@@ -18,6 +18,7 @@ from contextlib import closing
 from flask import Flask, request, session, url_for, redirect, \
      render_template, abort, g, flash
 import werkzeug
+from werkzeug import security
 
 
 # configuration
@@ -192,7 +193,7 @@ def login():
             username = ?''', [request.form['username']], one=True)
         if user is None:
             error = 'Invalid username'
-        elif not werkzeug.check_password_hash(user['pw_hash'],
+        elif not security.check_password_hash(user['pw_hash'],
                                      request.form['password']):
             error = 'Invalid password'
         else:
@@ -224,7 +225,7 @@ def register():
             g.db.execute('''insert into user (
                 username, email, pw_hash) values (?, ?, ?)''',
                 [request.form['username'], request.form['email'],
-                 werkzeug.kgenerate_password_hash(request.form['password'])])
+                 security.generate_password_hash(request.form['password'])])
             g.db.commit()
             flash('You were successfully registered and can login now')
             return redirect(url_for('login'))

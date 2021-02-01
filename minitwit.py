@@ -17,7 +17,7 @@ from datetime import datetime
 from contextlib import closing
 from flask import Flask, request, session, url_for, redirect, \
      render_template, abort, g, flash
-from werkzeug import check_password_hash, generate_password_hash
+import werkzeug
 
 
 # configuration
@@ -94,7 +94,7 @@ def timeline():
     redirect to the public timeline.  This timeline shows the user's
     messages as well as all the messages of followed users.
     """
-    print "We got a visitor from: " + str(request.remote_addr)
+    print(  "We got a visitor from: " + str(request.remote_addr) )
     if not g.user:
         return redirect(url_for('public_timeline'))
     offset = request.args.get('offset', type=int)
@@ -192,7 +192,7 @@ def login():
             username = ?''', [request.form['username']], one=True)
         if user is None:
             error = 'Invalid username'
-        elif not check_password_hash(user['pw_hash'],
+        elif not werkzeug.check_password_hash(user['pw_hash'],
                                      request.form['password']):
             error = 'Invalid password'
         else:
@@ -224,7 +224,7 @@ def register():
             g.db.execute('''insert into user (
                 username, email, pw_hash) values (?, ?, ?)''',
                 [request.form['username'], request.form['email'],
-                 generate_password_hash(request.form['password'])])
+                 werkzeug.kgenerate_password_hash(request.form['password'])])
             g.db.commit()
             flash('You were successfully registered and can login now')
             return redirect(url_for('login'))

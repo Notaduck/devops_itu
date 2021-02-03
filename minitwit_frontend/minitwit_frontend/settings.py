@@ -66,6 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+		'users.views.login_context'
             ],
             'libraries': {
                 'custom_filters' : 'minitwit_frontend.filters'

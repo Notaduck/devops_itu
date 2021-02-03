@@ -19,7 +19,7 @@ class PublicTimelineView(TimelineView):
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		context['public'] = True
-		context['posts'] = Message.objects.select_related('author').all()
+		context['posts'] = Message.objects.select_related('author').all().order_by('-pub_date')
 		return context
 
 
@@ -28,13 +28,13 @@ class CustomTimelineView(TimelineView):
 		context = super().get_context_data(**kwargs)
 		if username:
 			context['profile_user'] = User.objects.get(username=username)
-			context['posts'] = Message.objects.select_related('author').filter(author=context['profile_user'])
+			context['posts'] = Message.objects.select_related('author').filter(author=context['profile_user']).order_by('-pub_date')
 			if context['user']:
 				context['followed'] = Follower.objects.filter(who=context['user'], whom=context['profile_user']).exists()
 		elif context['user']:
 			users = [follower.whom for follower in Follower.objects.filter(who=context['user'])]
 			users.append(context['user'])
-			context['posts'] = Message.objects.select_related('author').filter(author_id__in=users)
+			context['posts'] = Message.objects.select_related('author').filter(author_id__in=users).order_by('-pub_date')
 		else:
 			redirect('public_timeline')
 		return context

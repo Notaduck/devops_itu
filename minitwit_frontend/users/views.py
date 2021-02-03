@@ -6,6 +6,10 @@ from django.contrib.auth.views import LoginView, LogoutView
 from users.forms import CustomUserCreationForm, CustomAuthenticationForm
 from users.models import User
 
+def login_context(request):
+	return {'user': request.user if request.user.is_authenticated else False}
+
+
 class RegisterView(FormView):
 	form_class = CustomUserCreationForm
 	template_name = 'register.html'

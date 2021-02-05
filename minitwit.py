@@ -17,7 +17,6 @@ from datetime import datetime
 from contextlib import closing
 from flask import Flask, request, session, url_for, redirect, \
      render_template, abort, g, flash
-import werkzeug
 from werkzeug import security
 
 
@@ -39,7 +38,7 @@ def connect_db():
 def init_db():
     """Creates the database tables."""
     with closing(connect_db()) as db:
-        with app.open_resource('schema.sql') as f:
+        with app.open_resource('schema.sql', 'r') as f:
             db.cursor().executescript(f.read())
         db.commit()
 

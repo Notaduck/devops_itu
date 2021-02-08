@@ -3,52 +3,69 @@ from django.http import HttpResponse
 
 
 def index(request):
-    # Testing
-    return HttpResponse("Hello World!")
+	# Testing
+	return HttpResponse("Hello World!")
 
 
 def beforeRequest(request):
-    pass
+	pass
 
 
 def afterRequest(response):
-    pass
+	pass
 
 
 def timeline(request):
-    # Insert
-    return render(request, "timeline.html")
+	return render(request, "layout.html")
 
 
 def publicTimeline(request):
-    pass
-
+	pass
 
 def userTimeLine(request):
-    pass
+	pass
 
 
 def followUser(request):
-    pass
+	pass
 
 
 def unfollowUser(request):
-    pass
+	pass
 
 
 def addMessage(request):
-    pass
+	pass
 
 
 def login(request):
-    # Insert
-    return render(request, "login.html")
+	return render(request, "login.html")
 
 
 def register(request):
-    # Insert
-    return render(request, "register.html")
+	return render(request, "register.html")
 
 
 def logout(request):
-    pass
+	pass
+
+
+def test(request):
+	"""Test Purposes only"""
+	context = {
+		'posts': [
+			{
+				'author': 'CoreyMS',
+				'title': 'Blog Post 1',
+				'content': 'First post content',
+				'date_posted': 'August 27, 2018'
+			},
+			{
+				'author': 'Jane Doe',
+				'title': 'Blog Post 2',
+				'content': 'Second post content',
+				'date_posted': 'August 28, 2018'
+			}
+		]
+	}
+	return render(request, "testTemplate.html", context)

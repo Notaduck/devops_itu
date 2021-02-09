@@ -45,7 +45,6 @@ def login(request):
 def register(request):
 	error = None
 	if request.method == 'POST':
-		print(request.POST)
 		if not request.POST.get('username', ''):
 			messages.add_message(request, messages.ERROR, 'You have to enter a username')
 		elif not request.POST.get('email') or '@' not in request.POST.get('email'):
@@ -64,24 +63,3 @@ def register(request):
 
 def logout(request):
 	pass
-
-
-def test(request):
-	"""Test Purposes only"""
-	context = {
-		'posts': [
-			{
-				'author': 'CoreyMS',
-				'title': 'Blog Post 1',
-				'content': 'First post content',
-				'date_posted': 'August 27, 2018'
-			},
-			{
-				'author': 'Jane Doe',
-				'title': 'Blog Post 2',
-				'content': 'Second post content',
-				'date_posted': 'August 28, 2018'
-			}
-		]
-	}
-	return render(request, "testTemplate.html", context)

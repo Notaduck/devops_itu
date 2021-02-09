@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'minitwit.apps.TestConfig',
     'minitwit.apps.MinitwitConfig',
     'django.contrib.admin',
     'django.contrib.auth',

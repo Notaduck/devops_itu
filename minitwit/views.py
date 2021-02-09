@@ -2,6 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
 
+from werkzeug import security # used only for user compatability between old system and new system
+
+from . import models
+
 def index(request):
 	# Testing
 	return HttpResponse("Hello World!")
@@ -45,7 +49,7 @@ def login(request):
 def register(request):
 	error = None
 	if request.method == 'POST':
-		if not request.POST.get('username', ''):
+		if not request.POST.get('username'):
 			messages.add_message(request, messages.ERROR, 'You have to enter a username')
 		elif not request.POST.get('email') or '@' not in request.POST.get('email'):
 			messages.add_message(request, messages.ERROR, 'You have to enter a valid email address')
@@ -53,12 +57,17 @@ def register(request):
 			messages.add_message(request, messages.ERROR, 'You have to enter a password')
 		elif request.POST.get('password') != request.POST.get('password2'):
 			messages.add_message(request, messages.ERROR, 'The two passwords do not match')
-		#elif get_user_id(request.form['username']) is not None:
-		#	messages.add_message(request, messages.ERROR, 'The username is already taken')
+		elif models.User.objects.filter(username = request.POST.get('username')).exists():
+			messages.add_message(request, messages.ERROR, 'The username is already taken')
 		else:
-			# insert new user
-			pass
-			return redirect('minitwit.views.login')
+			user = models.User(
+				username = request.POST.get('username'),
+				email = request.POST.get('email'),
+				pw_hash = security.generate_password_hash(request.POST.get('password'))
+			)
+			user.save()
+			messages.add_message(request, messages.INFO, 'You were succesfully registered and can login now')
+			return redirect(login)
 	return render(request, "register.html")
 
 def logout(request):

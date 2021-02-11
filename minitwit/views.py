@@ -7,8 +7,7 @@ from werkzeug import security # used only for user compatability between old sys
 from . import models
 
 def index(request):
-	# Testing
-	return HttpResponse("Hello World!")
+	return HttpResponse(request.session.get('user_id', False))
 
 
 def beforeRequest(request):
@@ -43,7 +42,17 @@ def addMessage(request):
 
 
 def login(request):
-	return render(request, "login.html")
+	if request.method == 'POST':
+		if request.session.get('user_id', False):
+			return redirect(index)
+		user = models.User.objects.get(username=request.POST.get('username'))
+		if user:
+			if security.check_password_hash(user.pw_hash, request.POST.get('password')):
+				request.session['user_id'] = user.pk
+				messages.add_message(request, messages.INFO, 'You were logged in')
+				return redirect(index)
+		messages.add_message(request, messages.ERROR, 'Wrong password or username')
+	return render(request, 'login.html')
 
 
 def register(request):
@@ -68,7 +77,7 @@ def register(request):
 			user.save()
 			messages.add_message(request, messages.INFO, 'You were succesfully registered and can login now')
 			return redirect(login)
-	return render(request, "register.html")
+	return render(request, 'register.html')
 
 def logout(request):
 	pass

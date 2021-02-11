@@ -19,11 +19,10 @@ def afterRequest(response):
 
 
 def TimeLine(request):
-	return render(request, "layout.html", )
-
+	return publicTimeLine(request)
 
 def publicTimeLine(request):
-	pass
+	return HttpResponse('')
 
 def userTimeLine(request):
 	pass
@@ -80,4 +79,7 @@ def register(request):
 	return render(request, 'register.html')
 
 def logout(request):
-	pass
+	if request.session.get('user_id', False):
+		del request.session['user_id']
+		messages.add_message(request, messages.INFO, 'You were logged out')
+	return redirect(TimeLine)

@@ -10,51 +10,58 @@ def index(request):
 	return HttpResponse(request.session.get('user_id', False))
 
 
-def beforeRequest(request):
+def timeline(request, username = None):
+	context = {'active_user' : None, 'profile_user': None, 'public': False, 'posts': []}
+	if request.session.get('user_id', False):
+		context['active_user'] = models.User.objects.get(user_id=request.session.get('user_id'))
+	if username is not None:
+		if username != context['active_user'].username:
+			context['profile_user'] = models.User.objects.get(username=username)
+		return user_timeline(request, context=context)
+	return public_timeline(request, context)
+
+def public_timeline(request, context):
+	context['public'] = True
+	context['posts'] = []
+	return render(request, 'timeline.html', context = context)
+
+def user_timeline(request, context):
+	if context['profile_user']:
+		context['posts'] = []
+	else:
+		context['posts'] = []
+	return render(request, 'timeline.html', context = context)
+
+
+def follow_user(request):
 	pass
 
 
-def afterRequest(response):
+def unfollow_user(request):
 	pass
 
 
-def TimeLine(request):
-	return publicTimeLine(request)
-
-def publicTimeLine(request):
-	return HttpResponse('')
-
-def userTimeLine(request):
-	pass
-
-
-def followUser(request):
-	pass
-
-
-def unfollowUser(request):
-	pass
-
-
-def addMessage(request):
+def add_message(request):
 	pass
 
 
 def login(request):
+	if request.session.get('user_id', False):
+		return redirect(timeline)
 	if request.method == 'POST':
-		if request.session.get('user_id', False):
-			return redirect(index)
 		user = models.User.objects.get(username=request.POST.get('username'))
 		if user:
 			if security.check_password_hash(user.pw_hash, request.POST.get('password')):
 				request.session['user_id'] = user.pk
 				messages.add_message(request, messages.INFO, 'You were logged in')
-				return redirect(index)
+				return redirect(timeline)
 		messages.add_message(request, messages.ERROR, 'Wrong password or username')
 	return render(request, 'login.html')
 
 
 def register(request):
+	if request.session.get('user_id', False):
+		return redirect(timeline)
 	error = None
 	if request.method == 'POST':
 		if not request.POST.get('username'):
@@ -82,4 +89,4 @@ def logout(request):
 	if request.session.get('user_id', False):
 		del request.session['user_id']
 		messages.add_message(request, messages.INFO, 'You were logged out')
-	return redirect(TimeLine)
+	return redirect(timeline)

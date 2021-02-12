@@ -11,7 +11,7 @@ def index(request):
 
 
 def timeline(request, username = None):
-	context = {'active_user' : None, 'profile_user': None, 'public': False, 'posts': []}
+	context = {'active_user' : None, 'profile_user': None, 'public': False, 'posts': [], 'followed': False}
 	if request.session.get('user_id', False):
 		context['active_user'] = models.User.objects.get(user_id=request.session.get('user_id'))
 	if username is not None:
@@ -28,18 +28,41 @@ def public_timeline(request, context):
 def user_timeline(request, context):
 	if context['profile_user']:
 		context['posts'] = []
+		context['followed'] = models.Follower.objects.filter(who=context['active_user'], whom=context['profile_user'].user_id).exists()
 	else:
 		context['posts'] = []
 	return render(request, 'timeline.html', context = context)
 
 
-def follow_user(request):
+def follow_user(request, username = False):
+	if not request.session.get('user_id', False) or not models.User.objects.filter(username=username).exists():
+		if not models.User.objects.filter(username=username).exists():
+			messages.add_message(request, messages.ERROR, 'The target user does not exist')
+		if not request.session.get('user_id', False):
+			messages.add_message(request, messages.ERROR, 'You must be logged in to follow a user')
+		return redirect(timeline)
+
+	followedUser = models.User.objects.get(username=username)
+	followingUser = models.User.objects.get(user_id=request.session.get('user_id'))
+
+	if followedUser.user_id == request.session.get('user_id'):
+		messages.add_message(request, messages.ERROR, 'You cannot follow yourself')
+
+	follower = models.Follower(
+		who = followingUser,
+		whom = followedUser
+	)
+
+	follower.save()
+	
+	messages.add_message(request, messages.INFO, 'You followed ' + followedUser.username)
+	
+	return redirect(timeline, username=username)
+
+
+
+def unfollow_user(request, username = False):
 	pass
-
-
-def unfollow_user(request):
-	pass
-
 
 def add_message(request):
 	pass

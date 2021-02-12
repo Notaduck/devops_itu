@@ -40,13 +40,14 @@ def follow_user(request, username = False):
 			messages.add_message(request, messages.ERROR, 'The target user does not exist')
 		if not request.session.get('user_id', False):
 			messages.add_message(request, messages.ERROR, 'You must be logged in to follow a user')
-		return redirect(timeline)
+		return redirect(timeline, username=username)
 
 	followedUser = models.User.objects.get(username=username)
 	followingUser = models.User.objects.get(user_id=request.session.get('user_id'))
 
 	if followedUser.user_id == request.session.get('user_id'):
 		messages.add_message(request, messages.ERROR, 'You cannot follow yourself')
+		return redirect(timeline, username=username)
 
 	follower = models.Follower(
 		who = followingUser,
@@ -58,11 +59,31 @@ def follow_user(request, username = False):
 	messages.add_message(request, messages.INFO, 'You followed ' + followedUser.username)
 	
 	return redirect(timeline, username=username)
-
-
+	
 
 def unfollow_user(request, username = False):
-	pass
+	if not request.session.get('user_id', False) or not models.User.objects.filter(username=username).exists():
+		if not models.User.objects.filter(username=username).exists():
+			messages.add_message(request, messages.ERROR, 'The target user does not exist')
+		if not request.session.get('user_id', False):
+			messages.add_message(request, messages.ERROR, 'You must be logged in to unfollow a user')
+		return redirect(timeline, username=username)
+
+	followedUser = models.User.objects.get(username=username)
+	
+	if followedUser.user_id == request.session.get('user_id'):
+		messages.add_message(request, messages.ERROR, 'You cannot unfollow yourself')
+		return redirect(timeline, username=username)
+
+	if not models.Follower.objects.filter(who=request.session.get('user_id'), whom=followedUser.user_id).exists():
+		follower = models.Follower.objects.get(who=request.session.get('user_id'), whom=followedUser.user_id)
+		follower.delete()
+		messages.add_message(request, messages.INFO, 'You unfollowed ' + followedUser.username)
+	else: 
+		messages.add_message(request, messages.ERROR, 'You cannot unfollow someone whom you are not following')
+		
+	return redirect(timeline, username=username)
+
 
 def add_message(request):
 	pass

@@ -50,13 +50,12 @@ def add_message(request):
 				return redirect(timeline)
 
 		message = Message(
-			author_id = User.objects.get(pk = request.session.get('user_id')),
+			author_id = User.objects.get(user_id = request.session.get('user_id')),
 			text = request.POST.get('text')
 		)
 
 		message.save()
-		transaction.commit()
-
+		
 		user_name = User.objects.get(pk = request.session.get('user_id')).username
 
 		return redirect(timeline, username = user_name)

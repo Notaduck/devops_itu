@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
-from django.db import transaction
 
 from werkzeug import security # used only for user compatability between old system and new system
 

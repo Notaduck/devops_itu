@@ -66,13 +66,17 @@ def login(request):
 	if request.session.get('user_id', False):
 		return redirect(timeline)
 	if request.method == 'POST':
-		user = User.objects.get(username=request.POST.get('username'))
-		if user:
-			if security.check_password_hash(user.pw_hash, request.POST.get('password')):
-				request.session['user_id'] = user.pk
-				messages.add_message(request, messages.INFO, 'You were logged in')
-				return redirect(timeline)
-		messages.add_message(request, messages.ERROR, 'Wrong password or username')
+		if request.POST.get('username') and request.POST.get('password'):
+			if User.objects.filter(username=request.POST.get('username')).exists():
+				user = User.objects.get(username=request.POST.get('username'))
+				if user:
+					if security.check_password_hash(user.pw_hash, request.POST.get('password')):
+						request.session['user_id'] = user.pk
+						messages.add_message(request, messages.INFO, 'You were logged in')
+						return redirect(timeline)
+			messages.add_message(request, messages.ERROR, 'Wrong password or username')
+		else:
+			messages.add_message(request, messages.ERROR, 'Both fields are required')
 	return render(request, 'login.html')
 
 

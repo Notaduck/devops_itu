@@ -20,9 +20,11 @@ from . import views
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
-	path('', views.index, name='index'),
+	path('', views.index, name='timeline'),
 	path('login', views.login, name='login'),
 	path('logout', views.logout, name='logout'),
 	path('register', views.register, name='register'),
-	path('timeline', views.TimeLine, name='timeline')
+	path('add_message', views.add_message, name='add_message'),
+	path('timeline', views.timeline, name='timeline'),
+	path('timeline/<str:username>', views.timeline, name='user timeline')
 ]

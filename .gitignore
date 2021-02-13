@@ -1,11 +1,8 @@
 .idea/	
-__pycache__/
 tmp/
-env
-*.DS_store
-*.pyc
-lib/
 bin/
+*.bak
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

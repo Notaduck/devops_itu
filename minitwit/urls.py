@@ -25,6 +25,8 @@ urlpatterns = [
 	path('logout', views.logout, name='logout'),
 	path('register', views.register, name='register'),
 	path('add_message', views.add_message, name='add_message'),
-	path('timeline', views.timeline, name='timeline'),
-	path('timeline/<str:username>', views.timeline, name='user timeline')
+	path('timeline', views.timeline, name='timeline'), 
+	path('timeline/<str:username>', views.timeline, name='user timeline'),
+	path('follow_user/<str:username>', views.follow_user, name='follow_user'),
+	path('unfollow_user/<str:username>', views.unfollow_user, name='unfollow_user')
 ]

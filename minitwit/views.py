@@ -22,15 +22,18 @@ def timeline(request, username = None):
 
 def public_timeline(request, context):
 	context['public'] = True
-	context['posts'] = []
+	context['posts'] = Message.objects.all()
 	return render(request, 'timeline.html', context = context)
 
 def user_timeline(request, context):
 	if context['profile_user']:
-		context['posts'] = []
+		context['posts'] = Message.objects.filter(author_id=context['profile_user'].user_id)
 		context['followed'] = models.Follower.objects.filter(who=context['active_user'], whom=context['profile_user'].user_id).exists()
 	else:
-		context['posts'] = []
+		users = [user.user_id for user in User.objects.filter(
+			user_id__in=Follower.objects.filter(who=context['active_user']))]
+		users.append(context['active_user'].user_id)
+		context['posts'] = Message.objects.filter(author_id__in=users)
 	return render(request, 'timeline.html', context = context)
 
 

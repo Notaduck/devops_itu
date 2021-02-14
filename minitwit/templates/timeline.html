@@ -24,7 +24,8 @@
         <a class=follow href="/follow_user/{{profile_user.username}}">Follow user</a>.
       {% endif %}
       </div>
-    {% elif public or not profile_user %}
+    {% endif %}
+    {% if public or not profile_user %}
       <div class=twitbox>
         <h3>What's on your mind {{ active_user.username }}?</h3>
         <form action="/add_message" method=post>
@@ -37,10 +38,10 @@
   {% if posts %}
     <ul class=messages>
     {% for post in posts %}
-      <li><img src="{{ post.user.email|gravatar }}"><p>
-        <strong><a href="/{{post.username}}">{{ post.username }}</a></strong>
+      <li>{{ post.author_id.email|gravatar }}<p>
+        <strong><a href="/timeline/{{post.author_id.username}}">{{ post.author_id.username }}</a></strong>
         {{ post.text }}
-        <small>&mdash;{{ post.pub_date|datetimeformat }}</small>
+        <small>&mdash;{{ post.pub_date }}</small>
     {% endfor %}
   {% else %}
     <li><em>There's no messages so far.</em>

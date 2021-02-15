@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -83,7 +84,6 @@ DATABASES = {
 	'HOST': os.getenv('MINITWIT_DB_HOST') or '127.0.0.1',
 	'PORT': os.getenv('MINITWIT_DB_PORT') or '5432'
     }
-}
 }
 
 

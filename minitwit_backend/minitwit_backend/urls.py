@@ -16,10 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+from msgs.views import get_all_messages
 
 router = routers.DefaultRouter()
-#router.register('hej', auth.views.loginViewset)
+# router.register('hej', auth.views.loginViewset)
+# router.register('hej', get_all_messages)
 
 urlpatterns = [
-    path('', include(router.urls))
+    # path('', include(router.urls))
+	path('', get_all_messages)
 ]

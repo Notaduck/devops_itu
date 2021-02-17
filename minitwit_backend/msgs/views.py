@@ -11,5 +11,5 @@ def messages(request):
 
 def messages_per_user(request, username):
     user = User.objects.get(username=username)
-    messages = Message.objects.filter(author_id=user.user_id)
+    messages = Message.objects.filter(author_id=user.user_id).order_by('pub_date')
     return JsonResponse(list(messages.values()), safe=False)

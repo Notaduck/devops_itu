@@ -16,7 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from msgs.views import get_all_messages
+from msgs.views import messages
+from msgs.views import messages_per_user
 
 router = routers.DefaultRouter()
 # router.register('hej', auth.views.loginViewset)
@@ -24,5 +25,6 @@ router = routers.DefaultRouter()
 
 urlpatterns = [
     # path('', include(router.urls))
-	path('', get_all_messages)
+	path('msgs/', messages),
+	path('msgs/<str:username>/', messages_per_user)
 ]

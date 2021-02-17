@@ -5,6 +5,11 @@ from msgs.models import Message
 from auth.models import User
 
 # Create your views here.
-def get_all_messages(request):
-    messages = list(Message.objects.all().values())
-    return JsonResponse(messages, safe=False)
+def messages(request):
+    message = Message.objects.order_by('pub_date')
+    return JsonResponse(list(message.values()), safe=False)
+
+def messages_per_user(request, username):
+    user = User.objects.get(username=username)
+    messages = Message.objects.filter(author_id=user.user_id)
+    return JsonResponse(list(messages.values()), safe=False)

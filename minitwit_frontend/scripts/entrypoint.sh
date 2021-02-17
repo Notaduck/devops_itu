@@ -1,8 +1,12 @@
 #!/bin/sh
 
 set -e
-ls
 
-python manage.py collectstatic --noinput
+python manage.py makemigrations
+python manage.py migrate
+exec "$@"
+# ls
 
-uwsgi --socker :8000 --master --enable-threads --module app.wsgi
+# python manage.py collectstatic --noinput
+
+# uwsgi --socket :8000 --master --enable-threads --module app.wsgi

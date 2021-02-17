@@ -1,8 +1,7 @@
-version: "3.9"
+version: "3.5"
 
 services:
   db:
-    container_name: minitwit_postgres
     image: postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
@@ -12,23 +11,39 @@ services:
       - postgres:/data/postgres
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - minitwit 
 
   api:
-    container_name: minitwit_api
     build:
       context: ./minitwit_backend
-
-    command: ["./wait-for-it.sh", "db", "--", "python3 manage.py runserver 0.0.0.0:8080"]
+    command: python manage.py runserver 0.0.0.0:8080
     volumes:
-      - .:/minitwit_api
+      - .:/code
     ports:
-      - "8000:8000"
-    networks:
-      - minitwit 
+      - "8080:8080"
     depends_on:
       - db
+    networks:
+      - minitwit 
+
+  web:
+    build:
+      context: ./minitwit_frontend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - minitwit 
 
 networks:
   minitwit:

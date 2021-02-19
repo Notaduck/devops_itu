@@ -1,4 +1,9 @@
 #!/bin/sh
+set -e
+
 python manage.py makemigrations
 python manage.py migrate
-exec "$@"
+python manage.py collectstatic --noinput
+
+# exec "$@"
+# 

@@ -14,9 +14,17 @@ COPY scripts/entrypoint.sh /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh
 
+# RUN mkdir -p /vol/web/media
+# RUN mkdir -p /vol/static
+# RUN adduser user
+# RUN chown -R user:user /vol
+# RUN chmod -R 755 /vol/web
+# USER user
+
+
 RUN mkdir -p /vol/web/media
 RUN mkdir -p /vol/web/static
-RUN adduser -D user
+RUN adduser user
 RUN chown -R user:user /vol
 RUN chmod -R 755 /vol/web
 USER user

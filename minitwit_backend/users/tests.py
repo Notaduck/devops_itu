@@ -50,7 +50,6 @@ class UserAuthenticationTestCase(APITestCase):
 		response = self.client.post(url, data=data)
 		self.assertEqual(response.status_code, 400)
 		data['username'] = 'uniquetest'
-		data['username'] = 'uniquetest'
 		response = self.client.post(url, data=data)
 		self.assertEqual(response.status_code, 204)
 

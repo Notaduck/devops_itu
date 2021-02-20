@@ -10,9 +10,9 @@ from rest_framework.renderers import JSONRenderer
 
 # Create your views here.
 class AddMessageAPIView(CreateApiView):
-	# queryset = Message.objects.all()
-	serializer_class = MessagesSerializer
-	permission_classes = (IsAuthenticated,)
+    # queryset = Message.objects.all()
+    serializer_class = MessagesSerializer
+    permission_classes = (IsAuthenticated,)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -25,10 +25,12 @@ class AddMessageAPIView(CreateApiView):
         serializer.save(user=user)
 
 class GetMessagesAPIView(RetrieveAPIView):
-	queryset = Message.objects.filter(author_id=request.)
     renderer_classes = [JSONRenderer]
-	serializer_class = MessagesSerializer
-	permission_classes = (IsAny,)
+    serializer_class = MessagesSerializer
+    permission_classes = (IsAny,)
+
+    # def retrieve(request, *args, **kwargs):
+
     
 
 def messages(request):

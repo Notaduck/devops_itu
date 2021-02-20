@@ -31,6 +31,8 @@ services:
       - db
     networks:
       - minitwit 
+    environment: 
+      - DEBUG=1
 
   web:
     build:
@@ -44,6 +46,9 @@ services:
       - db
     networks:
       - minitwit 
+    environment: 
+      - DEBUG=1
+
 
 networks:
   minitwit:

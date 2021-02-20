@@ -7,7 +7,10 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
       PGDATA: /data/postgres
+    env_file: 
+      - .postgres.env
     volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - postgres:/data/postgres
     ports:
       - "5432:5432"
@@ -18,32 +21,29 @@ services:
       retries: 5
     networks:
       - minitwit 
+    restart: always
 
   api:
     build:
       context: ./minitwit_backend
-    command: python manage.py runserver 127.0.0.1:8080
-    volumes:
-      - .:/code
+    # command: python manage.py runserver 127.0.0.1:8080
+    # volumes:
+    #   - .:/code
     ports:
-      - "8080:8080"
+      - "9000:9000"
     depends_on:
       - db
     networks:
       - minitwit 
-    environment: 
-      - SECRET_KEY=thisshouldbesecret
-      - DB_NAME=minitwit
-      - DB_USER=postgres
-      - DB_PASSWORD=changeme
-      - DB_HOST=db
-      - ALLOWED_HOSTS=127.0.0.1,localhost,api.minitwititu.dk
+    env_file:
+      - .api.env
+    restart: always
 
   web:
     build:
       context: ./minitwit_frontend
-    volumes:
-      - .:/code
+    # volumes:
+    #   - .:/code
     ports:
       - "8000:8000"
     volumes:
@@ -52,13 +52,16 @@ services:
       - db
     networks:
       - minitwit 
-    environment: 
-      - SECRET_KEY=thisshouldbesecret
-      - DB_NAME=minitwit
-      - DB_USER=postgres
-      - DB_PASSWORD=changeme
-      - DB_HOST=db
-      - ALLOWED_HOSTS=127.0.0.1,localhost,api.minitwititu.dk
+    env_file:
+      - .web.env
+    # environment: 
+    #   - SECRET_KEY=thisshouldbesecret
+    #   - DB_NAME=minitwit
+    #   - DB_USER=postgres
+    #   - DB_PASSWORD=changeme
+    #   - DB_HOST=db
+    #   - ALLOWED_HOSTS=127.0.0.1,localhost,minitwititu.dk
+    restart: always
   
   proxy:
     build:
@@ -68,10 +71,11 @@ services:
     networks:
       - minitwit 
     ports:
-      - "1337:1337"
+      - "80:80"
     depends_on:
       - web
       - api
+    restart: always
 
 
 networks:

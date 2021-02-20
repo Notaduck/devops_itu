@@ -28,5 +28,5 @@ class GetCurrentUser(RetrieveAPIView):
 	def retrieve(self, request, *args, **kwargs):
 		instance = request.user
 		serializer = self.get_serializer(instance)
-		serializer.data.pop('pwd')
+		serializer.data.pop('password')
 		return Response(serializer.data)

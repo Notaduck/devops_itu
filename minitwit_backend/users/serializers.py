@@ -13,5 +13,4 @@ class UserSerializer(serializers.ModelSerializer):
 		user = User(**validated_data)
 		user.set_password(password)
 		user.save()
-		user.set_unusable_password()
 		return user

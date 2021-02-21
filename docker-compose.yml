@@ -1,39 +1,58 @@
-version: '3.5'
+version: "3.5"
 
 services:
-  postgres:
-    container_name: postgres_container
+  db:
     image: postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
       PGDATA: /data/postgres
     volumes:
-       - postgres:/data/postgres
+      - postgres:/data/postgres
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
-      - postgres
-    restart: unless-stopped
-  
-  pgadmin:
-    container_name: pgadmin_container
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      - minitwit 
+
+  api:
+    build:
+      context: ./minitwit_backend
+    command: python manage.py runserver 0.0.0.0:8080
     volumes:
-       - pgadmin:/root/.pgadmin
+      - .:/code
     ports:
-      - "${PGADMIN_PORT:-5050}:80"
+      - "8080:8080"
+    depends_on:
+      - db
     networks:
-      - postgres
-    restart: unless-stopped
+      - minitwit 
+    environment: 
+      - DEBUG=1
+
+  web:
+    build:
+      context: ./minitwit_frontend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - minitwit 
+    environment: 
+      - DEBUG=1
+
 
 networks:
-  postgres:
+  minitwit:
     driver: bridge
 
 volumes:
-    postgres:
-    pgadmin:
+  postgres:

@@ -26,7 +26,7 @@ SECRET_KEY = os.getenv('MINITWIT_SECRET_KEY','vk61e&%q!ggpvhg=nljgy+vg8-tq+5#z%4
 DEBUG = os.getenv('DEBUG', True) 
 # DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['minitwititu.xyz']
 ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS')
 if ALLOWED_HOSTS_ENV:
     ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(','))

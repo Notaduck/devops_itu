@@ -8,12 +8,11 @@ from rest_framework.generics import RetrieveAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from social.serializers import FollowerSerializer
 
-# Create your views here.
 
 class FollowView(CreateAPIView):
 	serializer_class = FollowerSerializer
 	permission_classes = (IsAuthenticated,)
-	
+
 	def create(self, request, *args, **kwargs):
 		serializer = self.get_serializer(data=request.data)
 		serializer.is_valid(raise_exception=True)

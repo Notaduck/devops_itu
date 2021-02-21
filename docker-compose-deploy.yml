@@ -4,8 +4,6 @@ services:
   db:
     image: postgres
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
       PGDATA: /data/postgres
     env_file: 
       - .postgres.env
@@ -26,9 +24,6 @@ services:
   api:
     build:
       context: ./minitwit_backend
-    # command: python manage.py runserver 127.0.0.1:8080
-    # volumes:
-    #   - .:/code
     ports:
       - "9000:9000"
     depends_on:
@@ -42,8 +37,6 @@ services:
   web:
     build:
       context: ./minitwit_frontend
-    # volumes:
-    #   - .:/code
     ports:
       - "8000:8000"
     volumes:
@@ -54,13 +47,6 @@ services:
       - minitwit 
     env_file:
       - .web.env
-    # environment: 
-    #   - SECRET_KEY=thisshouldbesecret
-    #   - DB_NAME=minitwit
-    #   - DB_USER=postgres
-    #   - DB_PASSWORD=changeme
-    #   - DB_HOST=db
-    #   - ALLOWED_HOSTS=127.0.0.1,localhost,minitwititu.dk
     restart: always
   
   proxy:
@@ -71,7 +57,7 @@ services:
     networks:
       - minitwit 
     ports:
-      - "80:80"
+      - "80:8080"
     depends_on:
       - web
       - api

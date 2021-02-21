@@ -24,9 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('MINITWIT_SECRET_KEY') or 'vk61e&%q!ggpvhg=nljgy+vg8-tq+5#z%4pesej(wf0^vz%7au'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False if os.getenv('ENV') == 'Production' else True
+DEBUG = os.getenv('DEBUG', True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['api.minitwititu.xyz']
+ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS')
+if ALLOWED_HOSTS_ENV:
+    ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(','))
 
 
 # Application definition
@@ -81,7 +84,7 @@ DATABASES = {
     'NAME': os.getenv('MINITWIT_DB_NAME') or 'minitwit',
 	'USER': os.getenv('MINITWIT_DB_USER') or 'postgres',
 	'PASSWORD': os.getenv('MINITWIT_DB_PASSWORD') or 'changeme',
-	'HOST': os.getenv('MINITWIT_DB_HOST') or '127.0.0.1',
+	'HOST': os.getenv('MINITWIT_DB_HOST') or 'db',
 	'PORT': os.getenv('MINITWIT_DB_PORT') or '5432'
     }
 }

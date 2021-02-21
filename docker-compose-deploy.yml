@@ -1,0 +1,87 @@
+version: "3.5"
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /data/postgres
+    env_file: 
+      - .postgres.env
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - minitwit 
+    restart: always
+
+  api:
+    build:
+      context: ./minitwit_backend
+    # command: python manage.py runserver 127.0.0.1:8080
+    # volumes:
+    #   - .:/code
+    ports:
+      - "9000:9000"
+    depends_on:
+      - db
+    networks:
+      - minitwit 
+    env_file:
+      - .api.env
+    restart: always
+
+  web:
+    build:
+      context: ./minitwit_frontend
+    # volumes:
+    #   - .:/code
+    ports:
+      - "8000:8000"
+    volumes:
+      - static_data:/vol/static
+    depends_on:
+      - db
+    networks:
+      - minitwit 
+    env_file:
+      - .web.env
+    # environment: 
+    #   - SECRET_KEY=thisshouldbesecret
+    #   - DB_NAME=minitwit
+    #   - DB_USER=postgres
+    #   - DB_PASSWORD=changeme
+    #   - DB_HOST=db
+    #   - ALLOWED_HOSTS=127.0.0.1,localhost,minitwititu.dk
+    restart: always
+  
+  proxy:
+    build:
+      context: ./nginx
+    volumes:
+      - static_data:/vol/static
+    networks:
+      - minitwit 
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+      - api
+    restart: always
+
+
+networks:
+  minitwit:
+    driver: bridge
+
+volumes:
+  postgres:
+  static_data:

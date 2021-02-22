@@ -10,24 +10,18 @@ from social.serializers import FollowerSerializer
 from rest_framework import status
 from rest_framework.response import Response
 
-# Create your views here.
 
 class FollowView(CreateAPIView, DestroyAPIView):
 	serializer_class = FollowerSerializer
 	permission_classes = (IsAuthenticated,)
 
 	def post(self, request, username, *args, **kwargs):
-		# if username != request.user.username:
-		# 	return Response(status=status.HTTP_400_BAD_REQUEST)
-
 		if request.POST.get('follow', False):
 			who = User.objects.get_by_natural_key(username)
 			whom = User.objects.get_by_natural_key(request.POST.get('follow'))
 			if not who or not whom or who == whom:
-				print('1')
 				return Response(status=status.HTTP_400_BAD_REQUEST)
 			if Follower.objects.filter(who = who, whom = whom).exists():
-				print('2')
 				return Response(status=status.HTTP_400_BAD_REQUEST)
 			return self.create(request, username, *args, **kwargs)
 			
@@ -35,12 +29,10 @@ class FollowView(CreateAPIView, DestroyAPIView):
 		who = User.objects.get_by_natural_key(username)
 		whom = User.objects.get_by_natural_key(request.POST.get('unfollow'))
 		if not who or not whom or who == whom:
-			print('3')
 			return Response(status=status.HTTP_400_BAD_REQUEST)
 
 		if Follower.objects.filter(who = who, whom = whom).exists():
 			return self.destroy(request, username, *args, **kwargs)
-		print('4')
 		return Response(status=status.HTTP_400_BAD_REQUEST)
 	
 	def create(self, request, username, *args, **kwargs):

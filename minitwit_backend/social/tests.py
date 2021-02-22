@@ -53,7 +53,6 @@ class FollowTestCase(APITestCase):
         data = {'unfollow': 'b'}
 
         response = self.client.post(url, data=data)
-
         
         self.assertEqual(response.status_code, 204)
 
@@ -90,4 +89,53 @@ class FollowTestCase(APITestCase):
 
         response = self.client.post(url, data=data)
 
+        self.assertEqual(response.status_code, 400)
+
+    def test_unknow_c_follow_known_b(self):
+        username = 'c'
+        password = 'c'
+
+        url = f'/fllws/{username}'
+        data = {'follow': 'c'}
+
+        self.client.credentials(HTTP_AUTHORIZATION='Basic {}'.format(base64.b64encode(f'a:a'.encode('ascii')).decode()))
+        response = self.client.post(url, data=data)
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_unknow_c_follow_unknown_b(self):
+        username = 'c'
+        password = 'c'
+
+        url = f'/fllws/{username}'
+        data = {'follow': 'c'}
+
+        self.client.credentials(HTTP_AUTHORIZATION='Basic {}'.format(base64.b64encode(f'a:a'.encode('ascii')).decode()))
+        response = self.client.post(url, data=data)
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_unauthorized_a_follows_b(self):
+        username = 'c'
+        password = 'c'
+
+        url = f'/fllws/{username}'
+        data = {'follow': 'b'}
+
+        self.client.credentials(HTTP_AUTHORIZATION='Basic {}'.format(base64.b64encode(f'c:c'.encode('ascii')).decode()))
+        response = self.client.post(url, data=data)
+
+        self.assertEqual(response.status_code, 401)
+    
+    def test_empty_postrequest(self):
+        username = 'a'
+        password = 'a'
+
+        url = f'/fllws/{username}'
+        data = {}
+
+        self.client.credentials(HTTP_AUTHORIZATION='Basic {}'.format(base64.b64encode(f'{username}:{password}'.encode('ascii')).decode()))
+        response = self.client.post(url, data=data)
+
+        
         self.assertEqual(response.status_code, 400)

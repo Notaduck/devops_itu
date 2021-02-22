@@ -82,3 +82,5 @@ DB_HOST=..
 ALLOWED_HOSTS=127.0.0.1,localhost,minitwititu.dk
 ```
 
+Next step is simply to run the `deploy.sh` script which will tear down any existing containers, then build and run the new ones.
+

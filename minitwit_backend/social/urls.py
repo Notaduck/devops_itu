@@ -3,6 +3,6 @@ from social.views import FollowView
 
 
 urlpatterns = [
-	path('follow/', FollowView.as_view(), name='follow')
+	path('fllws/<str:username>', FollowView.as_view(), name='follow')
 ]
 

@@ -20,7 +20,7 @@ class FollowTestCase(APITestCase):
         create_user('a', 'a@a.test', 'a')
         create_user('b', 'b@b.test', 'b')
     
-    def test_follow_user(self):
+    def test_a_follow_b_secceeds(self):
 
         username = 'a'
         password = 'a'
@@ -39,7 +39,7 @@ class FollowTestCase(APITestCase):
         
         self.assertTrue(Follower.objects.filter(who = who, whom = whom).exists())
 
-    def test_a_unfollow_b(self):
+    def test_a_unfollow_b_succeeds(self):
         username = 'a'
         password = 'a'
 
@@ -61,3 +61,33 @@ class FollowTestCase(APITestCase):
         whom = User.objects.get_by_natural_key('b')
         
         self.assertTrue(not Follower.objects.filter(who = who, whom = whom).exists())
+
+    def test_a_follow_a_returns_400(self):
+        username = 'a'
+        password = 'a'
+
+        url = f'/fllws/{username}'
+        data = {'follow': 'a'}
+
+        self.client.credentials(HTTP_AUTHORIZATION='Basic {}'.format(base64.b64encode(f'{username}:{password}'.encode('ascii')).decode()))
+        response = self.client.post(url, data=data)
+
+        self.assertEqual(response.status_code, 400)
+
+        who = User.objects.get_by_natural_key(username)
+        whom = User.objects.get_by_natural_key('b')
+        
+        self.assertTrue(not Follower.objects.filter(who = who, whom = whom).exists())
+        
+    def test_a_unfollow_b_return_400(self):
+        username = 'a'
+        password = 'a'
+
+        self.client.credentials(HTTP_AUTHORIZATION='Basic {}'.format(base64.b64encode(f'{username}:{password}'.encode('ascii')).decode()))
+
+        url = f'/fllws/{username}'
+        data = {'unfollow': 'b'}
+
+        response = self.client.post(url, data=data)
+
+        self.assertEqual(response.status_code, 400)

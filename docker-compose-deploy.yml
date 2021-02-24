@@ -4,8 +4,6 @@ services:
   db:
     image: postgres
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
       PGDATA: /data/postgres
     env_file: 
       - .postgres.env
@@ -24,6 +22,7 @@ services:
     restart: always
 
   api:
+    image: docker.pkg.github.com/notaduck/DevOps_ITU:api
     build:
       context: ./minitwit_backend
     ports:
@@ -37,6 +36,7 @@ services:
     restart: always
 
   web:
+    image: docker.pkg.github.com/notaduck/DevOps_ITU:web
     build:
       context: ./minitwit_frontend
     ports:
@@ -52,6 +52,7 @@ services:
     restart: always
   
   proxy:
+    image: docker.pkg.github.com/notaduck/DevOps_ITU:proxy
     build:
       context: ./nginx
     volumes:

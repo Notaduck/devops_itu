@@ -20,6 +20,7 @@ jobs:
         uses: actions/checkout@v1
       - name: Add environment variables to .{service}.env
         run: |
+          touch .api.env
           echo DEBUG=0 >> .api.env
           echo DB_NAME= ${{ api.secrets.DB_NAME }} >> .api.env
           echo DB_USER= ${{ api.secrets.DB_USER }} >> .api.env
@@ -28,6 +29,7 @@ jobs:
           echo ALLOWED_HOSTS= ${{ api.secrets.ALLOWERD_HOSTS }} >> .api.env
           echo MINITWIT_SECRET_KEY= ${{ api.secrets.MINITWIT_SECRET_KEY }} >> .api.env
 
+          touch .web.env
           echo DEBUG=0 >> .web.env
           echo DB_NAME= ${{ web.secrets.DB_NAME }} >> .web.env
           echo DB_USER= ${{ web.secrets.DB_USER }} >> .web.env
@@ -36,6 +38,7 @@ jobs:
           echo ALLOWED_HOSTS= ${{ web.secrets.ALLOWERD_HOSTS }} >> .web.env
           echo MINITWIT_SECRET_KEY= ${{ web.secrets.MINITWIT_SECRET_KEY }} >> .web.env
 
+          touch .db.env
           echo PASSWORD= ${{ db.secrets.PASSWORD }} >> .db.env
           echo USER= ${{ db.secrets.USER }} >> .db.env
           echo DATABASE= ${{ db.secrets.DATABASE }} >> .db.env

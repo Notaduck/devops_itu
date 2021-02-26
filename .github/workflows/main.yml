@@ -64,53 +64,53 @@ jobs:
           docker push ${{ env.PROXY }}
           # docker push ${{ env.DB }}
 
-deploy:
-  name: Deploy to DigitalOcean
-  runs-on: ubuntu-latest
-  needs: build
-  steps:
-    - name: Checkout master
-      uses: actions/checkout@v1
-    - name: Add environment variables to .{service}.env
-      run: |
-        echo DEBUG=0 >> .api.env
-        echo DB_NAME= ${{ api.secrets.DB_NAME }} >> .api.env
-        echo DB_USER= ${{ api.secrets.DB_USER }} >> .api.env
-        echo DB_PASSWORD= ${{ api.secrets.DB_PASSWORD }} >> .api.env
-        echo DB_HOST= ${{ api.secrets.DB_HOST }} >> .api.env
-        echo ALLOWED_HOSTS= ${{ api.secrets.ALLOWERD_HOSTS }} >> .api.env
-        echo MINITWIT_SECRET_KEY= ${{ api.secrets.MINITWIT_SECRET_KEY }} >> .api.env
+  deploy:
+    name: Deploy to DigitalOcean
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v1
+      - name: Add environment variables to .{service}.env
+        run: |
+          echo DEBUG=0 >> .api.env
+          echo DB_NAME= ${{ api.secrets.DB_NAME }} >> .api.env
+          echo DB_USER= ${{ api.secrets.DB_USER }} >> .api.env
+          echo DB_PASSWORD= ${{ api.secrets.DB_PASSWORD }} >> .api.env
+          echo DB_HOST= ${{ api.secrets.DB_HOST }} >> .api.env
+          echo ALLOWED_HOSTS= ${{ api.secrets.ALLOWERD_HOSTS }} >> .api.env
+          echo MINITWIT_SECRET_KEY= ${{ api.secrets.MINITWIT_SECRET_KEY }} >> .api.env
 
-        echo DEBUG=0 >> .web.env
-        echo DB_NAME= ${{ web.secrets.DB_NAME }} >> .web.env
-        echo DB_USER= ${{ web.secrets.DB_USER }} >> .web.env
-        echo DB_PASSWORD= ${{ web.secrets.DB_PASSWORD }} >> .web.env
-        echo DB_HOST= ${{ web.secrets.DB_HOST }} >> .web.env
-        echo ALLOWED_HOSTS= ${{ web.secrets.ALLOWERD_HOSTS }} >> .web.env
-        echo MINITWIT_SECRET_KEY= ${{ web.secrets.MINITWIT_SECRET_KEY }} >> .web.env
+          echo DEBUG=0 >> .web.env
+          echo DB_NAME= ${{ web.secrets.DB_NAME }} >> .web.env
+          echo DB_USER= ${{ web.secrets.DB_USER }} >> .web.env
+          echo DB_PASSWORD= ${{ web.secrets.DB_PASSWORD }} >> .web.env
+          echo DB_HOST= ${{ web.secrets.DB_HOST }} >> .web.env
+          echo ALLOWED_HOSTS= ${{ web.secrets.ALLOWERD_HOSTS }} >> .web.env
+          echo MINITWIT_SECRET_KEY= ${{ web.secrets.MINITWIT_SECRET_KEY }} >> .web.env
 
-        echo PASSWORD= ${{ db.secrets.PASSWORD }} >> .db.env
-        echo USER= ${{ db.secrets.USER }} >> .db.env
-        echo DATABASE= ${{ db.secrets.DATABASE }} >> .db.env
-    - name: Add the private SSH key to the ssh-agent
-      env:
-        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-      run: |
-        mkdir -p ~/.ssh
-        ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-        ssh-keyscan github.com >> ~/.ssh/known_hosts
-        ssh-add - <<< "${{ secrets.PRIVATE_KEY }}"
-    - name: Build and deploy images on DigitalOcean
-      env:
-        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-      run: |
-        scp  -o StrictHostKeyChecking=no -r ./.env ./docker-compose.prod.yml root@${{ secrets.DIGITAL_OCEAN_IP_ADDRESS }}:/app
-        ssh -o StrictHostKeyChecking=no root@${{ secrets.DIGITAL_OCEAN_IP_ADDRESS }} << 'ENDSSH'
-          cd /app
-          source .env
-          docker login docker.pkg.github.com -u notaduck -p ${{ GITHUB_SECRET }} 
-          docker pull $WEB
-          docker pull $API
-          docker pull $PROXY
-          docker-compose -f docker-compose-deploy.yml up -d
-        ENDSSH
+          echo PASSWORD= ${{ db.secrets.PASSWORD }} >> .db.env
+          echo USER= ${{ db.secrets.USER }} >> .db.env
+          echo DATABASE= ${{ db.secrets.DATABASE }} >> .db.env
+      - name: Add the private SSH key to the ssh-agent
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: |
+          mkdir -p ~/.ssh
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          ssh-add - <<< "${{ secrets.PRIVATE_KEY }}"
+      - name: Build and deploy images on DigitalOcean
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: |
+          scp  -o StrictHostKeyChecking=no -r ./.env ./docker-compose.prod.yml root@${{ secrets.DIGITAL_OCEAN_IP_ADDRESS }}:/app
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.DIGITAL_OCEAN_IP_ADDRESS }} << 'ENDSSH'
+            cd /app
+            source .env
+            docker login docker.pkg.github.com -u notaduck -p ${{ GITHUB_SECRET }} 
+            docker pull $WEB
+            docker pull $API
+            docker pull $PROXY
+            docker-compose -f docker-compose-deploy.yml up -d
+          ENDSSH

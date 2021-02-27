@@ -43,11 +43,11 @@ jobs:
           echo USER= ${{ secrets.USER }} >> .db.env
           echo DATABASE= ${{ secrets.DATABASE }} >> .db.env
 
-      - name: Set environment variables
-        run: |
-          echo ::set-env name=WEB::${{ env.WEB }}
-          echo ::set-env name=PROXY::${{ env.PROXY }}
-          echo ::set-env name=DB::${{ env.DB }}
+      #- name: Set environment variables
+      #  run: |
+      #    echo ::set-env name=WEB::${{ env.WEB }}
+      #    echo ::set-env name=PROXY::${{ env.PROXY }}
+      #    echo ::set-env name=DB::${{ env.DB }}
       - name: Log in to GitHub Packages
         run: echo ${GITHUB_TOKEN} | docker login -u ${GITHUB_ACTOR} --password-stdin docker.pkg.github.com
         env:
@@ -55,7 +55,7 @@ jobs:
       - name: Pull images
         run: |
           docker pull ${{ env.WEB }} || true
-          docker pull ${{ env.API }} || true
+          dockset/////er pull ${{ env.API }} || true
           docker pull ${{ env.PROXY }} || true
       - name: Build images
         run: |

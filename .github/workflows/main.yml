@@ -101,7 +101,7 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          ssh-keyscan minitwititu.xyz >> ~/.ssh/known_hosts
           ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa  
           
       - name: Build and deploy images on DigitalOcean

@@ -1,4 +1,4 @@
-jjjjjjjjjjname: minitwit workflow
+name: minitwit workflow
 
 on:
   [push]

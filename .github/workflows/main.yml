@@ -103,7 +103,7 @@ jobs:
           ssh-agent -a $SSH_AUTH_SOCK > /dev/null
           ssh-keyscan minitwititu.xyz >> ~/.ssh/known_hosts
           ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa  
-          sudo "PermitRootLogin Yes">> /etc/ssh/sshd_config  
+          sudo echo "PermitRootLogin Yes">> /etc/ssh/sshd_config  
           
       - name: Build and deploy images on DigitalOcean
         env:

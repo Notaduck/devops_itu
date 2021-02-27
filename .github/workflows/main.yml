@@ -102,7 +102,7 @@ jobs:
           mkdir -p ~/.ssh
           ssh-agent -a $SSH_AUTH_SOCK > /dev/null
           ssh-keyscan github.com >> ~/.ssh/known_hosts
-          ssh-keygen -t rsa -N ''
+          ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa  
           
       - name: Build and deploy images on DigitalOcean
         env:

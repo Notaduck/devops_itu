@@ -102,7 +102,8 @@ jobs:
           mkdir -p ~/.ssh
           ssh-agent -a $SSH_AUTH_SOCK > /dev/null
           ssh-keyscan minitwititu.xyz >> ~/.ssh/known_hosts
-          ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa  
+          # ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa  
+          ssh-key -K ${{ secretc.PRIVATE_KEY }}
       - name: Build and deploy images on DigitalOcean
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock

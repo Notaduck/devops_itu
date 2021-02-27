@@ -111,7 +111,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no root@${{ secrets.DIGITAL_OCEAN_IP_ADDRESS }} << 'ENDSSH'
             cd /app
             source .env
-            docker login docker.pkg.github.com -u notaduck -p ${{ GUSER_SECRET }} 
+            docker login docker.pkg.github.com -u notaduck -p ${{ seecrets.GUSER_SECRET }} 
             docker pull $WEB
             docker pull $API
             docker pull $PROXY

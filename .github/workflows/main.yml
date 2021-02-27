@@ -1,4 +1,4 @@
-name: minitwit workflow
+jjjjjjjjjjname: minitwit workflow
 
 on:
   [push]
@@ -23,25 +23,25 @@ jobs:
           touch .api.env
           echo DEBUG=0 >> .api.env
           echo DB_NAME= ${{ secrets.DB_NAME }} >> .api.env
-          echo DB_USER= ${{ api.secrets.DB_USER }} >> .api.env
-          echo DB_PASSWORD= ${{ api.secrets.DB_PASSWORD }} >> .api.env
-          echo DB_HOST= ${{ api.secrets.DB_HOST }} >> .api.env
-          echo ALLOWED_HOSTS= ${{ api.secrets.ALLOWERD_HOSTS }} >> .api.env
-          echo MINITWIT_SECRET_KEY= ${{ api.secrets.MINITWIT_SECRET_KEY }} >> .api.env
+          echo DB_USER= ${{ secrets.DB_USER }} >> .api.env
+          echo DB_PASSWORD= ${{ secrets.DB_PASSWORD }} >> .api.env
+          echo DB_HOST= ${{ secrets.DB_HOST }} >> .api.env
+          echo ALLOWED_HOSTS= ${{ secrets.ALLOWERD_HOSTS }} >> .api.env
+          echo MINITWIT_SECRET_KEY= ${{ secrets.MINITWIT_SECRET_KEY }} >> .api.env
 
           touch .web.env
           echo DEBUG=0 >> .web.env
-          echo DB_NAME= ${{ web.secrets.DB_NAME }} >> .web.env
-          echo DB_USER= ${{ web.secrets.DB_USER }} >> .web.env
-          echo DB_PASSWORD= ${{ web.secrets.DB_PASSWORD }} >> .web.env
-          echo DB_HOST= ${{ web.secrets.DB_HOST }} >> .web.env
-          echo ALLOWED_HOSTS= ${{ web.secrets.ALLOWERD_HOSTS }} >> .web.env
-          echo MINITWIT_SECRET_KEY= ${{ web.secrets.MINITWIT_SECRET_KEY }} >> .web.env
+          echo DB_NAME= ${{ secrets.DB_NAME }} >> .web.env
+          echo DB_USER= ${{ secrets.DB_USER }} >> .web.env
+          echo DB_PASSWORD= ${{ secrets.DB_PASSWORD }} >> .web.env
+          echo DB_HOST= ${{ secrets.DB_HOST }} >> .web.env
+          echo ALLOWED_HOSTS= ${{ secrets.ALLOWERD_HOSTS }} >> .web.env
+          echo MINITWIT_SECRET_KEY= ${{ secrets.MINITWIT_SECRET_KEY }} >> .web.env
 
           touch .db.env
-          echo PASSWORD= ${{ db.secrets.PASSWORD }} >> .db.env
-          echo USER= ${{ db.secrets.USER }} >> .db.env
-          echo DATABASE= ${{ db.secrets.DATABASE }} >> .db.env
+          echo PASSWORD= ${{ secrets.PASSWORD }} >> .db.env
+          echo USER= ${{ secrets.USER }} >> .db.env
+          echo DATABASE= ${{ secrets.DATABASE }} >> .db.env
 
       - name: Set environment variables
         run: |
@@ -77,24 +77,24 @@ jobs:
       - name: Add environment variables to .{service}.env
         run: |
           echo DEBUG=0 >> .api.env
-          echo DB_NAME= ${{ api.secrets.DB_NAME }} >> .api.env
-          echo DB_USER= ${{ api.secrets.DB_USER }} >> .api.env
-          echo DB_PASSWORD= ${{ api.secrets.DB_PASSWORD }} >> .api.env
-          echo DB_HOST= ${{ api.secrets.DB_HOST }} >> .api.env
-          echo ALLOWED_HOSTS= ${{ api.secrets.ALLOWERD_HOSTS }} >> .api.env
-          echo MINITWIT_SECRET_KEY= ${{ api.secrets.MINITWIT_SECRET_KEY }} >> .api.env
+          echo DB_NAME= ${{ secrets.DB_NAME }} >> .api.env
+          echo DB_USER= ${{ secrets.DB_USER }} >> .api.env
+          echo DB_PASSWORD= ${{ secrets.DB_PASSWORD }} >> .api.env
+          echo DB_HOST= ${{ secrets.DB_HOST }} >> .api.env
+          echo ALLOWED_HOSTS= ${{ secrets.ALLOWERD_HOSTS }} >> .api.env
+          echo MINITWIT_SECRET_KEY= ${{ secrets.MINITWIT_SECRET_KEY }} >> .api.env
 
           echo DEBUG=0 >> .web.env
-          echo DB_NAME= ${{ web.secrets.DB_NAME }} >> .web.env
-          echo DB_USER= ${{ web.secrets.DB_USER }} >> .web.env
-          echo DB_PASSWORD= ${{ web.secrets.DB_PASSWORD }} >> .web.env
-          echo DB_HOST= ${{ web.secrets.DB_HOST }} >> .web.env
-          echo ALLOWED_HOSTS= ${{ web.secrets.ALLOWERD_HOSTS }} >> .web.env
-          echo MINITWIT_SECRET_KEY= ${{ web.secrets.MINITWIT_SECRET_KEY }} >> .web.env
+          echo DB_NAME= ${{ secrets.DB_NAME }} >> .web.env
+          echo DB_USER= ${{ secrets.DB_USER }} >> .web.env
+          echo DB_PASSWORD= ${{ secrets.DB_PASSWORD }} >> .web.env
+          echo DB_HOST= ${{ secrets.DB_HOST }} >> .web.env
+          echo ALLOWED_HOSTS= ${{ secrets.ALLOWERD_HOSTS }} >> .web.env
+          echo MINITWIT_SECRET_KEY= ${{ secrets.MINITWIT_SECRET_KEY }} >> .web.env
 
-          echo PASSWORD= ${{ db.secrets.PASSWORD }} >> .db.env
-          echo USER= ${{ db.secrets.USER }} >> .db.env
-          echo DATABASE= ${{ db.secrets.DATABASE }} >> .db.env
+          echo PASSWORD= ${{ secrets.PASSWORD }} >> .db.env
+          echo USER= ${{ secrets.USER }} >> .db.env
+          echo DATABASE= ${{ secrets.DATABASE }} >> .db.env
       - name: Add the private SSH key to the ssh-agent
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock

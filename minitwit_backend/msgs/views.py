@@ -41,12 +41,32 @@ class MessagesListCreateView(ListCreateAPIView):
             self.queryset = Message.objects.all()
 
         if('no' in self.request.GET):    
-            # self.pagination_class.default_limit = self.request.query_params['no']
             limit = int(self.request.GET['no'])
             return self.queryset.order_by('-pub_date')[:limit]
         else:
             self.paginate_by = None 
             return self.queryset.order_by('-pub_date')
+
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        filtered_messages = []
+
+        for message in serializer.data:
+            filtered_msg = {}
+            filtered_msg["content"] = message["text"]
+            filtered_msg["pub_date"] = message["pub_date"]
+            filtered_msg["user"] = User.objects.get(pk=message["author"]).username
+            filtered_messages.append(filtered_msg)
+
+        return JsonResponse(filtered_messages, safe=False)
         
 
     def create(self, request, username, *args, **kwargs):
@@ -55,18 +75,20 @@ class MessagesListCreateView(ListCreateAPIView):
 
         data = request.data.copy()
         data['author'] = User.objects.get_by_natural_key(username).pk
+        if 'content' in data and not 'text' in data:
+            data['text'] = data['content']
+
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         instance = self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        # fields = serializer.get_fields()
-        responseData= { 
-            'text': instance.text,
-            'author': serializer.validated_data['author'].pk,
-            'pub_date': instance.pub_date,
-            'flagged': instance.flagged
+        
+        filtered_message = { 
+            'content': instance.text,
+            'user': serializer.validated_data['author'].username,
+            'pub_date': instance.pub_date.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
         }
-        return Response(status=status.HTTP_204_NO_CONTENT, headers=headers, data=responseData)
+        return Response(status=status.HTTP_204_NO_CONTENT, headers=headers, data=filtered_message)
 
     def perform_create(self, serializer):
         return serializer.save()

@@ -108,8 +108,8 @@ jobs:
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
-          scp  -o StrictHostKeyChecking=no -r ./.env ./docker-compose-deploy.yml root@$minitwititu.xyz:/app
-          ssh -o StrictHostKeyChecking=no root@$minitwititu.xyz << 'ENDSSH'
+          scp  -o StrictHostKeyChecking=no -r ./.env ./docker-compose-deploy.yml root@minitwititu.xyz:/app
+          ssh -o StrictHostKeyChecking=no root@minitwititu.xyz << 'ENDSSH'
             cd /app
             source .env
             docker login docker.pkg.github.com -u notaduck -p ${{ secrets.GUSER_SECRET }} 

@@ -7,9 +7,9 @@ on:
   #     - created
 
 env:
-  WEB: docker.pkg.github.com/$GITHUB_REPOSITORY/web
-  PROXY: docker.pkg.github.com/$GITHUB_REPOSITORY/proxy
-  API: docker.pkg.github.com/$GITHUB_REPOSITORY/api
+  WEB: docker.pkg.github.com/notaduck/devops_itu/web
+  PROXY: docker.pkg.github.com/notaduck/devops_itu/proxy
+  API: docker.pkg.github.com/notaduck/devops_itu/api
 
 jobs:
   build:

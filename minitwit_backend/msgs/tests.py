@@ -44,9 +44,8 @@ class GetMessagesTestCase(APITestCase):
 
     def compareMessageDictToModel(self, dictionary, modelObj):
         dt = datetime.datetime.strptime(dictionary['pub_date'] + "+0000", '%Y-%m-%dT%H:%M:%S.%fZ%z')
-        return dictionary['text'] == modelObj.text and \
-                dictionary['author'] == modelObj.author.id and \
-                dictionary['flagged'] == modelObj.flagged and \
+        return dictionary['content'] == modelObj.text and \
+                dictionary['user'] == modelObj.author.username and \
                 dt == modelObj.pub_date
 
 
@@ -143,7 +142,7 @@ class GetMessagesTestCase(APITestCase):
         url = reverse('add_message', args=['test0'])
         response_post = self.client.post(url, { 'text': 'this is another very cool test message' })
         # the response object returns a datetime object in the pub_date field. replace it with a string
-        response_post.data['pub_date'] = response_post.data['pub_date'].strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+        # response_post.data['pub_date'] = response_post.data['pub_date'].strftime('%Y-%m-%dT%H:%M:%S.%fZ')
         print(self.compareMessageDictToModel(response_post.data, Message.objects.latest('pub_date')))
         self.assertEqual(response_post.status_code, 204)
 

@@ -3,6 +3,5 @@ from social.views import FollowView
 
 
 urlpatterns = [
-	path('follow/', FollowView.as_view(), name='follow'),
-	path('unfollow/', UnfollowView.as_view(), name='unfollow')
+	path('fllws/<str:username>', FollowView.as_view(), name='follow')
 ]

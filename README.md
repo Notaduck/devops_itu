@@ -53,4 +53,34 @@ The database should be up and running algonside with pgadminer on port `localhos
 python manage.py runserver 127.0.0.1:8000
 ```
 
+## Deploy the project
+
+In order to deploy the project tree enviroment files has to be created with the following structure
+
+`.postgres.env`
+```
+POSTGRES_USER=........
+POSTGRES_PASSWORD=........
+```
+
+`.api.env`
+```
+SECRET_KEY=..................
+DB_NAME=........
+DB_USER=........
+DB_PASSWORD=........
+DB_HOST=..
+ALLOWED_HOSTS=127.0.0.1,localhost,api.minitwititu.dk
+```
+
+```
+SECRET_KEY=..................
+DB_NAME=........
+DB_USER=........
+DB_PASSWORD=........
+DB_HOST=..
+ALLOWED_HOSTS=127.0.0.1,localhost,minitwititu.dk
+```
+
+Next step is simply to run the `deploy.sh` script which will tear down any existing containers, then build and run the new ones.
 

@@ -31,6 +31,8 @@ ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS')
 if ALLOWED_HOSTS_ENV:
     ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(','))
 
+APPEND_SLASH = False
+
 
 # Application definition
 
@@ -41,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'users'
+    'users',
+    'msgs'
 ]
 
 MIDDLEWARE = [

@@ -11,24 +11,24 @@
 {% endblock %}
 {% block body %}
   <h2>{{ self.title }}</h2>
-  {% if active_user %}
+  {% if user %}
     {% if not public %}
       <div class=followstatus>
       {% if not profile_user %}
         This is you!
       {% elif followed %}
         You are currently following this user.
-        <a class=unfollow href="/unfollow_user/{{profile_user.username}}">Unfollow user</a>.
+        <a class=unfollow href="/unfollow/{{profile_user.username}}/">Unfollow user</a>.
       {% else %}
         You are not yet following this user.
-        <a class=follow href="/follow_user/{{profile_user.username}}">Follow user</a>.
+        <a class=follow href="/follow/{{profile_user.username}}/">Follow user</a>.
       {% endif %}
       </div>
     {% endif %}
     {% if public or not profile_user %}
       <div class=twitbox>
-        <h3>What's on your mind {{ active_user.username }}?</h3>
-        <form action="/add_message" method=post>
+        <h3>What's on your mind {{ user.username }}?</h3>
+        <form action="/add_message/" method=post>
         {% csrf_token %}
           <p><input type=text name=text size=60><input type=submit value="Share">
         </form>
@@ -39,7 +39,7 @@
     <ul class=messages>
     {% for post in posts %}
       <li>{{ post.author_id.email|gravatar }}<p>
-        <strong><a href="/timeline/{{post.author_id.username}}">{{ post.author_id.username }}</a></strong>
+        <strong><a href="/timeline/{{post.author.username}}">{{ post.author.username }}</a></strong>
         {{ post.text }}
         <small>&mdash;{{ post.pub_date }}</small>
     {% endfor %}

@@ -13,7 +13,7 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"] 
       interval: 5s
       timeout: 5s
       retries: 5
@@ -22,6 +22,7 @@ services:
     restart: always
 
   api:
+    image: docker.pkg.github.com/notaduck/devops_itu/api
     build:
       context: ./minitwit_backend
     ports:
@@ -35,6 +36,7 @@ services:
     restart: always
 
   web:
+    image: docker.pkg.github.com/notaduck/devops_itu/web
     build:
       context: ./minitwit_frontend
     ports:
@@ -50,6 +52,7 @@ services:
     restart: always
   
   proxy:
+    image: docker.pkg.github.com/notaduck/devops_itu/proxy
     build:
       context: ./nginx
     volumes:

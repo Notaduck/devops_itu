@@ -95,23 +95,44 @@ jobs:
           echo PASSWORD= ${{ secrets.PASSWORD }} >> .db.env
           echo USER= ${{ secrets.USER }} >> .db.env
           echo DATABASE= ${{ secrets.DATABASE }} >> .db.env
-      - name: Add the private SSH key to the ssh-agent
-        uses: appleboy/ssh-action@master
-        with:
-          host: minitwititu.xyz
-          username: root
-          key: ${{ secrets.PRIVATE_KEY }}
-          port: 22
-          script: |
-            scp  -o StrictHostKeyChecking=no -r ./.env ./docker-compose-deploy.yml root@minitwititu.xyz:/app
-            ssh -o StrictHostKeyChecking=no root@minitwititu.xyz << 'ENDSSH'
-              cd /app
-              source .env
-              docker login docker.pkg.github.com -u notaduck -p ${{ secrets.GUSER_SECRET }} 
-              docker pull $WEB
-              docker pull $API
-              docker pull $PROXY
-              docker-compose -f docker-compose-deploy.yml up -d
+          - name: Add the private SSH key to the ssh-agent
+            env:
+              SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+            run: |
+              mkdir -p ~/.ssh
+              ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+              ssh-keyscan github.com >> ~/.ssh/known_hosts
+              ssh-add - <<< "${{ secrets.PRIVATE_KEY }}"
+          - name: Build and deploy images on DigitalOcean
+            env:
+              SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+            run: |
+              scp  -o StrictHostKeyChecking=no -r ./.env ./docker-compose.prod.yml root@${{ secrets.DIGITAL_OCEAN_IP_ADDRESS }}:/app
+              ssh -o StrictHostKeyChecking=no root@${{ secrets.DIGITAL_OCEAN_IP_ADDRESS }} << 'ENDSSH'
+                cd /app
+                source .env
+                docker login docker.pkg.github.com -u testdrivenio -p ce70f1d4a3a906ce8ac24caa6870fd29f2273d30
+                docker pull $WEB_IMAGE
+                docker pull $NGINX_IMAGE
+                docker-compose -f docker-compose.prod.yml up -d
+            ENDSSH
+      # - name: Add the private SSH key to the ssh-agent
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: minitwititu.xyz
+      #     username: root
+      #     key: ${{ secrets.PRIVATE_KEY }}
+      #     port: 22
+      #     script: |
+      #       scp  -o StrictHostKeyChecking=no -r ./.env ./docker-compose-deploy.yml root@minitwititu.xyz:/app
+      #       ssh -o StrictHostKeyChecking=no root@minitwititu.xyz << 'ENDSSH'
+      #         cd /app
+      #         source .env
+      #         docker login docker.pkg.github.com -u notaduck -p ${{ secrets.GUSER_SECRET }} 
+      #         docker pull $WEB
+      #         docker pull $API
+      #         docker pull $PROXY
+      #         docker-compose -f docker-compose-deploy.yml up -d
       # - name: Add the private SSH key to the ssh-agent
       #   env:
       #     SSH_AUTH_SOCK: /tmp/ssh_agent.sock

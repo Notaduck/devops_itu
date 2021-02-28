@@ -57,7 +57,7 @@ class GetMessagesTestCase(APITestCase):
 
         # check the number of messages received
         data = json.loads(response.content)
-        self.assertEqual(len(Message.objects.all()), len(data))
+        self.assertEqual(Message.objects.all().count(), len(data))
 
 
     def test_count_messages_per_user(self):
@@ -69,7 +69,7 @@ class GetMessagesTestCase(APITestCase):
         # check the number of messages received
         data = json.loads(response.content)
         user = User.objects.get(username='test0')
-        self.assertEqual(len(Message.objects.filter(author=user)), len(data))
+        self.assertEqual(Message.objects.filter(author=user).count(), len(data))
         
 
     def test_messages_per_invalid_user(self):
@@ -133,7 +133,7 @@ class GetMessagesTestCase(APITestCase):
         self.assertEqual(response.status_code, 204)
 
         # check that the message count has increased
-        self.assertEqual(oldMessageCount + 1, len(Message.objects.all()))
+        self.assertEqual(oldMessageCount + 1, Message.objects.all().count())
 
 
     def test_add_message_and_get_message(self):
@@ -141,9 +141,6 @@ class GetMessagesTestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Basic {}'.format(base64.b64encode('test0:test'.encode('ascii')).decode()))
         url = reverse('add_message', args=['test0'])
         response_post = self.client.post(url, { 'text': 'this is another very cool test message' })
-        # the response object returns a datetime object in the pub_date field. replace it with a string
-        # response_post.data['pub_date'] = response_post.data['pub_date'].strftime('%Y-%m-%dT%H:%M:%S.%fZ')
-        print(self.compareMessageDictToModel(response_post.data, Message.objects.latest('pub_date')))
         self.assertEqual(response_post.status_code, 204)
 
         # query the server again for the posted message

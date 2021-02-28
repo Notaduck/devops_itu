@@ -42,12 +42,7 @@ jobs:
           echo PASSWORD= ${{ secrets.PASSWORD }} >> .db.env
           echo USER= ${{ secrets.USER }} >> .db.env
           echo DATABASE= ${{ secrets.DATABASE }} >> .db.env
-
-      #- name: Set environment variables
-      #  run: |
-      #    echo ::set-env name=WEB::${{ env.WEB }}
-      #    echo ::set-env name=PROXY::${{ env.PROXY }}
-      #    echo ::set-env name=DB::${{ env.DB }}
+          
       - name: Log in to GitHub Packages
         run: echo ${GITHUB_TOKEN} | docker login -u ${GITHUB_ACTOR} --password-stdin docker.pkg.github.com
         env:
@@ -117,46 +112,4 @@ jobs:
                 docker pull $PROXY
                 docker-compose -f docker-compose-deploy.yml up -d
               ENDSSH
-      # - name: Add the private SSH key to the ssh-agent
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: minitwititu.xyz
-      #     username: root
-      #     key: ${{ secrets.PRIVATE_KEY }}
-      #     port: 22
-      #     script: |
-      #       scp  -o StrictHostKeyChecking=no -r ./.env ./docker-compose-deploy.yml root@minitwititu.xyz:/app
-      #       ssh -o StrictHostKeyChecking=no root@minitwititu.xyz << 'ENDSSH'
-      #         cd /app
-      #         source .env
-      #         docker login docker.pkg.github.com -u notaduck -p ${{ secrets.GUSER_SECRET }} 
-      #         docker pull $WEB
-      #         docker pull $API
-      #         docker pull $PROXY
-      #         docker-compose -f docker-compose-deploy.yml up -d
-      # - name: Add the private SSH key to the ssh-agent
-      #   env:
-      #     SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-      #   run: |
-      #     mkdir -p ~/.ssh
-      #     echo ${{ secrets.PRIVATE_KEY }} >> ~/.ssh/id_rsa
-      #     echo ${{ secrets.PUBLIC_KEY }} >> ~/.ssh/id_rsa.pub
-      #     cat ~/.ssh/id_rsa
-      #     chmod 600 ~/.ssh/id_rsa
-      #     ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-      #     ssh-keyscan minitwititu.xyz >> ~/.ssh/known_hosts
-      # - name: Build and deploy images on DigitalOcean
-      #   env:
-      #     SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-        # run: |
-        #   scp  -o StrictHostKeyChecking=no -r ./.env ./docker-compose-deploy.yml root@minitwititu.xyz:/app
-        #   ssh -o StrictHostKeyChecking=no root@minitwititu.xyz << 'ENDSSH'
-        #     cd /app
-        #     source .env
-        #     docker login docker.pkg.github.com -u notaduck -p ${{ secrets.GUSER_SECRET }} 
-        #     docker pull $WEB
-        #     docker pull $API
-        #     docker pull $PROXY
-        #     docker-compose -f docker-compose-deploy.yml up -d
-        #   ENDSSH
-
+     

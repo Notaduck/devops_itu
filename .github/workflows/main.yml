@@ -116,7 +116,6 @@ jobs:
                 docker pull $API
                 docker pull $PROXY
                 docker-compose -f docker-compose-deploy.yml up -d
-            # ENDSSH
       # - name: Add the private SSH key to the ssh-agent
       #   uses: appleboy/ssh-action@master
       #   with:

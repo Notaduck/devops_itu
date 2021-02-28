@@ -40,7 +40,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - static_data:/vol/static
+      - static_data:/vol/web
     depends_on:
       - db
     networks:

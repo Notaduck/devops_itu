@@ -114,8 +114,9 @@ jobs:
                 docker login docker.pkg.github.com -u notaduck -p ${{ secrets.GUSER_SECRET }}
                 docker pull $WEB
                 docker pull $API
+                docker pull $PROXY
                 docker-compose -f docker-compose-deploy.yml up -d
-            ENDSSH
+            # ENDSSH
       # - name: Add the private SSH key to the ssh-agent
       #   uses: appleboy/ssh-action@master
       #   with:

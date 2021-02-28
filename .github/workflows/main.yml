@@ -100,10 +100,12 @@ jobs:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
           mkdir -p ~/.ssh
+          echo ${{ secrets.PRIVATE_KEY }} >> ~/.ssh/id_rsa
+          echo ${{ secrets.PUBLIC_KEY }} >> ~/.ssh/id_rsa.pub
+          chmod 600 ~/.ssh/id_rsa
           ssh-agent -a $SSH_AUTH_SOCK > /dev/null
           ssh-keyscan minitwititu.xyz >> ~/.ssh/known_hosts
           # ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa  
-          ssh-add ${{ secrets.PRIVATE_KEY }}
       - name: Build and deploy images on DigitalOcean
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock

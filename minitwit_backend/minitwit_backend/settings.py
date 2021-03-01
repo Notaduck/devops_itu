@@ -39,14 +39,13 @@ APPEND_SLASH = False
 INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    # 'django.contrib.sessions', # should not be enabled when basic authentication is done
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
     'users',
     'social',
-    'msgs'
-
+    'msgs',
+    'latest'
 ]
 
 MIDDLEWARE = [
@@ -140,4 +139,9 @@ REST_FRAMEWORK = {
 	'DEFAULT_AUTHENTICATION_CLASSES': [
 		'rest_framework.authentication.BasicAuthentication'
 	],
+	'DEFAULT_FILTER_BACKENDS': [
+		'latest.filters.LatestFilterBackend'
+	]
 }
+
+LATEST = 0

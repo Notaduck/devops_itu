@@ -27,8 +27,8 @@ jobs:
     - echo "LOGIN"
     - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
     - echo "BUILD"
-    - docker build -t $DOCKER_USERNAME/web_image:latest . -f Dockerfile-web
-    - docker build -t $DOCKER_USERNAME/proxy_image:latest . -f Dockerfile-proxy
+    - docker build -t $DOCKER_USERNAME/web_image:latest . -f ./minitwit_frontend/Dockerfile
+    - docker build -t $DOCKER_USERNAME/proxy_image:latest . -f ./minitwit_frontend/Dockerfileproxy
     - docker build -t $DOCKER_USERNAME/db_image:latest . -f Dockerfile-db
     - echo "PUSH"
     - docker push $DOCKER_USERNAME/web_image:latest

@@ -35,8 +35,6 @@ jobs:
     install: skip
     script: |
       ssh -o "StrictHostKeyChecking no" ${MT_USER}@${MT_SERVER} \
-      ls -al /root &&  \
-      source /root/.profile && \
       cd /vagrant && \
       docker-compose pull && \
       docker-compose up -d && \

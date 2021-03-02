@@ -9,8 +9,8 @@ EXPOSE 8000
 
 RUN pip install -r requirements.txt
 
-COPY . /minitwit_frontend/
-COPY ./scripts/entrypoint.sh /entrypoint.sh
+COPY ./minitwit_frontend /minitwit_frontend/
+COPY ./minitwit_frontend/scripts/entrypoint.sh /entrypoint.sh
 
 RUN chmod +x ./entrypoint.sh
 

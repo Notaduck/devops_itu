@@ -25,11 +25,11 @@ jobs:
     - echo "LOGIN"
     - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
     - echo "BUILD"
-    - docker build -t $DOCKER_USERNAME/web_image:latest . -f ./minitwit_frontend/Dockerfile
-    - docker build -t $DOCKER_USERNAME/proxy_image:latest . -f ./minitwit_frontend/Dockerfile
+    - docker build -t $DOCKER_USERNAME/minitwit_web:latest . -f ./minitwit_frontend/Dockerfile
+    - docker build -t $DOCKER_USERNAME/minitwit_proxy:latest . -f ./nginx/Dockerfile
     - echo "PUSH"
-    - docker push $DOCKER_USERNAME/web_image:latest
-    - docker push $DOCKER_USERNAME/proxy_image:latest
+    - docker push $DOCKER_USERNAME/minitwit_web:latest
+    - docker push $DOCKER_USERNAME/minitwit_proxy:latest
   - stage: deploy
     name: deploy new version
     install: skip

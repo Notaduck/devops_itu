@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
     docker rmi hello-world
 
     echo -e "\nOpening port for minitwit ...\n"
-    ufw allow 5000
+    ufw allow 80
 
     echo -e "\nOpening port for minitwit ...\n"
     echo ". $HOME/.bashrc" >> $HOME/.bash_profile
@@ -38,7 +38,7 @@ Vagrant.configure("2") do |config|
     source $HOME/.bash_profile
 
     echo -e "\nVagrant setup done ..."
-    echo -e "minitwit will later be accessible at http://$(hostname -I | awk '{print $1}'):5000"
+    echo -e "minitwit will later be accessible at http://$(hostname -I | awk '{print $1}'):80"
     echo -e "The mysql database needs a minute to initialize, if the landing page is stack-trace ..."
     SHELL
   end

@@ -1,8 +1,14 @@
 version: "3.5"
 
+
+networks:
+  main:
+    name: minitwit-network
+
 services:
   db:
     image: postgres
+    container_name: minitwit_db
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
@@ -20,12 +26,14 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - minitwit-network
+      - main
     restart: always
 
   api:
     build:
       context: ./minitwit_backend
+    container_name: minitwit_api
+
     # command: python manage.py runserver 127.0.0.1:8080
     # volumes:
     #   - .:/code
@@ -34,7 +42,7 @@ services:
     depends_on:
       - db
     networks:
-      - minitwit-network
+      - main
     env_file:
       - .api.env
     restart: always
@@ -42,6 +50,7 @@ services:
   web:
     build:
       context: ./minitwit_frontend
+    container_name: minitwit_web
     # volumes:
     #   - .:/code
     ports:
@@ -51,7 +60,7 @@ services:
     depends_on:
       - db
     networks:
-      - minitwit-network
+      - main
     env_file:
       - .web.env
     # environment: 
@@ -66,10 +75,12 @@ services:
   proxy:
     build:
       context: ./nginx
+    container_name: minitwit_web
+
     volumes:
       - static_data:/vol/static
     networks:
-      - minitwit-network
+      - main
     ports:
       - "80:80"
     depends_on:
@@ -78,9 +89,9 @@ services:
     restart: always
 
 
-networks:
-  minitwit:
-    driver: bridge
+# networks:
+#   minitwit:
+#     driver: bridge
 
 volumes:
   postgres:

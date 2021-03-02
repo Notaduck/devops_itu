@@ -4,7 +4,7 @@ ENV PYTHONUNBUFFERED 1
 RUN mkdir /minitwit_frontend
 WORKDIR /minitwit_frontend
 
-COPY requirements.txt /minitwit_frontend/
+COPY ./requirements.txt /minitwit_frontend/
 EXPOSE 8000
 
 RUN pip install -r requirements.txt

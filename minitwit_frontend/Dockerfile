@@ -7,7 +7,10 @@ WORKDIR /minitwit_frontend
 COPY ./minitwit_frontend/requirements.txt /minitwit_frontend/
 EXPOSE 8000
 
-RUN pip install -r requirements.txt
+RUN pwd
+RUN ls -al 
+RUN ls -al ./minitwit_frontend
+RUN pip install -r /requirements.txt
 
 COPY ./minitwit_frontend /minitwit_frontend/
 COPY ./minitwit_frontend/scripts/entrypoint.sh /entrypoint.sh

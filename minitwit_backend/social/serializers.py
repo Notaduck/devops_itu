@@ -8,12 +8,12 @@ class FollowerSerializer(Serializer):
 
     class Meta:
         model = Follower
-        fields = ('whom')
+        fields = ('who', 'whom')
     
     def create(self, validated_data): 
         follow = Follower(
-            who = User.objects.get_by_natural_key(self.context.pop('username')),
-            whom = User.objects.get_by_natural_key(validated_data.pop('whom'))
+            who = self.context['data']['who'],
+            whom = self.context['data']['whom']
         )
         follow.save()
         return follow

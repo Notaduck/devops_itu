@@ -85,11 +85,11 @@ WSGI_APPLICATION = 'minitwit_backend.wsgi.application'
 DATABASES = {
     'default': {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': os.getenv('MINITWIT_DB_NAME') or 'minitwit',
-	'USER': os.getenv('MINITWIT_DB_USER') or 'postgres',
-	'PASSWORD': os.getenv('MINITWIT_DB_PASSWORD') or 'changeme',
-	'HOST': os.getenv('MINITWIT_DB_HOST') or '127.0.0.1',
-	'PORT': os.getenv('MINITWIT_DB_PORT') or '5432'
+    'NAME': os.getenv('DB_NAME') or 'minitwit',
+	'USER': os.getenv('DB_USER') or 'postgres',
+	'PASSWORD': os.getenv('DB_PASSWORD') or 'changeme',
+	'HOST': os.getenv('DB_HOST') or '127.0.0.1',
+	'PORT': os.getenv('DB_PORT') or '5432'
     }
 }
 

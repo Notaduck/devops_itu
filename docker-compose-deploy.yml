@@ -1,6 +1,5 @@
 version: "3.5"
 
-
 networks:
   main:
     name: minitwit-network
@@ -33,10 +32,6 @@ services:
     build:
       context: ./minitwit_backend
     container_name: minitwit_api
-
-    # command: python manage.py runserver 127.0.0.1:8080
-    # volumes:
-    #   - .:/code
     ports:
       - "9000:9000"
     depends_on:
@@ -51,8 +46,6 @@ services:
     build:
       context: ./minitwit_frontend
     container_name: minitwit_web
-    # volumes:
-    #   - .:/code
     ports:
       - "8000:8000"
     volumes:
@@ -63,13 +56,6 @@ services:
       - main
     env_file:
       - .web.env
-    # environment: 
-    #   - SECRET_KEY=thisshouldbesecret
-    #   - DB_NAME=minitwit
-    #   - DB_USER=postgres
-    #   - DB_PASSWORD=changeme
-    #   - DB_HOST=db
-    #   - ALLOWED_HOSTS=127.0.0.1,localhost,minitwititu.dk
     restart: always
   
   proxy:
@@ -87,11 +73,6 @@ services:
       - web
       - api
     restart: always
-
-
-# networks:
-#   minitwit:
-#     driver: bridge
 
 volumes:
   postgres:

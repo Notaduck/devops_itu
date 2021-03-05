@@ -7,7 +7,7 @@ RUN echo '-------------------'
 RUN pwd
 RUN ls
 RUN echo '-------------------'
-COPY ./minitwit_frontend/requirements.txt ./
+COPY ./minitwit_frontend/requirements.txt ./minitwit_frontend/
 EXPOSE 8000
 
 RUN pwd

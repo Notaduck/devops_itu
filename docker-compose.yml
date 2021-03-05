@@ -13,6 +13,9 @@ services:
       POSTGRES_USER: postgres 
       POSTGRES_PASSWORD: changeme 
       POSTGRES_DATABASE: minitwit 
+    volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - postgres:/data/postgres
     networks:
       - main
     ports:
@@ -33,6 +36,8 @@ services:
       - main
     ports:
       - '8000:8000'
+    volumes:
+      - static_data:/vol/static
     restart: always
 
   proxy:
@@ -44,9 +49,14 @@ services:
       - main
     ports:
       - '80:8080'
+    volumes:
+      - static_data:/vol/static
     restart: always
 
 
+volumes:
+  postgres:
+  static_data:
   # minitwitimage:
   #   image: ${DOCKER_USERNAME}/minitwitimage
   #   container_name: minitwit

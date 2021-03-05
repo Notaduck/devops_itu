@@ -21,7 +21,7 @@ RUN ls
 RUN ls ./scripts
 RUN echo '-------------------'
 
-RUN chmod +x ./scripts/entrypoint.sh
+RUN chmod +x /scripts/entrypoint.sh
 
 RUN mkdir -p /vol/web/media
 RUN mkdir -p /vol/web/static

@@ -14,7 +14,7 @@ EXPOSE 8000
 RUN pwd
 RUN ls -al 
 # RUN ls -al ./minitwit_frontend
-RUN pip install -r ./minitwit_frontend/requirements.txt
+RUN pip install -r requirements.txt
 
 COPY ./minitwit_frontend /minitwit_frontend/
 COPY ./minitwit_frontend/scripts/entrypoint.sh /entrypoint.sh

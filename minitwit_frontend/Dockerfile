@@ -19,7 +19,8 @@ RUN pip install -r requirements.txt
 COPY ./minitwit_frontend /minitwit_frontend/
 COPY ./minitwit_frontend/scripts/entrypoint.sh /entrypoint.sh
 
-RUN chmod +x ./scripts/entrypoint.sh
+RUN copy ./scripts/entrypoint.sh .
+RUN chmod +x ./entrypoint.sh
 
 RUN mkdir -p /vol/web/media
 RUN mkdir -p /vol/web/static
@@ -29,4 +30,4 @@ RUN chown -R user:user /vol
 RUN chmod -R 755 /vol/web
 USER user
 
-CMD ["/scripts/entrypoint.sh"]
+CMD ["entrypoint.sh"]

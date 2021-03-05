@@ -6,8 +6,13 @@ networks:
 
 services:
   db:
-    image: ${DOCKER_USERNAME}/minitwit_db
+    # image: ${DOCKER_USERNAME}/minitwit_db
+    image: postgres
     container_name: minitwit_db
+    environment:
+      POSTGRES_USER: postgres 
+      POSTGRES_PASSWORD: changeme 
+      POSTGRES_DATABASE: minitwit 
     networks:
       - main
     ports:

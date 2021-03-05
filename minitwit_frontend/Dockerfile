@@ -12,13 +12,15 @@ RUN pip install -r requirements.txt
 
 COPY ./minitwit_frontend /minitwit_frontend/
 
+
+COPY ./minitwit_frontend/scripts/entrypoint.sh /scripts/entrypoint.sh
+
 RUN echo '-------------------'
 RUN pwd
 RUN ls
 RUN echo '-------------------'
 
-COPY ./minitwit_frontend/scripts/entrypoint.sh /scripts/entrypoint.sh
-
+RUN sh ./scripts/entrypoint.sh
 RUN chmod +x ./scripts/entrypoint.sh
 
 RUN mkdir -p /vol/web/media

@@ -6,8 +6,16 @@ networks:
 
 services:
   db:
-    image: ${DOCKER_USERNAME}/minitwit_db
+    # image: ${DOCKER_USERNAME}/minitwit_db
+    image: postgres
     container_name: minitwit_db
+    environment:
+      POSTGRES_USER: postgres 
+      POSTGRES_PASSWORD: changeme 
+      POSTGRES_DATABASE: minitwit 
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres:/data/postgres
     networks:
       - main
     ports:
@@ -28,6 +36,8 @@ services:
       - main
     ports:
       - '8000:8000'
+    volumes:
+      - static_data:/vol/static
     restart: always
 
   proxy:
@@ -39,9 +49,14 @@ services:
       - main
     ports:
       - '80:8080'
+    volumes:
+      - static_data:/vol/static
     restart: always
 
 
+volumes:
+  postgres:
+  static_data:
   # minitwitimage:
   #   image: ${DOCKER_USERNAME}/minitwitimage
   #   container_name: minitwit

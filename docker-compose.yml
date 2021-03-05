@@ -14,7 +14,7 @@ services:
       POSTGRES_PASSWORD: changeme 
       POSTGRES_DATABASE: minitwit 
     volumes:
-      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - postgres:/data/postgres
     networks:
       - main

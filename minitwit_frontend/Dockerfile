@@ -3,7 +3,10 @@ ENV PYTHONUNBUFFERED 1
 
 RUN mkdir /minitwit_frontend
 WORKDIR /minitwit_frontend
-
+RUN echo '-------------------'
+RUN pwd
+RUN ls
+RUN echo '-------------------'
 COPY ./minitwit_frontend/requirements.txt /minitwit_frontend/
 EXPOSE 8000
 

@@ -25,7 +25,7 @@ jobs:
     - echo "LOGIN"
     - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
     - echo "BUILD"
-    - docker build --env-file=.web.env -t $DOCKER_USERNAME/minitwit_web:latest . -f ./minitwit_frontend/Dockerfile
+    - docker build -t $DOCKER_USERNAME/minitwit_web:latest . -f ./minitwit_frontend/Dockerfile
     - docker build -t $DOCKER_USERNAME/minitwit_proxy:latest . -f ./nginx/Dockerfile
     - echo "PUSH"
     - docker push $DOCKER_USERNAME/minitwit_web:latest

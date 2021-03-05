@@ -11,16 +11,14 @@ EXPOSE 8000
 RUN pip install -r requirements.txt
 
 COPY ./minitwit_frontend /minitwit_frontend/
-COPY ./minitwit_frontend/scripts/entrypoint.sh /entrypoint.sh
-
-
 
 RUN echo '-------------------'
 RUN pwd
 RUN ls
 RUN echo '-------------------'
 
-RUN copy ./scripts/entrypoint.sh
+COPY ./minitwit_frontend/scripts/entrypoint.sh /scripts/entrypoint.sh
+
 RUN chmod +x ./scripts/entrypoint.sh
 
 RUN mkdir -p /vol/web/media

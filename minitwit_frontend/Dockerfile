@@ -20,7 +20,6 @@ RUN pwd
 RUN ls
 RUN echo '-------------------'
 
-RUN sh ./scripts/entrypoint.sh
 RUN chmod +x ./scripts/entrypoint.sh
 
 RUN mkdir -p /vol/web/media

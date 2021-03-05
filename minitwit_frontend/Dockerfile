@@ -15,12 +15,6 @@ COPY ./minitwit_frontend /minitwit_frontend/
 
 COPY ./minitwit_frontend/scripts/entrypoint.sh /scripts/entrypoint.sh
 
-RUN echo '-------------------'
-RUN pwd
-RUN ls
-RUN ls ./scripts
-RUN echo '-------------------'
-
 RUN chmod +x /scripts/entrypoint.sh
 
 RUN mkdir -p /vol/web/media

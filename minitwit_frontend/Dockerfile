@@ -18,6 +18,7 @@ COPY ./minitwit_frontend/scripts/entrypoint.sh /scripts/entrypoint.sh
 RUN echo '-------------------'
 RUN pwd
 RUN ls
+RUN ls ./scripts
 RUN echo '-------------------'
 
 RUN chmod +x ./scripts/entrypoint.sh

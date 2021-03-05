@@ -83,8 +83,8 @@ WSGI_APPLICATION = 'minitwit.wsgi.application'
 
 DATABASES = {
     'default': {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': os.getenv('POSTGRES_DATABASE') or 'minitwit',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('POSTGRES_DB') or 'minitwit',
 	'USER': os.getenv('POSTGRES_USER') or 'postgres',
 	'PASSWORD': os.getenv('POSTGRES_PASSWORD') or 'changeme',
 	'HOST': os.getenv('POSTGRES_HOST') or '127.0.0.1',

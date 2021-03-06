@@ -59,7 +59,8 @@ services:
     image: ${DOCKER_USERNAME}/minitwit_proxy
     container_name: minitwit_proxy
     depends_on:
-      - web, api
+      - web
+      - api
     networks:
       - main
     ports:

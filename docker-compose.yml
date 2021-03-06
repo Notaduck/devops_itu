@@ -40,11 +40,23 @@ services:
       - static_data:/vol/static
     restart: always
 
+  api:
+    image: ${DOCKER_USERNAME}/minitwit_api
+    container_name: minitwit_api
+    depends_on:
+      - db
+    networks:
+      - main
+    ports:
+      - '9000:9000'
+    restart: always
+
   proxy:
     image: ${DOCKER_USERNAME}/minitwit_proxy
     container_name: minitwit_proxy
     depends_on:
       - web
+      - api
     networks:
       - main
     ports:

@@ -15,7 +15,7 @@ Vagrant.configure("2") do |config|
       provider.token = ENV["DIGITAL_OCEAN_TOKEN"]
       provider.image = 'docker-18-04'
       provider.region = 'fra1'
-      provider.size = 's-1vcpu-1gb'
+      provider.size = 's-2vcpu-2gb'
       provider.privatenetworking = true
     end
 
@@ -33,13 +33,12 @@ Vagrant.configure("2") do |config|
     echo ". $HOME/.bashrc" >> $HOME/.bash_profile
 
     echo -e "\nConfiguring credentials as environment variables...\n"
-    echo "export DOCKER_USERNAME='<your_dockerhub_id>'" >> $HOME/.bash_profile
-    echo "export DOCKER_PASSWORD='<your_dockerhub_pwd>'" >> $HOME/.bash_profile
+    echo "export DOCKER_USERNAME='xxxxxxx'" >> $HOME/.bash_profile
+    echo "export DOCKER_PASSWORD='xxxxxxxxxxx!'" >> $HOME/.bash_profile
     source $HOME/.bash_profile
 
     echo -e "\nVagrant setup done ..."
     echo -e "minitwit will later be accessible at http://$(hostname -I | awk '{print $1}'):80"
-    echo -e "The mysql database needs a minute to initialize, if the landing page is stack-trace ..."
     SHELL
   end
 end

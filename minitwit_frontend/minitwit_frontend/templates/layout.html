@@ -1,0 +1,24 @@
+{% load static %}
+<!doctype html>
+<title>{% block title %}Welcome{% endblock %} | MiniTwit</title>
+<link rel=stylesheet type=text/css href="{% static 'minitwit/style.css' %}">
+<div class=page>
+  <h1>MiniTwit</h1>
+  <div class=navigation>
+  {% if user %}
+    <a href="/timeline/">my timeline</a> |
+    <a href="/">public timeline</a> |
+    <a href="/logout">sign out</a>
+  {% else %}
+    <a href="/">public timeline</a> |
+    <a href="/register">sign up</a> |
+    <a href="/login">sign in</a>
+  {% endif %}
+  </div>
+  <div class=body>
+  {% block body %}{% endblock %}
+  </div>
+  <div class=footer>
+    MiniTwit &mdash; A Django Application
+  </div>
+</div>

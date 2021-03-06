@@ -24,11 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY') or 'vk61e&%q!ggpvhg=nljgy+vg8-tq+5#z%4pesej(wf0^vz%7au'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-<<<<<<< HEAD
 DEBUG = bool(int(os.getenv('DEBUG', 0)))
-=======
-DEBUG = bool(os.getenv('DEBUG', 0))
->>>>>>> 74751206751d57164b7e210d254d36ffb8964763
 
 ALLOWED_HOSTS = ['']
 ALLOWED_HOSTS_ENV = os.environ.get('API_ALLOWED_HOSTS')

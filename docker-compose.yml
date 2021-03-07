@@ -1,5 +1,3 @@
-version: '3.5'
-
 networks:
   main:
     name: minitwit-network
@@ -31,7 +29,8 @@ services:
     image: ${DOCKER_USERNAME}/minitwit_web
     container_name: minitwit_web
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - main
     ports:
@@ -44,7 +43,8 @@ services:
     image: ${DOCKER_USERNAME}/minitwit_api
     container_name: minitwit_api
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - main
     ports:

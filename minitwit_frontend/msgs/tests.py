@@ -1,7 +1,9 @@
 import json
 import datetime
+from django.utils import timezone
 from django.test import TestCase, Client
 from django.urls import reverse
+from django.template.loader import render_to_string
 
 from users.tests import create_user, login_user
 from users.models import User
@@ -52,3 +54,34 @@ class GetMessagesTestCase(TestCase):
 		self.assertEqual(response.status_code, 200)
 		for msg in self.messages:
 			self.assertContains(response, msg.text, count=1)
+
+	def test_messages_order_public(self):
+		url = reverse('public_timeline')
+		response = self.client.get(url)
+		date = timezone.now()
+		for msg in response.context['posts']:
+			self.assertTrue(msg.pub_date < date)
+			date = msg.pub_date
+
+	def test_messages_order_private_including_follow(self):
+		#Login
+		url = reverse('login')
+		data = {
+			'username': 'test0',
+			'password': 'test'
+		}
+		response = self.client.post(url, data=data)
+
+		#Follow
+		response = self.client.get('/follow/test1/')
+
+		#Test Timeline Order
+		url = reverse('personal_timeline')
+		response = self.client.get(url)
+		date = timezone.now()
+		for msg in response.context['posts']:
+			self.assertTrue(msg.pub_date < date)
+			date = msg.pub_date
+
+	def test_add_message_unauthenticated(self):
+		pass

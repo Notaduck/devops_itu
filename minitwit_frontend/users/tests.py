@@ -104,3 +104,46 @@ class UserAuthenticationTestCase(TestCase):
 		response = self.client.get(url)
 		self.assertEqual(response.status_code, 302)
 		self.assertEqual(response.url, reverse('personal_timeline').rstrip('/'))
+
+
+	def test_nav_bar_logged_in(self):
+		html1 = '<a href="/timeline/">my timeline</a>'
+		html2 = '<a href="/">public timeline</a>'
+		html3 = '<a href="/logout">sign out</a>'
+
+		html4 = '<a href="/register">sign up</a>'
+		html5 = '<a href="/login">sign in</a>'
+		
+		url = reverse('login')
+		data = {
+			'username': 'test',
+			'password': 'test'
+		}
+		response = self.client.post(url, data=data)
+
+		url = reverse('public_timeline')
+		response = self.client.get(url)
+		
+		self.assertContains(response, html1)
+		self.assertContains(response, html2)
+		self.assertContains(response, html3)
+		self.assertNotContains(response, html4)
+		self.assertNotContains(response, html5)
+
+
+	def test_nav_bar_without_login(self):
+		html1 = '<a href="/">public timeline</a>'
+		html2 = '<a href="/register">sign up</a>'
+		html3 = '<a href="/login">sign in</a>'
+
+		html4 = '<a href="/timeline/">my timeline</a>'
+		html5 = '<a href="/logout">sign out</a>'
+		
+		url = reverse('public_timeline')
+		response = self.client.get(url)
+		
+		self.assertContains(response, html1)
+		self.assertContains(response, html2)
+		self.assertContains(response, html3)
+		self.assertNotContains(response, html4)
+		self.assertNotContains(response, html5)

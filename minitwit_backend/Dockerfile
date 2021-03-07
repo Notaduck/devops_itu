@@ -11,7 +11,7 @@ RUN pip install -r requirements.txt
 
 COPY ./minitwit_backend /minitwit_backend/
 
-COPY ./minitwit_frontend/scripts/entrypoint.sh /scripts/entrypoint.sh
+COPY ./minitwit_backend/scripts/entrypoint.sh /scripts/entrypoint.sh
 
 RUN chmod +x /scripts/entrypoint.sh
 

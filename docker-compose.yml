@@ -31,8 +31,7 @@ services:
     image: ${DOCKER_USERNAME}/minitwit_web
     container_name: minitwit_web
     depends_on:
-      db:
-        condition: service_healthy
+     - db
     networks:
       - main
     ports:
@@ -45,8 +44,7 @@ services:
     image: ${DOCKER_USERNAME}/minitwit_api
     container_name: minitwit_api
     depends_on:
-      db:
-        condition: service_healthy
+     - db
     networks:
       - main
     ports:

@@ -36,7 +36,4 @@ jobs:
     name: deploy new version
     install: skip
     script: |
-      ssh -o "StrictHostKeyChecking no" ${MT_USER}@${MT_SERVER} \
-      cd /vagrant && \
-      docker-compose pull && \
-      docker-compose up -d
+      ssh -o "StrictHostKeyChecking no" ${MT_USER}@${MT_SERVER} -c "cd /vagrant; docker-compose pull; docker-compose up -d"

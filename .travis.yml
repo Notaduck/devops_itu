@@ -13,12 +13,23 @@ before_install:
 - echo 'echo ${SSH_PASSPHRASE}' > /tmp/askpass && chmod +x /tmp/askpass
 - eval "$(ssh-agent -s)"
 - DISPLAY=":0.0" SSH_ASKPASS="/tmp/askpass" setsid ssh-add /tmp/git_deploy_key </dev/null
+
+deploy:
+  provider: releases
+  token:
+    secure: rvydoFDNZUvJxQ5yQrCCMANBPZhzfGIBUhvM8mXxFMWfJ0stz8N/+B2L4nEdY4xVSNA9gcKeYvuMt1AtIHSnCeWW3YYfhfmOmFJgiyWLtbLnWPcOmZzsXEGGOqW4wCF5L8H3GzpNbn46uOp6vw8uIgamVYAc+OZVe+bc+4htxKtA2fgDkUgFc/7eVtq7aWJlRcnKJeTtgkjJMaEskwDZiaXCuQnP+wTXjrysH16flQZgrRXmlrrogfz3i1pOO5CNjW53FhpVrKgV1EQcSKeVmusHe9VVP7U9D+zKkSBLpNuhIZKBim2yypQzgCJc1jZlRbV1lPnJVHT9r/j15GtbzUoiecIZg17SEvqMhX9P9sUD9HTs/15d7M69eXBrLXRL/mAPBJ9VyBpU/U0h9UxhLgSL/UNPob98RJayaajNxYaAX+afKs+vM46J9OBsmFlUuitauBSLa0EQeB3mOavuX3ogj/UkX+5GAkkn6LFCbRx4erYNJhlaQKXMV1nErhUyqumu/nWgaoNJXXb4H4VHUqxBB5N56HQtSPBxrgYnQL5KVMt2XiSx5j6SUbawwdHLPL27ECntZJaOkZCFuSAeDVh6OVVXv8RjBtgSusuc+Dnhu3DOTefEQn8b8fPkBlhqZkONMaojOybpL6PYgQgjtBKC1WO1F58oiQ1ZNZruXMM=
+  skip_cleanup: true
+  files: ./
+  on:
+    tags: true
+
 install:
 - docker --version
 stages:
 - docker_build
 - test
 - deploy
+- release
 jobs:
   include:
   - stage: docker_build
@@ -34,17 +45,25 @@ jobs:
     - docker push $DOCKER_USERNAME/minitwit_web:latest
     - docker push $DOCKER_USERNAME/minitwit_api:latest
     - docker push $DOCKER_USERNAME/minitwit_proxy:latest
-
   - stage: test
     name: run test(s)
     install: skip
     script: |
-       python -m pip install -r minitwit_backend/requirements.txt
-       python minitwit_frontend/manage.py test &&
-       python minitwit_backend/manage.py test
-
+      python -m pip install -r minitwit_backend/requirements.txt
+      python minitwit_frontend/manage.py test &&
+      python minitwit_backend/manage.py test
   - stage: deploy
     name: deploy new version
     install: skip
-    script: |
-      ssh -o "StrictHostKeyChecking no" ${MT_USER}@${MT_SERVER} "source /root/.bash_profile; cd /vagrant; docker-compose pull; docker-compose up -d"
+    script: 'ssh -o "StrictHostKeyChecking no" ${MT_USER}@${MT_SERVER} "source /root/.bash_profile;
+      cd /vagrant; docker-compose pull; docker-compose up -d"
+
+'
+  - stage: GitHub Release
+    script: echo "Deploying to GitHub releases ..."
+    deploy:
+      provider: releases
+      api_key: "$GITHUB_OAUTH_TOKEN"
+      skip_cleanup: true
+      on:
+        tags: true

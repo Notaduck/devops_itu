@@ -1,8 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, BaseUserManager
 from users.managers import UserManager
+from django_prometheus.models import ExportModelOperationsMixin
 
-class User(AbstractBaseUser, PermissionsMixin):
+
+class User(AbstractBaseUser, PermissionsMixin, ExportModelOperationsMixin("user")):
 	username = models.CharField(max_length=50, unique=True)
 	email = models.EmailField(unique=True)
 

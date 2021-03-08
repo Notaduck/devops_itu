@@ -19,6 +19,7 @@ stages:
 - deploy
 jobs:
   include:
+
   - stage: docker_build
     name: build and push docker
     script:
@@ -37,8 +38,10 @@ jobs:
     name: run test(s)
     install: skip
     script: |
+       python -m pip install -r minitwit_backend/requirements.txt
        python minitwit_frontend/manage.py test &&
        python minitwit_backend/manage.py test
+
   - stage: deploy
     name: deploy new version
     install: skip

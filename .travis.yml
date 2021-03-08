@@ -32,6 +32,13 @@ jobs:
     - docker push $DOCKER_USERNAME/minitwit_web:latest
     - docker push $DOCKER_USERNAME/minitwit_api:latest
     - docker push $DOCKER_USERNAME/minitwit_proxy:latest
+
+  - stage: test
+    name: run test(s)
+    install: skip
+    script: |
+       python minitwit_frontend/manage.py test &&
+       python minitwit_backend/manage.py test
   - stage: deploy
     name: deploy new version
     install: skip

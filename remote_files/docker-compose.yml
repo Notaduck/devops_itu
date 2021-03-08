@@ -10,7 +10,9 @@ services:
     image: postgres
     container_name: minitwit_db
     environment:
-      PGDATA: /data/postgres
+      POSTGRES_USER: postgres 
+      POSTGRES_PASSWORD: changeme 
+      POSTGRES_DATABASE: minitwit 
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - postgres:/data/postgres
@@ -18,8 +20,6 @@ services:
       - main
     ports:
       - '5432:5432'
-    env_file:
-      - .env
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -31,28 +31,24 @@ services:
     image: ${DOCKER_USERNAME}/minitwit_web
     container_name: minitwit_web
     depends_on:
-      - db
+     - db
     networks:
       - main
     ports:
       - '8000:8000'
-    env_file:
-      - .env
     volumes:
-      - static_data:/vol/static
+      - static_data:/vol/web
     restart: always
 
   api:
     image: ${DOCKER_USERNAME}/minitwit_api
     container_name: minitwit_api
     depends_on:
-      - db
+     - db
     networks:
       - main
     ports:
       - '9000:9000'
-    env_file:
-      - .env
     restart: always
 
   proxy:

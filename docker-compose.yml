@@ -37,7 +37,7 @@ services:
     ports:
       - '8000:8000'
     volumes:
-      - static_data:/vol/static
+      - static_data:/vol/web
     restart: always
 
   api:
@@ -69,22 +69,3 @@ services:
 volumes:
   postgres:
   static_data:
-  # minitwitimage:
-  #   image: ${DOCKER_USERNAME}/minitwitimage
-  #   container_name: minitwit
-  #   networks:
-  #     - main
-  #   depends_on:
-  #     - itusqlimage
-  #   ports:
-  #       - '5000:5000'
-
-  # itusqlimage:
-  #   image: ${DOCKER_USERNAME}/mysqlimage
-  #   container_name: minitwit_mysql
-  #   networks:
-  #     - main
-  #   ports:
-  #     - '3306:3306'
-  #   environment:
-  #       - MYSQL_ROOT_PASSWORD=root

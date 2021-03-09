@@ -26,16 +26,6 @@ SECRET_KEY = os.getenv('API_SECRET_KEY') or 'vk61e&%q!ggpvhg=nljgy+vg8-tq+5#z%4p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.getenv('DEBUG', 0)))
 
-# SETTINGS FOR DJANGO REST 
-REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-    ),
-    'DEFAULT_PARSER_CLASSES': (
-        'rest_framework.parsers.JSONParser',
-    )
-}
-
 ALLOWED_HOSTS = ['']
 ALLOWED_HOSTS_ENV = os.environ.get('API_ALLOWED_HOSTS')
 if ALLOWED_HOSTS_ENV:

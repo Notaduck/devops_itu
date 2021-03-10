@@ -12,21 +12,16 @@ RUN pip install -r requirements.txt
 
 COPY ./minitwit_frontend /minitwit_frontend/
 
-
 COPY ./minitwit_frontend/scripts/entrypoint.sh /scripts/entrypoint.sh
 
 RUN chmod +x /scripts/entrypoint.sh
-
-RUN python manage.py makemigrations
-RUN python manage.py migrate
 
 RUN mkdir -p /vol/web/media
 RUN mkdir -p /vol/web/static
 
 RUN adduser user
 RUN chown -R user:user /vol
-RUN chown user:user /scripts/entrypoint.sh
 RUN chmod -R 755 /vol/web
-USER user
+# USER user
 
 CMD ["/scripts/entrypoint.sh"]

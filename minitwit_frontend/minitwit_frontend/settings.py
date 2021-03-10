@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'timeline',
     'social',
     'msgs',
+    'latest',
 ]
 
 MIDDLEWARE = [

@@ -17,6 +17,9 @@ COPY ./minitwit_frontend/scripts/entrypoint.sh /scripts/entrypoint.sh
 
 RUN chmod +x /scripts/entrypoint.sh
 
+RUN python manage.py makemigrations
+RUN python manage.py migrate
+
 RUN mkdir -p /vol/web/media
 RUN mkdir -p /vol/web/static
 

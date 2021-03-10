@@ -30,10 +30,11 @@ class LatestMiddleware():
         return response
         
     def process_view(self, request, view_func, view_args, view_kwargs):
-        latest = Latest.objects.all().first()
         param = request.GET.get('latest')
 
-        if not latest:
+        if Latest.objects.exists():
+            latest = Latest.objects.all().first()
+        else:
             latest = Latest()
             
         if param:

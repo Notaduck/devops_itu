@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from latest.models import Lates
+from latest.models import Latest
 
 class LatestSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)

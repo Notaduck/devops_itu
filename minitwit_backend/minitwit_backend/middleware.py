@@ -9,15 +9,18 @@ class LatestMiddleware():
         return response
         
     def process_view(self, request, view_func, view_args, view_kwargs):
-        param = request.GET.get('latest')
+        param = request.GET.get('latest', 1)
+
 
         if Latest.objects.all().count() > 0:
             latest = Latest.objects.all().first()
+
+            if param:
+                latest.latest = param
+                latest.save(force_update=True)
+
         else:
-            latest = Latest()
+            latest = Latest(latest=param).save(force_create=True)
             
-        if param:
-            latest.id = param
-            latest.save()
         
 

@@ -5,4 +5,4 @@ from latest.models import Latest
 
 @api_view(['get'])
 def latest(request):
-	return Response({'latest': Latest.objects.all().first().id})
+	return Response({'latest': Latest.objects.all().first().latest})

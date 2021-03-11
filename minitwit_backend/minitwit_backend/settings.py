@@ -33,6 +33,17 @@ if ALLOWED_HOSTS_ENV:
 
 APPEND_SLASH = False
 
+# Rest framework options
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    )
+}
+
+
 
 # Application definition
 
@@ -85,12 +96,21 @@ WSGI_APPLICATION = 'minitwit_backend.wsgi.application'
 
 DATABASES = {
     'default': {
+<<<<<<< HEAD
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv('POSTGRES_DB') or 'minitwit',
         'USER': os.getenv('POSTGRES_USER') or 'postgres',
         'PASSWORD': os.getenv('POSTGRES_PASSWORD') or 'changeme',
         'HOST': os.getenv('POSTGRES_HOST') or '127.0.0.1',
         'PORT': os.getenv('POSTGRES_PORT') or '5432'
+=======
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': os.getenv('DB_NAME') or 'minitwit',
+	'USER': os.getenv('DB_USER') or 'postgres',
+	'PASSWORD': os.getenv('DB_PASSWORD') or 'changeme',
+	'HOST': os.getenv('DB_HOST') or '127.0.0.1',
+	'PORT': os.getenv('DB_PORT') or '5432'
+>>>>>>> 95857e5fc588274d61d1491ed3da55af127cdde7
     }
 }
 

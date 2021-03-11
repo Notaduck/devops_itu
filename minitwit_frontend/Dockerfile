@@ -3,26 +3,25 @@ ENV PYTHONUNBUFFERED 1
 
 RUN mkdir /minitwit_frontend
 WORKDIR /minitwit_frontend
-
-COPY requirements.txt /minitwit_frontend/
+RUN mkdir ./scripts
+COPY ./minitwit_frontend/requirements.txt /minitwit_frontend/
 EXPOSE 8000
 
+# RUN ls -al ./minitwit_frontend
 RUN pip install -r requirements.txt
 
-COPY . /minitwit_frontend/
-COPY scripts/entrypoint.sh /entrypoint.sh
+COPY ./minitwit_frontend /minitwit_frontend/
 
-RUN chmod +x /entrypoint.sh
+COPY ./minitwit_frontend/scripts/entrypoint.sh /scripts/entrypoint.sh
 
+RUN chmod +x /scripts/entrypoint.sh
 
 RUN mkdir -p /vol/web/media
-
-# RUN mkdir -p /vol/static
 RUN mkdir -p /vol/web/static
 
 RUN adduser user
 RUN chown -R user:user /vol
 RUN chmod -R 755 /vol/web
-USER user
+# USER user
 
-CMD ["/entrypoint.sh"]
+CMD ["/scripts/entrypoint.sh"]

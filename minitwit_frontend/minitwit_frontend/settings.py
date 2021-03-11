@@ -20,13 +20,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('MINITWIT_SECRET_KEY') or 'vk61e&%q!ggpvhg=nljgy+vg8-tq+5#z%4pesej(wf0^vz%7au'
+SECRET_KEY = os.getenv('SECRET_KEY','vk61e&%q!ggpvhg=nljgy+vg8-tq+5#z%4pesej(wf0^vz%7au')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.getenv('DEBUG', 0))
-# DEBUG = bool(int(os.environ.get('DEBUG', 0)))
+DEBUG = bool(int(os.getenv('DEBUG', 0)))
 
 ALLOWED_HOSTS = []
+ALLOWED_HOSTS_ENV = os.environ.get('WEB_ALLOWED_HOSTS')
+if ALLOWED_HOSTS_ENV:
+    ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(','))
+
 
 
 # Application definition
@@ -42,6 +45,7 @@ INSTALLED_APPS = [
     'timeline',
     'social',
     'msgs',
+    'latest',
 ]
 
 MIDDLEWARE = [
@@ -84,12 +88,12 @@ WSGI_APPLICATION = 'minitwit_frontend.wsgi.application'
 
 DATABASES = {
     'default': {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': os.getenv('MINITWIT_DB_NAME') or 'minitwit',
-	'USER': os.getenv('MINITWIT_DB_USER') or 'postgres',
-	'PASSWORD': os.getenv('MINITWIT_DB_PASSWORD') or 'changeme',
-	'HOST': os.getenv('MINITWIT_DB_HOST') or '127.0.0.1',
-	'PORT': os.getenv('MINITWIT_DB_PORT') or '5432'
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('POSTGRES_DB') or 'minitwit',
+        'USER': os.getenv('POSTGRES_USER') or 'postgres',
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD') or 'changeme',
+        'HOST': os.getenv('POSTGRES_HOST') or '127.0.0.1',
+        'PORT': os.getenv('POSTGRES_PORT') or '5432'
     }
 }
 
@@ -130,7 +134,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/static/static/'
+STATIC_ROOT = '/vol/web/static/'
 
 AUTH_USER_MODEL = 'users.User'
 

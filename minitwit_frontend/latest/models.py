@@ -5,4 +5,5 @@ class Latest(models.Model):
 	latest = models.IntegerField()
 
 	ID_FIELD = 'id'
+	LATEST_FIELD = 'latest'
 	REQUIRED_FIELDS = ['latest']

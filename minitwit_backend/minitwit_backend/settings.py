@@ -92,7 +92,7 @@ DATABASES = {
     'NAME': os.getenv('MINITWIT_DB_NAME') or 'minitwit',
 	'USER': os.getenv('MINITWIT_DB_USER') or 'postgres',
 	'PASSWORD': os.getenv('MINITWIT_DB_PASSWORD') or 'changeme',
-	'HOST': os.getenv('MINITWIT_DB_HOST') or '127.0.0.1',
+	'HOST': os.getenv('MINITWIT_DB_HOST') or 'db',
 	'PORT': os.getenv('MINITWIT_DB_PORT') or '5432'
     }
 }

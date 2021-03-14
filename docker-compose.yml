@@ -74,7 +74,7 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
     depends_on:
-      - api
+      - proxy 
     ports:
       - "9090:9090"
     networks:

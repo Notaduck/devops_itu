@@ -4,4 +4,4 @@ set -e
 
 ./build_images.sh
 docker-compose pull
-docker-comose up --build
+docker-compose up --build

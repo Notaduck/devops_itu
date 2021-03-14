@@ -19,5 +19,6 @@ urlpatterns = [
     path('', include('users.urls')),
     path('', include('msgs.urls')),
     path('', include('social.urls')),
-    path('', include('latest.urls'))
+    path('', include('latest.urls')),
+    path('', include('django_prometheus.urls')),
 ]

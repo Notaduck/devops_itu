@@ -66,13 +66,3 @@ jobs:
     install: skip
     script: 'ssh -o "StrictHostKeyChecking no" ${MT_USER}@${MT_SERVER} "source /root/.bash_profile;
       cd /vagrant; docker-compose pull; docker-compose up -d"
-
-'
-  - stage: GitHub Release
-    script: echo "Deploying to GitHub releases ..."
-    deploy:
-      provider: releases
-      api_key: "$GITHUB_OAUTH_TOKEN"
-      skip_cleanup: true
-      on:
-        tags: true

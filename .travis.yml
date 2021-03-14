@@ -5,7 +5,7 @@ python:
 - 3.9
 services:
 - docker
-if: branch = pipes
+if: branch = main
 before_install:
 - openssl aes-256-cbc -K $encrypted_56635d5d55b3_key -iv $encrypted_56635d5d55b3_iv
   -in ./ssh_keys/do_ssh_key.enc -out /tmp/git_deploy_key -d

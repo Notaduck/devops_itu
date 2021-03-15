@@ -60,8 +60,12 @@ jobs:
     script: |
       python -m pip install -r minitwit_backend/requirements.txt
       cd minitwit_frontend/
+      python manage.py makemigrations
+      python manage.py migrate
       python manage.py test 
       cd ../minitwit_backend/
+      python manage.py makemigrations
+      python manage.py migrate
       python manage.py test
   - stage: deploy
     name: deploy new version

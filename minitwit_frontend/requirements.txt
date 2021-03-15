@@ -9,3 +9,4 @@ uWSGI>=2.0.18,<2.1
 django-prometheus==2.1.0
 psutil
 MarkupSafe==1.1.1
+requests

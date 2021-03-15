@@ -107,7 +107,7 @@ DATABASES = {
         'PASSWORD': os.getenv('POSTGRES_PASSWORD') or 'changeme',
         'HOST': os.getenv('POSTGRES_HOST') or '127.0.0.1',
         'PORT': os.getenv('POSTGRES_PORT') or '5432'
-    } if not 'test' in sys.argv else {
+    } if os.getenv('ENV') != 'test' else {
         'ENGINE':'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
     }

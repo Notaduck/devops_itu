@@ -53,13 +53,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_prometheus',
     'users',
     'social',
     'msgs',
-    'latest'
+    'latest',
 ]
 
 MIDDLEWARE = [
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -67,6 +69,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'minitwit_backend.middleware.MetricsMiddleware', # import custom middleware from minitwit_backend/minitwit_backend/middleware.py
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
     'minitwit_backend.middleware.LatestMiddleware',
 ]
 
@@ -96,21 +100,12 @@ WSGI_APPLICATION = 'minitwit_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-<<<<<<< HEAD
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv('POSTGRES_DB') or 'minitwit',
         'USER': os.getenv('POSTGRES_USER') or 'postgres',
         'PASSWORD': os.getenv('POSTGRES_PASSWORD') or 'changeme',
         'HOST': os.getenv('POSTGRES_HOST') or '127.0.0.1',
         'PORT': os.getenv('POSTGRES_PORT') or '5432'
-=======
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': os.getenv('DB_NAME') or 'minitwit',
-	'USER': os.getenv('DB_USER') or 'postgres',
-	'PASSWORD': os.getenv('DB_PASSWORD') or 'changeme',
-	'HOST': os.getenv('DB_HOST') or '127.0.0.1',
-	'PORT': os.getenv('DB_PORT') or '5432'
->>>>>>> 95857e5fc588274d61d1491ed3da55af127cdde7
     }
 }
 

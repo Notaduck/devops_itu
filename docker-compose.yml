@@ -6,8 +6,7 @@ networks:
 
 services:
   db:
-    # image: ${DOCKER_USERNAME}/minitwit_db
-    image: postgres
+    image: ${DOCKER_USERNAME}/minitwit_db
     container_name: minitwit_db
     env_file:
       - .env

@@ -57,7 +57,8 @@ jobs:
   - stage: test
     name: run test(s)
     install: skip
-    script: 'python -m pip install -r minitwit_backend/requirements.txt &&
+    script: |
+      'python -m pip install -r minitwit_backend/requirements.txt &&
       cd minitwit_frontend/ &&
       python manage.py makemigrations &&
       python manage.py migrate &&

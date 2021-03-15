@@ -11,5 +11,5 @@ class LatestFilterBackend:
 		except:
 			pass
 			"""invalid latest parameter"""
-		finally:
-			return queryset
+
+		return queryset

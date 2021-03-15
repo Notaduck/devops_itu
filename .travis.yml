@@ -39,7 +39,6 @@ stages:
 - docker_build
 - test
 - deploy
-- release
 jobs:
   include:
   - stage: docker_build
@@ -60,8 +59,10 @@ jobs:
     install: skip
     script: |
       python -m pip install -r minitwit_backend/requirements.txt
-      python minitwit_frontend/manage.py test &&
-      python minitwit_backend/manage.py test
+      cd minitwit_frontend/
+      python manage.py test 
+      cd ../minitwit_backend/
+      python manage.py test
   - stage: deploy
     name: deploy new version
     install: skip

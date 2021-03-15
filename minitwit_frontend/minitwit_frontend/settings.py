@@ -91,7 +91,6 @@ WSGI_APPLICATION = 'minitwit_frontend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-print(sys.argv)
 DATABASES = {
     'default': {
         'ENGINE':'django.db.backends.postgresql_psycopg2',

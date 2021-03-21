@@ -6,7 +6,11 @@ networks:
 
 services:
   db:
+<<<<<<< HEAD
     image: postgres
+=======
+    image: postgres 
+>>>>>>> 7bf321a337a2b9ff879f680dc5d633daedaa2e66
     container_name: minitwit_db
     env_file:
       - .env
@@ -85,6 +89,8 @@ services:
       - prometheus 
     ports:
       - "3000:3000"
+    env_file:
+      - .env
     volumes:
       - grafana_data:/var/lib/grafana
     networks:

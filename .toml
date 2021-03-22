@@ -1,0 +1,32 @@
+[tool.black]
+line-length = 79
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | nginx 
+  | remote_files 
+  | run.sh 
+  | init.sql
+  | ssh_keys
+  | README.md
+  | deploy.sh
+  | pyvenv.cfg 
+  | ./CONTRIBUTE.md
+  | ./Vagrantfile
+  | ./Dockerfile-api
+  | ./Dockerfile-web
+  | ./Dockerfile-proxy
+  | ./prometheus.yml 
+  | ./docker-compose.yml 
+  | ./docker-compose-deploy.yml 
+)/
+'''

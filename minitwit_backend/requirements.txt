@@ -9,3 +9,4 @@ prometheus-client==0.9.0
 django-prometheus==2.1.0
 psutil==5.8.0
 requests==2.25.1
+pycodestyle==2.7.0

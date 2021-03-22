@@ -2,9 +2,9 @@ from django.urls import reverse
 from django.views.generic.edit import FormView
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView, LogoutView
-
 from users.forms import CustomUserCreationForm, CustomAuthenticationForm
 from users.models import User
+from minitwit_frontend.metrics import Metrics
 
 def login_context(request):
 	return {'user': request.user if request.user.is_authenticated else False}
@@ -17,6 +17,7 @@ class RegisterView(FormView):
 
 	def form_valid(self, form):
 		form.save()
+		Metrics.inserts_total.labels("user").inc()
 		return super().form_valid(form)
 
 

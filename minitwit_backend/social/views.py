@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from social.serializers import FollowerSerializer
 from rest_framework import status
 from rest_framework.response import Response
+from minitwit_backend.metrics import Metrics
 
 
 class FollowView(CreateAPIView, DestroyAPIView):
@@ -61,11 +62,14 @@ class FollowView(CreateAPIView, DestroyAPIView):
 		serializer.is_valid(raise_exception=False)
 		self.perform_create(serializer)
 		headers = self.get_success_headers(serializer.data)
-		
+		# update metrics
+		Metrics.inserts_total.labels("follower").inc()
 		return Response(status=status.HTTP_204_NO_CONTENT, headers=headers)
 	
 	def destroy(self, request, username, who, whom, *args, **kwargs):
 		instance = Follower.objects.get(who=who, whom=whom)
 		self.perform_destroy(instance)
+		# update metrics
+		Metrics.deletes_total.inc()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 

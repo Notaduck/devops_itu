@@ -64,7 +64,10 @@ services:
       - '80:8080'
     volumes:
       - static_data:/vol/static
+    env_file:
+      - .env
     restart: always
+
 
   prometheus:
     image: prom/prometheus

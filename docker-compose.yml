@@ -6,7 +6,7 @@ networks:
 
 services:
   db:
-    image: postgres 
+    image: postgres
     container_name: minitwit_db
     env_file:
       - .env

@@ -33,6 +33,9 @@ Vagrant.configure("2") do |config|
     echo -e "\nOpening port for minitwit ...\n"
     echo ". $HOME/.bashrc" >> $HOME/.bash_profile
 
+    echo "export ELK_DIR='/vagrant'" >> $HOME/.bash_profile
+    echo "export ELK_USER=${whoami}" >> $HOME/.bash_profile
+
     echo -e "\nConfiguring credentials as environment variables...\n"
     echo "export DOCKER_USERNAME='xxxxxxx'" >> $HOME/.bash_profile
     echo "export DOCKER_PASSWORD='xxxxxxxxxxx!'" >> $HOME/.bash_profile

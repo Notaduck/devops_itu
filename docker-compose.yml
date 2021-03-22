@@ -1,6 +1,8 @@
 version: '3.5'
 
 networks:
+  efk:
+    name: minitwit-network-efk
   main:
     name: minitwit-network
 
@@ -94,6 +96,33 @@ services:
     networks:
       - main 
 
+  elasticsearch:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:7.2.0"
+    env_file:
+      - .env.efk
+    volumes:
+        - efk_elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+        - efk
+
+  kibana:
+    image: "docker.elastic.co/kibana/kibana:7.2.0"
+    env_file:
+      - .env.efk
+    networks:
+        - efk
+
+  filebeat:
+    image: "docker.elastic.co/beats/filebeat:7.2.0"
+    env_file:
+      - .env.efk
+    user: root
+    volumes:
+        - ${EFK_DIR}/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+        - /var/lib/docker:/var/lib/docker:ro
+        - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+        - efk
 
 volumes:
   postgres:

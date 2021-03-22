@@ -6,7 +6,6 @@ networks:
 
 services:
   db:
-    # image: ${DOCKER_USERNAME}/minitwit_db
     image: postgres
     container_name: minitwit_db
     env_file:
@@ -51,6 +50,8 @@ services:
       - main
     ports:
       - '9000:9000'
+    volumes:
+      - static_data:/vol/api
     restart: always
 
   proxy:
@@ -86,6 +87,8 @@ services:
       - prometheus 
     ports:
       - "3000:3000"
+    env_file:
+      - .env
     volumes:
       - grafana_data:/var/lib/grafana
     networks:

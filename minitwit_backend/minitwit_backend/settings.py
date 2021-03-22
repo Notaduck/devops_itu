@@ -160,4 +160,7 @@ REST_FRAMEWORK = {
 	]
 }
 
+STATIC_URL = '/static/static/'
+STATIC_ROOT = '/vol/api/static/'
+
 LATEST = 0

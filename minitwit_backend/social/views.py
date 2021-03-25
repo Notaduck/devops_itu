@@ -17,6 +17,7 @@ class FollowView(CreateAPIView, DestroyAPIView):
 	serializer_class = FollowerSerializer
 	permission_classes = (IsAuthenticated,)
 
+
 	def post(self, request, username, *args, **kwargs):
 		if not User.objects.filter(username = username).exists():
 			return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -48,12 +49,14 @@ class FollowView(CreateAPIView, DestroyAPIView):
 			if Follower.objects.filter(who = who, whom = whom).exists():
 				return self.destroy(request, username, who, whom, *args, **kwargs)
 			else:
+				# return 204 because weird api specifications from helge
 				return Response(status=status.HTTP_204_NO_CONTENT)
 		else: 
 			return Response(status=status.HTTP_400_BAD_REQUEST)
 		
 		return Response(status=status.HTTP_400_BAD_REQUEST)
 	
+
 	def create(self, request, username, who, whom, *args, **kwargs):
 		data = request.data.copy()
 		data['who'] = who
@@ -66,10 +69,11 @@ class FollowView(CreateAPIView, DestroyAPIView):
 		Metrics.inserts_total.labels("follower").inc()
 		return Response(status=status.HTTP_204_NO_CONTENT, headers=headers)
 	
+
 	def destroy(self, request, username, who, whom, *args, **kwargs):
 		instance = Follower.objects.get(who=who, whom=whom)
 		self.perform_destroy(instance)
 		# update metrics
-		Metrics.deletes_total.inc()
+		Metrics.deletes_total.labels("follower").inc()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 

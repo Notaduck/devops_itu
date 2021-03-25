@@ -9,6 +9,7 @@ class FollowView(CreateView):
 	model = Follower
 
 	def get(self, request, username=None):
+		Metrics.insert_requests_total.labels("follower").inc()
 		if username is None or username==self.request.user.username: redirect('/timeline')
 		follower = Follower(who=request.user, whom=User.objects.get(username=username))
 		follower.save()
@@ -21,6 +22,7 @@ class UnFollowView(DeleteView):
 	model = Follower
 
 	def get(self, request, username=None):
+		Metrics.delete_requests_total.labels("follower").inc()
 		if username is None or username==self.request.user.username: redirect('/timeline')
 		Follower.objects.get(who=request.user, whom=User.objects.get(username=username)).delete()
 		Metrics.deletes_total.labels("follower").inc()

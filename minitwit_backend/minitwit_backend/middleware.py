@@ -1,4 +1,5 @@
 import psutil
+import json
 from minitwit_backend.metrics import Metrics
 from latest.models import Latest
 
@@ -22,23 +23,19 @@ class MetricsMiddleware:
 
     def process_view(self, request, view_func, view_args, view_kwargs):
         if request.method == 'POST':
-            # increment delete requests if /unfollow was posted to
-            if request.path.startswith("/unfollow"):
-                Metrics.delete_requests_total.labels("follow").inc()
-                return
-            
             # determine the label of the model that was posted to
-            if request.path.startswith("/msgs"):
-                label = "message"
+            if request.path.startswith("/fllws"):
+                # if request was given to /fllws, determine whether its follow or unfollow
+                if b'unfollow' in request.body:
+                    Metrics.delete_requests_total.labels("follower").inc()
+                elif b'follow' in request.body:
+                    Metrics.insert_requests_total.labels("follower").inc()
+            elif request.path.startswith("/msgs"):
+                Metrics.insert_requests_total.labels("message").inc()
             elif request.path.startswith("/register"):
-                label = "user"
-            elif request.path.startswith("/follow"):
-                label = "follow"
-            else: # if a post method was not sent to one of the above URLs, then do nothing
-                return
+                Metrics.insert_requests_total.labels("user").inc()
+            # if a post method was not sent to one of the above URLs, then do nothing
             
-            # increment insert requests if a post request was sent to a correct label 
-            Metrics.insert_requests_total.labels(label).inc()
 
 
 class LatestMiddleware():

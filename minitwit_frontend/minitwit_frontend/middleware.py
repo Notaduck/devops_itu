@@ -18,23 +18,4 @@ class MetricsMiddleware:
         Metrics.cpu_load_percent.set(psutil.cpu_percent())
 
         return response
-
-    def process_view(self, request, view_func, view_args, view_kwargs):
-        if request.method == 'POST':
-            # increment delete requests if /unfollow was posted to
-            if request.path.startswith("/unfollow"):
-                Metrics.delete_requests_total.labels("follow").inc()
-                return
-            
-            # determine the label of the model that was posted to
-            if request.path.startswith("/msgs"):
-                label = "message"
-            elif request.path.startswith("/register"):
-                label = "user"
-            elif request.path.startswith("/follow"):
-                label = "follow"
-            else: # if a post method was not sent to one of the above URLs, then do nothing
-                return
-            
-            # increment insert requests if a post request was sent to a correct label 
-            Metrics.insert_requests_total.labels(label).inc()
+        

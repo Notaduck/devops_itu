@@ -18,3 +18,4 @@ class MetricsMiddleware:
         Metrics.cpu_load_percent.set(psutil.cpu_percent())
 
         return response
+        

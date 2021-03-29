@@ -50,6 +50,8 @@ services:
       - main
     ports:
       - '9000:9000'
+    volumes:
+      - static_data:/vol/api
     restart: always
 
   proxy:

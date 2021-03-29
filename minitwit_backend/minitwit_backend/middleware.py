@@ -20,6 +20,23 @@ class MetricsMiddleware:
 
         return response
 
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        if request.method == 'POST':
+            # determine the label of the model that was posted to
+            if request.path.startswith("/fllws"):
+                # if request was given to /fllws, determine whether its follow or unfollow
+                if b'unfollow' in request.body:
+                    Metrics.delete_requests_total.labels("follower").inc()
+                elif b'follow' in request.body:
+                    Metrics.insert_requests_total.labels("follower").inc()
+            elif request.path.startswith("/msgs"):
+                Metrics.insert_requests_total.labels("message").inc()
+            elif request.path.startswith("/register"):
+                Metrics.insert_requests_total.labels("user").inc()
+            # if a post method was not sent to one of the above URLs, then do nothing
+            
+
+
 class LatestMiddleware():
     def __init__(self, get_response):
         self.get_response = get_response

@@ -1,5 +1,4 @@
 import psutil
-import json
 from minitwit_backend.metrics import Metrics
 from latest.models import Latest
 

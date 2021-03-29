@@ -37,8 +37,7 @@ class FollowView(CreateAPIView, DestroyAPIView):
 			else:
 				# return 204 because api specifies such 
 				return Response(status=status.HTTP_204_NO_CONTENT)
-		else: 
-			return Response(status=status.HTTP_400_BAD_REQUEST)
+		return Response(status=status.HTTP_400_BAD_REQUEST)
 	
 
 	def create(self, request, username, who, whom, *args, **kwargs):

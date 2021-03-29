@@ -35,7 +35,7 @@ class FollowView(CreateAPIView, DestroyAPIView):
 			if Follower.objects.filter(who = who, whom = whom).exists():
 				return self.destroy(request, username, who, whom, *args, **kwargs)
 			else:
-				# return 204 because weird api specifications from helge
+				# return 204 because api specifies such 
 				return Response(status=status.HTTP_204_NO_CONTENT)
 		else: 
 			return Response(status=status.HTTP_400_BAD_REQUEST)

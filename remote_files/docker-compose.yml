@@ -50,6 +50,8 @@ services:
       - main
     ports:
       - '9000:9000'
+    volumes:
+      - static_data:/vol/api
     restart: always
 
   proxy:
@@ -67,7 +69,6 @@ services:
     env_file:
       - .env
     restart: always
-
 
   prometheus:
     image: prom/prometheus
@@ -88,11 +89,23 @@ services:
       - prometheus 
     ports:
       - "3000:3000"
+    env_file:
+      - .env
     volumes:
       - grafana_data:/var/lib/grafana
     networks:
       - main 
-
+  filebeat:
+    image: "docker.elastic.co/beats/filebeat:7.2.0"
+    # environment:
+    #     - "ELK_USER=${ELK_USER}"
+    user: root
+    volumes:
+        - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+        - /var/lib/docker:/var/lib/docker:ro
+        - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+        - main       
 
 volumes:
   postgres:

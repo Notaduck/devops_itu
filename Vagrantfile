@@ -25,7 +25,8 @@ Vagrant.configure("2") do |config|
     echo -e "\nVerifying that docker works ...\n"
     docker run --rm hello-world
     docker rmi hello-world
-
+    chown root /vagrant/filebeat.yml 
+    chmod go-w /vagrant/filebeat.yml
     echo -e "\nOpening port for minitwit ...\n"
     ufw allow 80
     ufw allow 3000

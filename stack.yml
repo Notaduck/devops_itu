@@ -7,6 +7,7 @@ services:
       - "80:80"
     command:
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
+      - "traefik.http.routers.traefik.rule=Host(`minitwititu.xyz`)"
       - "--providers.docker.swarmMode=true"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.network=traefik-public"

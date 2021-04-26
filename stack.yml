@@ -1,0 +1,122 @@
+version: "3.5"
+
+services:
+  traefik:
+    image: traefik
+    ports:
+      - "80:80"
+    command:
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
+      - "--providers.docker.swarmMode=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=traefik-public"
+      - "--entrypoints.web.address=:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - traefik-public
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+
+  web:
+    image: ${DOCKER_USERNAME}/minitwit_web
+    container_name: minitwit_web
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - main
+    ports:
+      - "8000:8000"
+    volumes:
+      - static_data:/vol/web
+    restart: always
+
+  api:
+    image: ${DOCKER_USERNAME}/minitwit_api
+    container_name: minitwit_api
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - main
+    ports:
+      - "9000:9000"
+    volumes:
+      - static_data:/vol/api
+    restart: always
+
+  proxy:
+    image: ${DOCKER_USERNAME}/minitwit_proxy
+    container_name: minitwit_proxy
+    depends_on:
+      - web
+      - api
+    networks:
+      - main
+      - traefik-public
+    # ports:
+    #   - "80:8080"
+    volumes:
+      - static_data:/vol/static
+    env_file:
+      - .env
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.services.nginx-web.loadbalancer.server.port=80"
+
+    restart: always
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    depends_on:
+      - proxy
+    ports:
+      - "9090:9090"
+    networks:
+      - main
+
+  grafana:
+    image: grafana/grafana
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - main
+
+  filebeat:
+    image: "docker.elastic.co/beats/filebeat:7.2.0"
+    restart: always
+    user: root
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - main
+
+networks:
+  traefik-public:
+    external: true
+  main:
+    driver: overlay
+
+volumes:
+  postgres:
+  static_data:
+  grafana_data:
+  prometheus_data:

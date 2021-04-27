@@ -1,26 +1,6 @@
 version: "3.5"
 
 services:
-  traefik:
-    image: traefik
-    ports:
-      - "80:80"
-    command:
-      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
-      - "traefik.http.routers.traefik.rule=Host(`minitwititu.xyz`)"
-      - "--providers.docker.swarmMode=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--providers.docker.network=traefik-public"
-      - "--entrypoints.web.address=:80"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - traefik-public
-    deploy:
-      placement:
-        constraints:
-          - node.role == manager
-
   web:
     image: ${DOCKER_USERNAME}/minitwit_web
     container_name: minitwit_web
@@ -30,8 +10,6 @@ services:
       - db
     networks:
       - main
-    ports:
-      - "8000:8000"
     volumes:
       - static_data:/vol/web
     restart: always
@@ -45,8 +23,6 @@ services:
       - db
     networks:
       - main
-    ports:
-      - "9000:9000"
     volumes:
       - static_data:/vol/api
     restart: always
@@ -59,19 +35,23 @@ services:
       - api
     networks:
       - main
-      - traefik-public
-    # ports:
-    #   - "80:8080"
+      # - traefik-public
+    ports:
+      - "80:8080"
     volumes:
       - static_data:/vol/static
     env_file:
       - .env
+    # deploy:
+    #   labels:
+    #     - "traefik.enable=true"
+    #     - "traefik.http.routers.static-http.entrypoints=websecure"
+    #     - "traefik.http.routers.static-http.rule=Host(`minitwititu.xyz`) && PathPrefix(`/static`)"
+    #   # - "traefik.http.routers.static-http.tls.certresolver=mytlschallenge"
     deploy:
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.nginx-web.rule=Host(`minitwititu.xyz`)"
-        - "traefik.http.services.nginx-web.loadbalancer.server.port=80"
-
+      placement:
+        constraints:
+          - node.role == manager
     restart: always
 
   prometheus:

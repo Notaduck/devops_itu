@@ -62,6 +62,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'minitwit_backend.middleware.LoggingMiddleware', # import custom middleware for logging of all requests
     'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -167,3 +168,63 @@ REST_FRAMEWORK = {
 
 STATIC_URL = '/static/static/'
 STATIC_ROOT = '/vol/api/static/'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+
+    'handlers': {
+        'console': {
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        }
+    },
+
+    'formatters': {
+        'simple': {
+            'format': '{asctime} {levelname} {message}',
+            'style': '{'
+        }
+    },
+
+    'root': {
+        'handlers': ['simple'],
+        'level': 'DEBUG' if DEBUG else 'INFO',
+    },
+
+    'loggers': {
+        'django': {
+            'handlers': ['simple'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False
+        },
+        'django.request': {
+            'handlers': ['simple'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False
+        },
+        'django.server': {
+            'handlers': ['simple'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False
+        },
+        'django.security.*': {
+            # security types avaliable and raise SuspiciousOperation are [DisallowedHost, DisallowedModelAdminLookup, DisallowedModelAdminToField, DisallowedRedirect, InvalidSessionKey, RequestDataTooBig, SuspiciousFileOperation, SuspiciousMultipartForm, SuspiciousSession, TooManyFieldsSent] 
+            # although CSRF Failures are not regarded as SuspicousOperations and are logged to the type ['csrf']
+            'handlers': ['simple'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False
+        },
+        'django.db.backends': {
+            'handlers': ['simple'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False
+        },
+        'django.db.backends.schema': {
+            'handlers': ['simple'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False
+        }
+    }
+}

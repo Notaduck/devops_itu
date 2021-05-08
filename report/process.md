@@ -1,5 +1,3 @@
-# Current state
-
 # The Team
 
 The team is organized via Discord. We build a server to support all communication through that.

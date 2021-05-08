@@ -6,33 +6,28 @@ Minitwit also consists of logging and monitoring tools that depends on the web a
 
 # Architecture
 
-The main functionality of Minitwit is contained in the publicly available web and API servers and their database.
+![Deployment Diagram](images/deployment_diagram.png "Deployment Diagram")
+
+*describe what goes on the production CI droplet and why*
+We have tried to keep most of our project on one droplet, so that the process of deployment is always the same, no matter what part of the system is being changed. This main CI droplet runs Docker in swarm mode, so that the web and API services can be scaled. Other services that either cannot or do not need scaling are hosted on either the manager node or on a separate droplet.
+
+## Subsystems
 
 ![Web, Api, DB structure](images/web-api-db.png "Web, Api, DB diagram")
-*describe what goes on the production CI droplet and why*
 
-Normally, with a project that requires a web app and API, it is normal to have the web app communicate with the database through the API. However, Django designed such that communication with a database backend is much simpler to implement than communication with a custom backend server. For this reason, our web app and API don't communicate with one another, and therefore don't form a frontend/backend structure. Instead, our database is our backend and our web app/API servers are our frontends.
+With a project that requires a web app and API, it is normal to have the web app communicate with the database through the API. However, Django designed such that communication with a database backend is much simpler to implement than communication with a custom backend server. For this reason, our web app and API don't communicate with one another, and therefore don't form a frontend/backend structure. Instead, our database is our backend and our web app/API servers are our frontends.
 
 *describe how proxy works w web + API*
-We have a nginx proxy that routes traffic from minitwititu.xyz to our web app server's IP address, and from api.minitwititu.xyz to our API server's address. 
+We have a nginx proxy that routes traffic from minitwititu.xyz to our web app server's IP address, and from api.minitwititu.xyz to our API server's address. The proxy is hosted on the swarm manager node because it does not need scaling, because ...
 *Does the proxy only route HTTP requests? does it route anything else? why is it on the manager node (will it not be scaled)?*
 
 *describe how elastic search and filebeat are structured and why*
 *some fuckin sequence diagram or something*
-*why is elastic search on a separate droplet? why is filebeat on the manager node? does filebeat communicate w any other services besides elastic search?*
+*why is elastic search on a separate droplet? why is it on the manager node? does filebeat communicate w any other services besides elastic search?*
 
 *describe how web + API communicate w prometheus, and how prometheus communicates w grafana*
-Our monitoring is accomplished by Prometheus, which exposes our metrics on minitwitwitu.xyz/metrics. Our web app and API both make calls to update certain Prometheus metrics, and Prometheus gathers other performance-related metrics from both of them. Since the web and API services need to work very closely with Prometheus, they are all located on the same Droplet.
-The /metrics route is used by our Grafana server, which allows us to create monitoring dashboards for all the metrics on that route. Grafana is hosted on our main CI droplet 
-
-*describe why we chose to put stuff in manager node vs worker node (something about not needing to scale certain services)*
-
-## Deployment
-
-![Deployment Diagram](images/deployment_diagram.png "Deployment Diagram")
-Droplet: device node / server
-Docker image: Execution Environment Node
-Docker
+Our monitoring is accomplished by Prometheus, which exposes our metrics on minitwitwitu.xyz/metrics. Our web app and API both make calls to update certain Prometheus metrics, and Prometheus gathers other performance-related metrics from both of them. 
+The /metrics route is also checked by our Grafana server, which allows us to create monitoring dashboards for all the metrics on that route.
 
 
 # Dependencies
@@ -40,9 +35,16 @@ Docker
 Our dependencies are split into ... and tools
 
 ## Tools
-- Docker 0.0.0 | ...
-- Digital Ocean 0.0.0 | ...
-- Travis 0.0.0 | ...
+
+- Docker | Cloud computing services
+- Digital Ocean | Cloud infrastructure provider
+- Travis | Hosted continuous integration service
+- ElasticSearch | Distributed RESTful search and analytics engine
+- Kibana | Data visualization dashboard software for ElasticSearch
+- Filebeat | File harvester
+- PostGreSQL | Database Manangement System
+- NGINX | Proxy (and load balancer????)
+
 
 ## ...??
 
@@ -59,7 +61,7 @@ Web App dependencies are as follows:
 - pytz 2021.1 - Cross platform timezone calculations
 - requests 2.25.1 - HTTP library
 - sqlparse 0.4.1 - SQL query parser / transformer
-- uWSGI 2.0.18 - 2.1 - ... (NGINX?)
+- uWSGI 2.0.18 - 2.1 - Web service gateway
 
 API dependecies are as follows:
 
@@ -73,7 +75,10 @@ API dependecies are as follows:
 - requests 2.25.1 - HTTP library
 - sqlparse 0.4.1 - SQL query parser / transformer
 - toml 0.10.2 - Python library for TOML
-- uWSGI 2.0.18 - 2.1 - ... (NGINX?)
+- uWSGI 2.0.18 - 2.1 - Web service gateway
 - wrapt 1.12.1 - A Python module for decorators, wrappers and monkey patching.
 
-# Sub systems
+# Current state
+Get the fucking grafana to tell us something xD
+
+# License

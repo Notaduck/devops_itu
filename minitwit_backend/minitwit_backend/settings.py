@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,15 +22,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('MINITWIT_SECRET_KEY') or 'vk61e&%q!ggpvhg=nljgy+vg8-tq+5#z%4pesej(wf0^vz%7au'
+SECRET_KEY = os.getenv('API_SECRET_KEY') or 'vk61e&%q!ggpvhg=nljgy+vg8-tq+5#z%4pesej(wf0^vz%7au'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.getenv('DEBUG', 0))
+DEBUG = bool(int(os.getenv('DEBUG', 0)))
 
-ALLOWED_HOSTS = ['api.minitwititu.xyz']
-ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS')
+ALLOWED_HOSTS = ['']
+ALLOWED_HOSTS_ENV = os.environ.get('API_ALLOWED_HOSTS')
 if ALLOWED_HOSTS_ENV:
     ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(','))
+
+APPEND_SLASH = False
+
+# Rest framework options
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    )
+}
+
 
 
 # Application definition
@@ -37,14 +51,18 @@ if ALLOWED_HOSTS_ENV:
 INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    # 'django.contrib.sessions', # should not be enabled when basic authentication is done
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'users'
+    'django_prometheus',
+    'users',
+    'social',
+    'msgs',
+    'latest',
 ]
 
 MIDDLEWARE = [
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -52,6 +70,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'minitwit_backend.middleware.MetricsMiddleware', # import custom middleware from minitwit_backend/minitwit_backend/middleware.py
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
+    'minitwit_backend.middleware.LatestMiddleware',
 ]
 
 ROOT_URLCONF = 'minitwit_backend.urls'
@@ -80,14 +101,18 @@ WSGI_APPLICATION = 'minitwit_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': os.getenv('MINITWIT_DB_NAME') or 'minitwit',
-	'USER': os.getenv('MINITWIT_DB_USER') or 'postgres',
-	'PASSWORD': os.getenv('MINITWIT_DB_PASSWORD') or 'changeme',
-	'HOST': os.getenv('MINITWIT_DB_HOST') or 'db',
-	'PORT': os.getenv('MINITWIT_DB_PORT') or '5432'
+        'ENGINE':'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('POSTGRES_DB') or 'minitwit',
+        'USER': os.getenv('POSTGRES_USER') or 'postgres',
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD') or 'changeme',
+        'HOST': os.getenv('POSTGRES_HOST') or '127.0.0.1',
+        'PORT': os.getenv('POSTGRES_PORT') or '5432'
+    } if os.getenv('ENV') != 'preprod' else {
+        'ENGINE':'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
     }
 }
+
 
 
 # Password validation
@@ -135,4 +160,10 @@ REST_FRAMEWORK = {
 	'DEFAULT_AUTHENTICATION_CLASSES': [
 		'rest_framework.authentication.BasicAuthentication'
 	],
+	'DEFAULT_FILTER_BACKENDS': [
+		'latest.filters.LatestFilterBackend'
+	]
 }
+
+STATIC_URL = '/static/static/'
+STATIC_ROOT = '/vol/api/static/'

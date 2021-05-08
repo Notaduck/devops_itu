@@ -4,6 +4,7 @@ from rest_framework.authentication import BasicAuthentication
 from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from minitwit_backend.metrics import Metrics
 
 from users.models import User
 from users.serializers import UserSerializer
@@ -18,6 +19,8 @@ class RegisterView(CreateAPIView):
 		serializer.is_valid(raise_exception=True)
 		self.perform_create(serializer)
 		headers = self.get_success_headers(serializer.data)
+		# update metrics
+		Metrics.inserts_total.labels("user").inc()
 		return Response(status=status.HTTP_204_NO_CONTENT, headers=headers)
 
 class GetCurrentUser(RetrieveAPIView):

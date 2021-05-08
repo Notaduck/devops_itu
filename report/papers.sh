@@ -2,4 +2,4 @@
 
 docker pull silviof/docker-pandoc &&
     pandoc="docker run -ti --rm -v ${PWD}:/source --rm silviof/docker-pandoc" &&
-    $pandoc ./notes.md ./notes1.md -o ./out/main.pdf
+    $pandoc ./main.md --toc ./system.md ./process.md ./lessons_learned.md -o ./out/main.pdf

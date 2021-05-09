@@ -41,12 +41,39 @@ services:
     restart: always
 
   api:
+<<<<<<< HEAD
     image: ${DOCKER_USERNAME}/minitwit_api
     container_name: minitwit_api
+=======
+    build:
+      context: ./minitwit_backend
+    command: python manage.py runserver 0.0.0.0:8080
+    container_name: api
+    volumes:
+      - .:/code
+    ports:
+      - "8080:8080"
+>>>>>>> bf30413b734096cc131a9d78dec943f9c4150f40
     depends_on:
      - db
     networks:
+<<<<<<< HEAD
       - main
+=======
+      - minitwit 
+    environment: 
+      - DEBUG=1
+    depends_on: 
+      - grafana
+      - prometheus
+
+  web:
+    build:
+      context: ./minitwit_frontend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+>>>>>>> bf30413b734096cc131a9d78dec943f9c4150f40
     ports:
       - '9000:9000'
     restart: always
@@ -58,12 +85,41 @@ services:
       - web
       - api
     networks:
+<<<<<<< HEAD
       - main
     ports:
       - '80:8080'
     volumes:
       - static_data:/vol/static
     restart: always
+=======
+      - minitwit 
+    environment: 
+      - DEBUG=1
+    depends_on: 
+      - grafana
+      - prometheus
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    # volumes:
+    #   - grafana_data:/var/lib/grafana
+    #   - ./grafana/provisioning/:/etc/grafana/provisioning/
+    restart: always
+
+  prometheus:
+    image: prom/prometheus:v2.1.0
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prom/prometheus
+    command: 
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 9090:9090
+>>>>>>> bf30413b734096cc131a9d78dec943f9c4150f40
 
 
 volumes:

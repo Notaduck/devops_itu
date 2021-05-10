@@ -5,7 +5,7 @@
 # Configuration options
 # -------------------------------------------------------------------
 NUM_OF_MANAGERS=1
-NUM_OF_WORKERS=1
+NUM_OF_WORKERS=0
 DO_REGION="fra1"
 DO_IMAGE="docker-18-04"
 DO_SIZE="s-1vcpu-1gb"
@@ -22,7 +22,8 @@ echo initManager arguments: $*
 # Todo: We have an issue here, if re-creating the machines, then the old token will be re-used, which is wrong ...
 sleep 60
 if [ "$2" -eq "1" ]; then
-    SWARM_MANAGER_IP=$(ifconfig eth1 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
+    SWARM_MANAGER_IP=$(ip -4 -br addr show eth1 | awk -F" " '{print $3}'|cut -d'/' -f1)
+    ufw allow 2377
     mkdir -p /vagrant/.vagrant/swarm-token
     ls -a /vagrant
     ls -a /vagrant/.vagrant
@@ -43,7 +44,7 @@ fi
 EOD
 
 @initWorker = <<EOD
-scp -r root@your.server.example.com:/vagrant/.vagrant/swarm-token/ /vagrant/.vagrant/swarm-token/
+scp root@10.114.0.3:/vagrant/.vagrant/swarm-token/worker /vagrant/.vagrant/swarm-token/
 
 docker swarm join \
   --token `cat  /vagrant/.vagrant/swarm-token/worker` \

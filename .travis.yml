@@ -9,8 +9,9 @@ python:
 services:
   - docker
 before_install:
-  - openssl aes-256-cbc -K $encrypted_a2d101734077_key -iv $encrypted_a2d101734077_iv
-    -in sshkey.enc -out sshkey -d
+  # - openssl aes-256-cbc -K $encrypted_a2d101734077_key -iv $encrypted_a2d101734077_iv
+  # -in sshkey.enc -out sshkey -d
+  - openssl aes-256-cbc -K $encrypted_a2d101734077_key -iv $encrypted_a2d101734077_iv -in sshkey.enc -out /tmp/git_deploy_key -d
   - chmod 600 /tmp/git_deploy_key
   - echo 'echo ${SSH_PASSPHRASE}' > /tmp/askpass && chmod +x /tmp/askpass
   - eval "$(ssh-agent -s)"

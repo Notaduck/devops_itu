@@ -189,40 +189,40 @@ LOGGING = {
     },
 
     'root': {
-        'handlers': ['simple'],
+        'handlers': ['console'],
         'level': 'DEBUG' if DEBUG else 'INFO',
     },
 
     'loggers': {
         'django': {
-            'handlers': ['simple'],
+            'handlers': ['console'],
             'level': 'DEBUG' if DEBUG else 'INFO',
             'propagate': False
         },
         'django.request': {
-            'handlers': ['simple'],
+            'handlers': ['console'],
             'level': 'DEBUG' if DEBUG else 'INFO',
             'propagate': False
         },
         'django.server': {
-            'handlers': ['simple'],
+            'handlers': ['console'],
             'level': 'DEBUG' if DEBUG else 'INFO',
             'propagate': False
         },
         'django.security.*': {
             # security types avaliable and raise SuspiciousOperation are [DisallowedHost, DisallowedModelAdminLookup, DisallowedModelAdminToField, DisallowedRedirect, InvalidSessionKey, RequestDataTooBig, SuspiciousFileOperation, SuspiciousMultipartForm, SuspiciousSession, TooManyFieldsSent] 
             # although CSRF Failures are not regarded as SuspicousOperations and are logged to the type ['csrf']
-            'handlers': ['simple'],
+            'handlers': ['console'],
             'level': 'DEBUG' if DEBUG else 'INFO',
             'propagate': False
         },
         'django.db.backends': {
-            'handlers': ['simple'],
+            'handlers': ['console'],
             'level': 'DEBUG' if DEBUG else 'INFO',
             'propagate': False
         },
         'django.db.backends.schema': {
-            'handlers': ['simple'],
+            'handlers': ['console'],
             'level': 'DEBUG' if DEBUG else 'INFO',
             'propagate': False
         }

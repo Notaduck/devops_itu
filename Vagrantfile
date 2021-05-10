@@ -1,45 +1,105 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-Vagrant.configure("2") do |config|
-  config.vm.box = 'digital_ocean'
-  config.vm.box_url = "https://github.com/devopsgroup-io/vagrant-digitalocean/raw/master/box/digital_ocean.box"
-  config.ssh.private_key_path = 'ssh_keys/do_ssh_key'
+# -------------------------------------------------------------------
+# Configuration options
+# -------------------------------------------------------------------
+NUM_OF_MANAGERS=1
+NUM_OF_WORKERS=1
+DO_REGION="fra1"
+DO_IMAGE="docker-18-04"
+DO_SIZE="s-1vcpu-1gb"
+DO_ACCESS_TOKEN=ENV['DIGITAL_OCEAN_TOKEN']
+# -------------------------------------------------------------------
+# (End configuration options)
 
-  config.vm.synced_folder "remote_files", "/vagrant", type: "rsync"
-  
-  config.vm.define "minitwit-ci-server", primary: true do |server|
+# -- Internal variables
+VAGRANTFILE_API_VERSION = "2"
 
-    server.vm.provider :digital_ocean do |provider|
-      provider.ssh_key_name = "do_ssh_key"
-      provider.token = ENV["DIGITAL_OCEAN_TOKEN"]
-      provider.image = 'docker-18-04'
-      provider.region = 'fra1'
-      provider.size = 's-2vcpu-2gb'
-      provider.privatenetworking = true
-    end
 
-    server.vm.hostname = "minitwit-ci-server"
-    server.vm.provision "shell", inline: <<-SHELL
+@initManager = <<EOD
+echo initManager arguments: $*
+# Todo: We have an issue here, if re-creating the machines, then the old token will be re-used, which is wrong ...
+sleep 60
+if [ "$2" -eq "1" ]; then
+    SWARM_MANAGER_IP=$(ifconfig eth1 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
+    mkdir -p /vagrant/.vagrant/swarm-token
+    ls -a /vagrant
+    ls -a /vagrant/.vagrant
+    ls -a /vagrant/.vagrant/swarm-token
+    chmod 777 /vagrant/.vagrant/swarm-token
+    echo $SWARM_MANAGER_IP > /vagrant/.vagrant/swarm-manager-ip
+    echo "SWARM_MANAGER_IP: $SWARM_MANAGER_IP"
+    docker swarm init --advertise-addr eth1:2377
+    docker swarm join-token -q manager > /vagrant/.vagrant/swarm-token/manager
+    docker swarm join-token -q worker > /vagrant/.vagrant/swarm-token/worker
+else
+    echo "Join swarm ...";
+    echo "SWARM_MANAGER_IP: `cat /vagrant/.vagrant/swarm-manager-ip`";
+    docker swarm join \
+      --token `cat /vagrant/.vagrant/swarm-token/manager` \
+      `cat /vagrant/.vagrant/swarm-manager-ip`:2377
+fi
+EOD
 
-    echo -e "\nVerifying that docker works ...\n"
-    docker run --rm hello-world
-    docker rmi hello-world
+@initWorker = <<EOD
+docker swarm join \
+  --token `cat  /vagrant/.vagrant/swarm-token/worker` \
+  157.230.16.162:2377
+EOD
 
-    echo -e "\nOpening port for minitwit ...\n"
-    ufw allow 80
-    ufw allow 3000
 
-    echo -e "\nOpening port for minitwit ...\n"
-    echo ". $HOME/.bashrc" >> $HOME/.bash_profile
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-    echo -e "\nConfiguring credentials as environment variables...\n"
-    echo "export DOCKER_USERNAME='xxxxxxx'" >> $HOME/.bash_profile
-    echo "export DOCKER_PASSWORD='xxxxxxxxxxx!'" >> $HOME/.bash_profile
-    source $HOME/.bash_profile
+  config.vm.provision "docker"
+  config.vm.synced_folder "./remote_files", "/vagrant", disabled: false
 
-    echo -e "\nVagrant setup done ..."
-    echo -e "minitwit will later be accessible at http://$(hostname -I | awk '{print $1}'):80"
-    SHELL
+  # Digital Ocean Configuration
+  config.vm.provider :digital_ocean do |provider, override|
+    override.ssh.private_key_path = './ssh_keys/id_rsa'
+    provider.ssh_key_name = 'vagrant'
+    override.vm.box = 'digital_ocean'
+    # override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+
+    provider.token = DO_ACCESS_TOKEN
+    provider.image = DO_IMAGE
+    provider.region = DO_REGION
+    provider.size = DO_SIZE
+    provider.ipv6 = false
+    provider.private_networking = true
   end
+
+
+  (1..NUM_OF_MANAGERS).each do |mgrNumber|
+    config.vm.define "manager-#{mgrNumber}" do |node|
+
+        node.vm.provision "shell", inline: <<-SHELL
+          sudo mkdir /vagrant
+          docker run --rm hello-world
+          docker rmi hello-world
+
+          echo ". $HOME/.bashrc" >> $HOME/.bash_profile
+          echo -e "\nConfiguring credentials as environment variables...\n"
+          echo "export DOCKER_USERNAME='xxxxxxx'" >> $HOME/.bash_profile
+          echo "export DOCKER_PASSWORD='xxxxxxxxxxx!'" >> $HOME/.bash_profile
+          source $HOME/.bash_profile
+        SHELL
+
+        node.vm.synced_folder "./remote_files", "/vagrant", disabled: false
+
+        # Todo: Does at the end of the day not work, since the rsync sync-folders are not available for the 2nd manager ...
+        # node.vm.provision "shell", inline: @initManager, args: [ "#{NUM_OF_MANAGERS}" , "#{mgrNumber}" ]
+
+      end
+    end # (end each)
+
+  (1..NUM_OF_WORKERS).each do |workerNumber|
+      config.vm.define "worker-#{workerNumber}" do |node|
+
+        node.vm.provision "shell", inline: "sudo mkdir /vagrant"
+        node.vm.synced_folder "./remote_files", "/vagrant", disabled: false
+
+      end
+    end # (end each)
+
 end

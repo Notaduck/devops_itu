@@ -42,12 +42,6 @@ services:
       - static_data:/vol/static
     env_file:
       - .env
-    # deploy:
-    #   labels:
-    #     - "traefik.enable=true"
-    #     - "traefik.http.routers.static-http.entrypoints=websecure"
-    #     - "traefik.http.routers.static-http.rule=Host(`minitwititu.xyz`) && PathPrefix(`/static`)"
-    #   # - "traefik.http.routers.static-http.tls.certresolver=mytlschallenge"
     deploy:
       placement:
         constraints:
@@ -66,6 +60,10 @@ services:
       - "9090:9090"
     networks:
       - main
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
 
   grafana:
     image: grafana/grafana
@@ -79,6 +77,10 @@ services:
       - grafana_data:/var/lib/grafana
     networks:
       - main
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
 
   filebeat:
     image: "docker.elastic.co/beats/filebeat:7.2.0"

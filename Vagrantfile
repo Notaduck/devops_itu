@@ -5,7 +5,7 @@
 # Configuration options
 # -------------------------------------------------------------------
 NUM_OF_MANAGERS=1
-NUM_OF_WORKERS=0
+NUM_OF_WORKERS=1
 DO_REGION="fra1"
 DO_IMAGE="docker-18-04"
 DO_SIZE="s-1vcpu-1gb"

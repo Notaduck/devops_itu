@@ -30,7 +30,7 @@ if [ "$2" -eq "1" ]; then
     chmod 777 /vagrant/.vagrant/swarm-token
     echo $SWARM_MANAGER_IP > /vagrant/.vagrant/swarm-manager-ip
     echo "SWARM_MANAGER_IP: $SWARM_MANAGER_IP"
-    docker swarm init --advertise-addr eth1:2377
+    docker swarm init --advertise-addr $SWARM_MANAGER_IP:2377
     docker swarm join-token -q manager > /vagrant/.vagrant/swarm-token/manager
     docker swarm join-token -q worker > /vagrant/.vagrant/swarm-token/worker
 else
@@ -43,9 +43,11 @@ fi
 EOD
 
 @initWorker = <<EOD
+scp -r root@your.server.example.com:/vagrant/.vagrant/swarm-token/ /vagrant/.vagrant/swarm-token/
+
 docker swarm join \
   --token `cat  /vagrant/.vagrant/swarm-token/worker` \
-  157.230.16.162:2377
+  10.114.0.3:2377
 EOD
 
 
@@ -59,8 +61,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     override.ssh.private_key_path = './ssh_keys/id_rsa'
     provider.ssh_key_name = 'vagrant'
     override.vm.box = 'digital_ocean'
-    # override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
-
+    override.vm.box_url = "https://github.com/devopsgroup-io/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+    override.vm.allowed_synced_folder_types = :rsync
     provider.token = DO_ACCESS_TOKEN
     provider.image = DO_IMAGE
     provider.region = DO_REGION
@@ -73,19 +75,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   (1..NUM_OF_MANAGERS).each do |mgrNumber|
     config.vm.define "manager-#{mgrNumber}" do |node|
 
-        node.vm.provision "shell", inline: <<-SHELL
-          sudo mkdir /vagrant
-          docker run --rm hello-world
-          docker rmi hello-world
+        # node.vm.provision "shell", inline: <<-SHELL
+        #   docker run --rm hello-world
+        #   docker rmi hello-world
 
-          echo ". $HOME/.bashrc" >> $HOME/.bash_profile
-          echo -e "\nConfiguring credentials as environment variables...\n"
-          echo "export DOCKER_USERNAME='xxxxxxx'" >> $HOME/.bash_profile
-          echo "export DOCKER_PASSWORD='xxxxxxxxxxx!'" >> $HOME/.bash_profile
-          source $HOME/.bash_profile
-        SHELL
+        #   echo ". $HOME/.bashrc" >> $HOME/.bash_profile
+        #   echo -e "\nConfiguring credentials as environment variables...\n"
+        #   echo "export DOCKER_USERNAME='xxxxxxx'" >> $HOME/.bash_profile
+        #   echo "export DOCKER_PASSWORD='xxxxxxxxxxx!'" >> $HOME/.bash_profile
+        #   source $HOME/.bash_profile
+        # SHELL
 
         node.vm.synced_folder "./remote_files", "/vagrant", disabled: false
+        node.vm.provision "shell", inline: @initManager, args: [ "#{NUM_OF_MANAGERS}" , "#{mgrNumber}" ]
 
         # Todo: Does at the end of the day not work, since the rsync sync-folders are not available for the 2nd manager ...
         # node.vm.provision "shell", inline: @initManager, args: [ "#{NUM_OF_MANAGERS}" , "#{mgrNumber}" ]
@@ -96,7 +98,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   (1..NUM_OF_WORKERS).each do |workerNumber|
       config.vm.define "worker-#{workerNumber}" do |node|
 
-        node.vm.provision "shell", inline: "sudo mkdir /vagrant"
+        # node.vm.provision "shell", inline: "sudo mkdir /vagrant"
         node.vm.synced_folder "./remote_files", "/vagrant", disabled: false
 
       end

@@ -11,6 +11,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework import status, permissions, exceptions, pagination
 from rest_framework.response import Response
 import datetime
+from minitwit_backend.metrics import Metrics
                 
 
 class IsReadOnlyRequest(permissions.BasePermission):
@@ -88,6 +89,8 @@ class MessagesListCreateView(ListCreateAPIView):
             'user': serializer.validated_data['author'].username,
             'pub_date': instance.pub_date.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
         }
+		# update metrics
+        Metrics.inserts_total.labels("message").inc()
         return Response(status=status.HTTP_204_NO_CONTENT, headers=headers, data=filtered_message)
 
     def perform_create(self, serializer):

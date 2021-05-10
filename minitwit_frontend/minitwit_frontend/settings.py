@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import sys
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -41,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'django_prometheus',
+    'django_prometheus',
     'users',
     'timeline',
     'social',
@@ -92,12 +93,15 @@ WSGI_APPLICATION = 'minitwit_frontend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE':'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv('POSTGRES_DB') or 'minitwit',
         'USER': os.getenv('POSTGRES_USER') or 'postgres',
         'PASSWORD': os.getenv('POSTGRES_PASSWORD') or 'changeme',
         'HOST': os.getenv('POSTGRES_HOST') or '127.0.0.1',
         'PORT': os.getenv('POSTGRES_PORT') or '5432'
+    } if os.getenv('ENV') != 'preprod' else {
+        'ENGINE':'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
     }
 }
 

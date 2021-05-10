@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -70,11 +71,17 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 <<<<<<< HEAD
+<<<<<<< HEAD
     'minitwit_backend.middleware.MetricsMiddleware', # import custom middleware from minitwit_backend/minitwit_backend/middleware.py
     'django_prometheus.middleware.PrometheusAfterMiddleware',
 =======
     'minitwit_backend.middleware.LatestMiddleware',
 >>>>>>> 570b90211119d95470ac25f21afa5765d5863c86
+=======
+    'minitwit_backend.middleware.MetricsMiddleware', # import custom middleware from minitwit_backend/minitwit_backend/middleware.py
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
+    'minitwit_backend.middleware.LatestMiddleware',
+>>>>>>> dd9cd763dfbcbb1360858c68cbe36b4d3cacf5fe
 ]
 
 ROOT_URLCONF = 'minitwit_backend.urls'
@@ -103,23 +110,18 @@ WSGI_APPLICATION = 'minitwit_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-<<<<<<< HEAD
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE':'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv('POSTGRES_DB') or 'minitwit',
         'USER': os.getenv('POSTGRES_USER') or 'postgres',
         'PASSWORD': os.getenv('POSTGRES_PASSWORD') or 'changeme',
         'HOST': os.getenv('POSTGRES_HOST') or '127.0.0.1',
         'PORT': os.getenv('POSTGRES_PORT') or '5432'
-=======
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': os.getenv('DB_NAME') or 'minitwit',
-	'USER': os.getenv('DB_USER') or 'postgres',
-	'PASSWORD': os.getenv('DB_PASSWORD') or 'changeme',
-	'HOST': os.getenv('DB_HOST') or '127.0.0.1',
-	'PORT': os.getenv('DB_PORT') or '5432'
->>>>>>> 95857e5fc588274d61d1491ed3da55af127cdde7
+    } if os.getenv('ENV') != 'preprod' else {
+        'ENGINE':'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
     }
 }
+
 
 
 # Password validation
@@ -171,5 +173,8 @@ REST_FRAMEWORK = {
 		'latest.filters.LatestFilterBackend'
 	]
 }
+
+STATIC_URL = '/static/static/'
+STATIC_ROOT = '/vol/api/static/'
 
 LATEST = 0

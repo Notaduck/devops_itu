@@ -6,13 +6,10 @@ networks:
 
 services:
   db:
-    # image: ${DOCKER_USERNAME}/minitwit_db
     image: postgres
     container_name: minitwit_db
-    environment:
-      POSTGRES_USER: postgres 
-      POSTGRES_PASSWORD: changeme 
-      POSTGRES_DATABASE: minitwit 
+    env_file:
+      - .env
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - postgres:/data/postgres
@@ -30,6 +27,8 @@ services:
   web:
     image: ${DOCKER_USERNAME}/minitwit_web
     container_name: minitwit_web
+    env_file:
+      - .env
     depends_on:
      - db
     networks:
@@ -41,6 +40,7 @@ services:
     restart: always
 
   api:
+<<<<<<< HEAD
 <<<<<<< HEAD
     image: ${DOCKER_USERNAME}/minitwit_api
     container_name: minitwit_api
@@ -74,8 +74,20 @@ services:
     volumes:
       - .:/code
 >>>>>>> bf30413b734096cc131a9d78dec943f9c4150f40
+=======
+    image: ${DOCKER_USERNAME}/minitwit_api
+    container_name: minitwit_api
+    env_file:
+      - .env
+    depends_on:
+     - db
+    networks:
+      - main
+>>>>>>> dd9cd763dfbcbb1360858c68cbe36b4d3cacf5fe
     ports:
       - '9000:9000'
+    volumes:
+      - static_data:/vol/api
     restart: always
 
   proxy:
@@ -86,11 +98,15 @@ services:
       - api
     networks:
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dd9cd763dfbcbb1360858c68cbe36b4d3cacf5fe
       - main
     ports:
       - '80:8080'
     volumes:
       - static_data:/vol/static
+<<<<<<< HEAD
     restart: always
 =======
       - minitwit 
@@ -107,21 +123,46 @@ services:
     # volumes:
     #   - grafana_data:/var/lib/grafana
     #   - ./grafana/provisioning/:/etc/grafana/provisioning/
+=======
+    env_file:
+      - .env
+>>>>>>> dd9cd763dfbcbb1360858c68cbe36b4d3cacf5fe
     restart: always
 
   prometheus:
-    image: prom/prometheus:v2.1.0
+    image: prom/prometheus
     container_name: prometheus
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - prom/prometheus
-    command: 
-      - '--config.file=/etc/prometheus/prometheus.yml'
+      - prometheus_data:/prometheus
+    depends_on:
+      - proxy 
     ports:
+<<<<<<< HEAD
       - 9090:9090
 >>>>>>> bf30413b734096cc131a9d78dec943f9c4150f40
+=======
+      - "9090:9090"
+    networks:
+      - main 
+
+  grafana:
+    image: grafana/grafana
+    depends_on:
+      - prometheus 
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - main 
+>>>>>>> dd9cd763dfbcbb1360858c68cbe36b4d3cacf5fe
 
 
 volumes:
   postgres:
   static_data:
+  grafana_data:
+  prometheus_data:

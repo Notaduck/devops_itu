@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from social.serializers import FollowerSerializer
 from rest_framework import status
 from rest_framework.response import Response
+from minitwit_backend.metrics import Metrics
 
 
 class FollowView(CreateAPIView, DestroyAPIView):
@@ -16,43 +17,30 @@ class FollowView(CreateAPIView, DestroyAPIView):
 	serializer_class = FollowerSerializer
 	permission_classes = (IsAuthenticated,)
 
+
 	def post(self, request, username, *args, **kwargs):
-		if not User.objects.filter(username = username).exists():
-			return Response(status=status.HTTP_400_BAD_REQUEST)
-		# who = User.objects.get_by_natural_key(username)
-		who = User.objects.get(username=username)
+		if User.objects.filter(username = username).exists():
+			who = User.objects.get(username=username)
 
-		if request.data.get('follow', False):
-			whomExists = User.objects.filter(username = request.data.get('follow')).exists()
-
-			if not whomExists:
-				return Response(status=status.HTTP_400_BAD_REQUEST)
-
+		if request.data.get('follow', False) and User.objects.filter(username=request.data.get('follow')).exists():
 			whom = User.objects.get_by_natural_key(request.data.get('follow'))
 
 			if Follower.objects.filter(who = who, whom = whom).exists() or who == whom:
 				return Response(status=status.HTTP_400_BAD_REQUEST)
 			return self.create(request, username, who, whom, *args, **kwargs)
-			
-		if request.data.get('unfollow', False):
-	
-			whomExists = User.objects.filter(username = request.data.get('unfollow')).exists()
 
-			if not whomExists:
-				return Response(status=status.HTTP_400_BAD_REQUEST)
-
-			# whom = User.objects.get_by_natural_key(request.data.get('unfollow'))
+		if request.data.get('unfollow', False) and User.objects.filter(username=request.data.get('unfollow')).exists():
 			whom = User.objects.get(username=request.data.get('unfollow'))
 
 			if Follower.objects.filter(who = who, whom = whom).exists():
 				return self.destroy(request, username, who, whom, *args, **kwargs)
 			else:
+				# return 204 because weird api specifications from helge
 				return Response(status=status.HTTP_204_NO_CONTENT)
 		else: 
 			return Response(status=status.HTTP_400_BAD_REQUEST)
-		
-		return Response(status=status.HTTP_400_BAD_REQUEST)
 	
+
 	def create(self, request, username, who, whom, *args, **kwargs):
 		data = request.data.copy()
 		data['who'] = who
@@ -61,11 +49,14 @@ class FollowView(CreateAPIView, DestroyAPIView):
 		serializer.is_valid(raise_exception=False)
 		self.perform_create(serializer)
 		headers = self.get_success_headers(serializer.data)
-		
+		# update metrics
+		Metrics.inserts_total.labels("follower").inc()
 		return Response(status=status.HTTP_204_NO_CONTENT, headers=headers)
 	
+
 	def destroy(self, request, username, who, whom, *args, **kwargs):
 		instance = Follower.objects.get(who=who, whom=whom)
 		self.perform_destroy(instance)
+		# update metrics
+		Metrics.deletes_total.labels("follower").inc()
 		return Response(status=status.HTTP_204_NO_CONTENT)
-

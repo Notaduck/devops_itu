@@ -6,26 +6,58 @@ Here we meet up, discuss meetings, solutions, problems and more. We also created
 
 We use discord servers to meet up every Monday during and after our lecture, we usually work on the given task most of that day. The work that we did not finish are usually completed in the weekend, because of very different time schedules during the week.
 
-# CI/CD chain
+# CI/CD pipeline
+
+Our CI/CD chain is run everytime we commit to any branch.
+
+![CI/CD pipeline](images/CICD.png "CI/CD pipeline")
 
 ## Git hook
 
 ### Pre commit
-- pep8 
-- something black
-flake8
 
-Github ()
+Before commiting, we have a git hook that runs **Flake8** to enforce style consistency across our Python project.
+
+## Github
+
+The developer code is then pushed to Github...
+
+## Static code analysis
+
+We use 3 static analysis tools as software quality gates into your CI/CD pipeline.
+
+### SonarQube
+
+We use SonarQube for continuous inspection of code quality. It performs automatic reviews with static analysis of the code to detect bugs, code smells, and security vulnerabilities in our project.
+
+### Code Climate
+
+We use Code Climate for test coverage?
+
+### Better Code Hub
+
+We use Better Code Hub for quality improvements?
 
 ## Travis 
 
-- Make a new release
+Our Travis setup consist of 3 jobs; build, test, deploy.
 
-### Stages
+### Docker build
 
-- docker_build
-- test
-- deploy
+The first job in our Travis setup is build. But, before we build we start out with getting acess to Travis by using our ssh keys. Afterwards, this job has 3 stages; login to docker, build the 3 docker images web, api and proxy and lastly push the 3 images.
+
+### Test
+
+The second job is testing. Here we start out by migrating. Migrations are Django’s way of propagating changes we make to our models (adding a field, deleting a model, etc.) into our database schema. 
+
+We only test frontend...
+
+### Deploy
+
+The third job is deploy and we only deploy when we commit to the main branch, which is how we make a new release.
+Before deploying we set up the git user and tag the commit. The final step is pulling the images and deplying to the swarm.
+
+- deploy token?
 
 # Repository
 

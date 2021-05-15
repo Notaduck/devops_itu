@@ -1,33 +1,25 @@
 # System Design
 
-Minitwit is a social media application that provides basic Twitter-like services. It consists of a web app and API services that are publicly available on the internet. Both services allow the user to register a profile, log in, create messages (tweets), follow and unfollow users. Basic authentication is required when creating messages, following, or unfollowing. Most of the application is written in Python, since our web app and API are using the Django framework. The web app and API are hosted on separate servers on a single Digital Ocean droplet, and communicate with a server on a separate droplet.
+Minitwit is a social media application that provides basic Twitter-like services. It consists of a web app and API services that are publicly available on the internet. Both services allow the user to register a profile, log in, create messages (tweets), follow and unfollow users. Basic authentication is required when creating messages, following, or unfollowing. Most of the application is written in Python, since our web app and API are using the Django framework. 
 
-Minitwit also consists of logging and monitoring tools that depends on the web app and API services, which are hosted on multiple servers on the same droplet as the web app and API. The monitoring tools communicate with a logging server which is hosted on a third separate droplet.
+Minitwit also consists of monitoring tools, which the web app and API communicate with when certain metrics are updated. These tools include Prometheus and Grafana, which allow for collection and displaying of metrics respectively. The monitoring tools are very useful for us developers, since they help us to maintain the system properly. 
+
+For logging features, we have implemented an EFK stack that includes Filebeat, Elastic Search, and Kibana. Filebeat is responsible for harvesting the data that we want to log, while Elastic Search is used to store that data in a database. With the logging features implemented, it is much easier for developers to diagnose and debug problems with the system. It also gives us a hand in maintaining the system.
 
 # Architecture
 
 ![Deployment Diagram](images/deployment_diagram.png "Deployment Diagram")
 
-*describe what goes on the production CI droplet and why*
-The **minitwit-ci-server** is responsible for creating the Docker Swarm nodes and connecting them. The server runs a Vagrant instance, which creates instantiates as many nodes as needed on Digital Ocean.
+Minitwit is hosted on multiple Digital Ocean droplets which form a Docker Swarm. Our logging and production database are each containerized on their own separate Droplets. This allows us to easily horizontally scale everything besides our persistent data, which should not be horizontally scaled anyways. 
 
-## Subsystems
+With a project that requires a web app, database, and API, it is normal to have the web app communicate with the database through the API. However, Django is designed such that direct communication with a database backend is much simpler to implement than communication with a custom backend server. For this reason, our web app and API don't communicate with one another, and therefore don't form a frontend/backend structure. Instead, our database is our backend and our web app/API servers are our frontends.
 
-![Web, Api, DB structure](images/web-api-db.png "Web, Api, DB diagram")
+We have a proxy service that uses nginx to route traffic from minitwititu.xyz to our web app server's IP address, and from api.minitwititu.xyz to our API server's address. It only exposes those two IPs, so all of the logging and monitoring related IPs are not exposed.
 
-With a project that requires a web app and API, it is normal to have the web app communicate with the database through the API. However, Django designed such that communication with a database backend is much simpler to implement than communication with a custom backend server. For this reason, our web app and API don't communicate with one another, and therefore don't form a frontend/backend structure. Instead, our database is our backend and our web app/API servers are our frontends.
+Our logging is accomplished by our Filebeat service, along with a logging database that hosts an Elastic Search instance. Filebeat scrapes the swarm manager's output, including all standard output for all services in the stack, and then logs relevant data in the logging database (Elastic Search). This logging database is used by Kibana to display our log information in a neat and readable website.
 
-*describe how proxy works w web + API*
-We have a nginx proxy that routes traffic from minitwititu.xyz to our web app server's IP address, and from api.minitwititu.xyz to our API server's address. The proxy is hosted on the swarm manager node because it does not need scaling, because ...
-*Does the proxy only route HTTP requests? does it route anything else? why is it on the manager node (will it not be scaled)?*
-
-*describe how elastic search and filebeat are structured and why*
-*some fuckin sequence diagram or something*
-*why is elastic search on a separate droplet? why is it on the manager node? does filebeat communicate w any other services besides elastic search?*
-
-*describe how web + API communicate w prometheus, and how prometheus communicates w grafana*
-Our monitoring is accomplished by Prometheus, which exposes our metrics on minitwitwitu.xyz/metrics. Our web app and API both make calls to update certain Prometheus metrics, and Prometheus gathers other performance-related metrics from both of them. 
-The /metrics route is also checked by our Grafana server, which allows us to create monitoring dashboards for all the metrics on that route.
+Our monitoring is accomplished by Prometheus, which exposes our metrics on minitwitwitu.xyz/metrics. Our web app and API both make calls to update certain Prometheus metrics, and Prometheus gathers other performance-related metrics from both of them. Some performance-related metrics are reported through middleware in the web app/API, while other 
+The /metrics route is also checked by our Grafana service, which hosts a webpage in which metrics can be monitored through customizeable dashboards.
 
 
 # Dependencies
@@ -45,8 +37,13 @@ Our dependencies are split into direct dependencies and tools
 - PostGreSQL | Database Manangement System
 - NGINX | (Web Server used for reverse proxy)
 
-**why nginx, ssl cetificate https liggende centraslt så de ikke centraliced managemant of ssl certicifacte.**
+- Flake8 | Python style consistency
+- Black | Python code formatter
+- SonarQube | Code quality inspector, bugs, vulnerabilities
+- Code Climate | Test coverage
+- Better Code Hub | Quality improvements
 
+**why nginx, so we dont have ssl cetificate https?? lying around.. så de ikke centraliced managemant of ssl certicifacte.**
 
 ## ...??
 

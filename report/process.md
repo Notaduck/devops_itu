@@ -10,7 +10,7 @@ We use discord servers to meet up every Monday during and after our lecture, we 
 
 Our CI/CD chain is run everytime we commit to any branch.
 
-![CI/CD pipeline](images/CICD.png "CI/CD pipeline")
+![CI/CD pipeline](images/CICD.png "CI/CD pipeline"){ width=50% }
 
 ## Git hook
 
@@ -26,17 +26,9 @@ The developer code is then pushed to Github...
 
 We use 3 static analysis tools as software quality gates into your CI/CD pipeline.
 
-### SonarQube
+We use **SonarQube** for continuous inspection of code quality. It performs automatic reviews with static analysis of the code to detect bugs, code smells, and security vulnerabilities in our project. We use **Code Climate** for test coverage, 
 
-We use SonarQube for continuous inspection of code quality. It performs automatic reviews with static analysis of the code to detect bugs, code smells, and security vulnerabilities in our project.
-
-### Code Climate
-
-We use Code Climate for test coverage?
-
-### Better Code Hub
-
-We use Better Code Hub for quality improvements?
+We use **Better Code Hub** for quality improvements?
 
 ## Travis 
 
@@ -90,7 +82,7 @@ We later used Github issues to maintain a backlog over the tasks for the group t
 # Monitoring
 
 We use the monitoring service Prometheus, to monitor our application...
-To display the data that we get from Prometheus, we use the web-based multi-source graph interface, Grafana.
+To display the data that we get from Prometheus, we use the web-based graph interface, Grafana.
 
 We split our monitoring into 2 Grafana dashboards; Business Monitoring (e.g. images/Business Monitoring), which displays our PostgreSQL Query data, and Infrastructure Monitoring (e.g. images/Infrastructure Monitoring), which displays our Prometheus metrics.
 
@@ -100,12 +92,13 @@ The Infrastructure Monitoring dashboard contains CPU Load percent, used for up-t
 
 # Logging
 
-...
+Our EFK stack is set up to report each transaction's user, IP address, request type, content, page redirect, and response status. This data is collected by Filebeat when Django invokes its middleware. They are logged as soon as the API/web response is ready to be sent back to the user.
+When Filebeat logs the data, it is sent to the Elastic Search database that is hosted on a separate droplet, so that is accessible on Kibana.
 
 # Security
 
-...
+Brief results of the security assessment.
 
 # Scaling and load balancing
 
-... 
+Our scaling and load balancing is done through a single Docker Swarm that holds all of Minitwit's non-database services. 

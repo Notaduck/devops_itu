@@ -9,7 +9,7 @@ Minitwit also consists of logging and monitoring tools that depends on the web a
 ![Deployment Diagram](images/deployment_diagram.png "Deployment Diagram")
 
 *describe what goes on the production CI droplet and why*
-We have tried to keep most of our project on one droplet, so that the process of deployment is always the same, no matter what part of the system is being changed. This main CI droplet runs Docker in swarm mode, so that the web and API services can be scaled. Other services that either cannot or do not need scaling are hosted on either the manager node or on a separate droplet.
+The **minitwit-ci-server** is responsible for creating the Docker Swarm nodes and connecting them. The server runs a Vagrant instance, which creates instantiates as many nodes as needed on Digital Ocean.
 
 ## Subsystems
 
@@ -32,7 +32,7 @@ The /metrics route is also checked by our Grafana server, which allows us to cre
 
 # Dependencies
 
-Our dependencies are split into ... and tools
+Our dependencies are split into direct dependencies and tools
 
 ## Tools
 
@@ -43,7 +43,9 @@ Our dependencies are split into ... and tools
 - Kibana | Data visualization dashboard software for ElasticSearch
 - Filebeat | File harvester
 - PostGreSQL | Database Manangement System
-- NGINX | Proxy (and load balancer????)
+- NGINX | (Web Server used for reverse proxy)
+
+**why nginx, ssl cetificate https liggende centraslt så de ikke centraliced managemant of ssl certicifacte.**
 
 
 ## ...??
@@ -79,6 +81,9 @@ API dependecies are as follows:
 - wrapt 1.12.1 - A Python module for decorators, wrappers and monkey patching.
 
 # Current state
+
 Get the fucking grafana to tell us something xD
 
 # License
+
+We collected all the license for every dependency we have to form the license our product. Here we met the GNU GPL v2 for psycopg2, The GPL series are all copyleft licenses, which means that any derivative work must be distributed under the same or equivalent license terms. To cover the product we therefore chose to go with the GNU General Public License v3.0; can be found in the licence document. In this process we also collected all copyright noticies for the dependencies, these are all placed in the Notice document.

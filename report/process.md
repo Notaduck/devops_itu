@@ -1,3 +1,4 @@
+
 # The Team
 
 The team is organized via Discord. We build a server to support all communication through that.
@@ -12,6 +13,9 @@ We use discord servers to meet up every Monday during and after our lecture, we 
 ### Pre commit
 - pep8 
 - something black
+flake8
+
+Github ()
 
 ## Travis 
 
@@ -24,6 +28,7 @@ We use discord servers to meet up every Monday during and after our lecture, we 
 - deploy
 
 # Repository
+
 what, where, why
 We have organized the project in one repository ...
 We split logging into a separate repository because ...
@@ -32,21 +37,23 @@ We split logging into a separate repository because ...
 
 Our branching strategy utilizes the Gitflow Workflow. Basically we will have 2 main branches and a number of feature branches:
 
-
-- main branch - This is the main branch and contains the "production code".
+- main branch - This is the main branch and contains the production code.
 - developer branch - This is the development branch containing the development code. This code is merged and pushed into main at the end of each completed weekly assignment.
 - feature branches - Used to develop specific features relating to a specific assignment and is merged and pushed into the development branch when it is completed.
 
-
 Branches should always be branched from develop
 
-Always to pull the newest development branch before creating a feature branch
+Always pull the newest development branch before creating a feature branch
 
 Experimenting is preferably done in branches. In some cases when working on a specific task it might make sense to further branch out from the feature branch eg.
 
 # Development process
 
+For this project we worked with an agile development process. Agile is all about moving fast, releasing often, and responding to the needs of your users, even if it goes against what’s in your initial plan. Every week we would plan a new implementation, work on the implementation in smaller bids, test it and release it for feedback session the next lecture. If we had any bugs or backlog from the last week we would split up and work on tasks in smaller groups. 
+
 We used Github Projects to organize tasks in Kanban boards. We created 2 boards to separate tasks on the frontend and backend at the beginning of the project.
+
+We later used Github issues to maintain a backlog over the tasks for the group to take on.
 
 # Monitoring
 
@@ -61,6 +68,12 @@ The Infrastructure Monitoring dashboard contains CPU Load percent, used for up-t
 
 # Logging
 
+...
+
 # Security
 
+...
+
 # Scaling and load balancing
+
+... 

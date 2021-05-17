@@ -1,3 +1,5 @@
+\newpage
+
 # System Design
 
 Minitwit is a social media application that provides basic Twitter-like services. It consists of a web app and API services that are publicly available on the internet. Both services allow the user to register a profile, log in, create messages (tweets), follow and unfollow users. Basic authentication is required when creating messages, following, or unfollowing. Most of the application is written in Python, since our web app and API are using the Django framework. 
@@ -10,13 +12,19 @@ For logging features, we have implemented an EFK stack that includes Filebeat, E
 
 # Architecture
 
-![Deployment Diagram](images/deployment_diagram.png "Deployment Diagram")
-
 Minitwit is hosted on multiple Digital Ocean droplets which form a Docker Swarm. Our logging and production database are each containerized on their own separate Droplets. This allows us to easily horizontally scale everything besides our persistent data, which should not be horizontally scaled anyways. 
 
-With a project that requires a web app, database, and API, it is normal to have the web app communicate with the database through the API. However, Django is designed such that direct communication with a database backend is much simpler to implement than communication with a custom backend server. For this reason, our web app and API don't communicate with one another, and therefore don't form a frontend/backend structure. Instead, our database is our backend and our web app/API servers are our frontends.
+![Deployment diagram of docker swarm setup](images/deployment_diagram.png "Deployment Diagram"){ width=80% }
+
+With a project that requires a web app, database, and API, it is normal to have the web app communicate with the database through the API. However, Django is designed such that direct communication with a database backend is much simpler to implement than communication with a custom backend server.
+
+![Diagram of project structure](images/web-api-db.png "Diagram of project structure"){ width=50% }
+
+For this reason, our web app and API don't communicate with one another, and therefore don't form a frontend/backend structure. Instead, our database is our backend and our web app/API servers are our frontends.
 
 ****We chose to use a PostGreSQL client that initially was hosted on the same, but we changed it to blah bla h ablsdlsad**** django with postgres - lecture 3??? 
+
+**more detailed diagram**
 
 We have a proxy service that uses nginx to route traffic from minitwititu.xyz to our web app server's IP address, and from api.minitwititu.xyz to our API server's address. It only exposes those two IPs, so all of the logging and monitoring related IPs are not exposed.
 
@@ -80,7 +88,15 @@ API dependecies are as follows:
 
 # Current state
 
-Get the fucking grafana to tell us something xD
+Do we know any bugs in our system or ?
+
+For static analysis of the software, we've primarily used SonarCloud. As of now their report on the project is as follows:
+
+ **Reliability**: 0 bugs
+ **Security**: 0 vulnerabilities with 3 security hotspots (23 with tests??)
+ **Maintainability**: 2 hours technical debt based on 16 code smells, where hereof 8 are critical or major.
+ **Duplications**: 5.0 % duplications and 6 dublicated blocks (including tests/settings)
+ 
 
 # License
 

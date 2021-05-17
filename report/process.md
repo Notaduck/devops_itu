@@ -10,23 +10,19 @@ We use discord servers to meet up every Monday during and after our lecture, we 
 
 Our CI/CD chain is run everytime we commit to any branch.
 
-![CI/CD pipeline](images/CICD.png "CI/CD pipeline"){ width=50% }
+![CI/CD pipeline](images/CICD.png "CI/CD pipeline"){ width=80% }
 
-## Git hook
+Before commiting, we have a git hook that runs **Flake8** and **Black** to enforce ... and style consistency across our Python project.
 
-### Pre commit
-
-Before commiting, we have a git hook that runs **Flake8** to enforce style consistency across our Python project.
-
-## Github
-
-The developer code is then pushed to Github...
+The developer code is then pushed to Github ...
 
 ## Static code analysis
 
 We use 3 static analysis tools as software quality gates into your CI/CD pipeline.
 
-We use **SonarQube** for continuous inspection of code quality. It performs automatic reviews with static analysis of the code to detect bugs, code smells, and security vulnerabilities in our project. We use **Code Climate** for test coverage, 
+We use **SonarQube** for continuous inspection of code quality. It performs automatic reviews with static analysis of the code to detect bugs, code smells, and security vulnerabilities in our project.
+
+We use **Code Climate** for test coverage, 
 
 We use **Better Code Hub** for quality improvements?
 
@@ -34,22 +30,11 @@ We use **Better Code Hub** for quality improvements?
 
 Our Travis setup consist of 3 jobs; build, test, deploy.
 
-### Docker build
+The first job in our Travis setup is build. Before build we start out with getting access to Travis by using our ssh keys. Afterwards, build has 3 stages; login to docker, build the 3 docker images web, api and proxy and lastly push the 3 images.
 
-The first job in our Travis setup is build. But, before we build we start out with getting acess to Travis by using our ssh keys. Afterwards, this job has 3 stages; login to docker, build the 3 docker images web, api and proxy and lastly push the 3 images.
+The second job is testing. Here we start out by migrating. Migrations are Django’s way of propagating changes we make to our models (adding a field, deleting a model, etc.) into our database schema. We only test frontend...
 
-### Test
-
-The second job is testing. Here we start out by migrating. Migrations are Django’s way of propagating changes we make to our models (adding a field, deleting a model, etc.) into our database schema. 
-
-We only test frontend...
-
-### Deploy
-
-The third job is deploy and we only deploy when we commit to the main branch, which is how we make a new release.
-Before deploying we set up the git user and tag the commit. The final step is pulling the images and deplying to the swarm.
-
-- deploy token?
+The third job is deploy and we only deploy when we commit to the main branch, which is how we make a new release. Before deploying we set up the git user and tag the commit. The final step is pulling the images and deplying to the swarm. - deploy token?
 
 # Repository
 
@@ -82,22 +67,34 @@ We later used Github issues to maintain a backlog over the tasks for the group t
 # Monitoring
 
 We use the monitoring service Prometheus, to monitor our application...
-To display the data that we get from Prometheus, we use the web-based graph interface, Grafana.
+To display the data that we get from Prometheus, we use the web-based graph interface, Grafana...
 
 We split our monitoring into 2 Grafana dashboards; Business Monitoring (e.g. images/Business Monitoring), which displays our PostgreSQL Query data, and Infrastructure Monitoring (e.g. images/Infrastructure Monitoring), which displays our Prometheus metrics.
 
 The Business Monitoring dashboard contains amount of: Users, Messages and Followers. We used these data to monitor the correctness of successful requests.
 
+![Business Monitoring](images/Business Monitoring.png "Business Monitoring"){ height=25% }
+
 The Infrastructure Monitoring dashboard contains CPU Load percent, used for up-time calculation as well as strain on the system and HTTP Responses (Frontend / Backend), used to monitor system failure as well as performance in regards to correct response.
+
+![Infrastructure Monitoring](images/Infrastructure Monitoring.png "Infrastructure Monitoring")
+
 
 # Logging
 
 Our EFK stack is set up to report each transaction's user, IP address, request type, content, page redirect, and response status. This data is collected by Filebeat when Django invokes its middleware. They are logged as soon as the API/web response is ready to be sent back to the user.
+
 When Filebeat logs the data, it is sent to the Elastic Search database that is hosted on a separate droplet, so that is accessible on Kibana.
 
 # Security
 
 Brief results of the security assessment.
+
+What tools did why use?
+Known risks?
+Did we get firewall on database?
+
+We do not have anything like fail2ban setup on the database server, and we only use basic authentication which provides very little security and are therefore vulnerable to brute force and dictionary attacks.
 
 # Scaling and load balancing
 

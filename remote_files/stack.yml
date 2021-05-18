@@ -4,28 +4,32 @@ services:
   web:
     image: ${DOCKER_USERNAME}/minitwit_web
     container_name: minitwit_web
+    ports:
+      - "8000:8000"
     env_file:
       - .env
-    depends_on:
-      - db
-    networks:
-      - main
     volumes:
       - static_data:/vol/web
-    restart: always
+    deploy:
+      replicas: 2
+      restart_policy:
+        max_attempts: 3
+        condition: on-failure
 
   api:
     image: ${DOCKER_USERNAME}/minitwit_api
     container_name: minitwit_api
+    ports:
+      - "9000:9000"
     env_file:
       - .env
-    depends_on:
-      - db
-    networks:
-      - main
     volumes:
       - static_data:/vol/api
-    restart: always
+    deploy:
+      replicas: 2
+      restart_policy:
+        max_attempts: 3
+        condition: on-failure
 
   proxy:
     image: ${DOCKER_USERNAME}/minitwit_proxy
@@ -33,9 +37,6 @@ services:
     depends_on:
       - web
       - api
-    networks:
-      - main
-      # - traefik-public
     ports:
       - "80:8080"
     volumes:
@@ -58,8 +59,6 @@ services:
       - proxy
     ports:
       - "9090:9090"
-    networks:
-      - main
     deploy:
       placement:
         constraints:
@@ -75,8 +74,6 @@ services:
       - .env
     volumes:
       - grafana_data:/var/lib/grafana
-    networks:
-      - main
     deploy:
       placement:
         constraints:
@@ -90,14 +87,6 @@ services:
       - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
       - /var/lib/docker:/var/lib/docker:ro
       - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - main
-
-networks:
-  traefik-public:
-    external: true
-  main:
-    driver: overlay
 
 volumes:
   postgres:

@@ -8,7 +8,7 @@ One of the first things that our application needed was a database to store user
 
 Minitwit also consists of monitoring tools, which the web app and API communicate with when certain metrics are updated. These tools include Prometheus and Grafana, which allow for collection and displaying of metrics respectively. The monitoring tools are very useful for us developers, since they help us to maintain the system properly. 
 
-For logging features, we have implemented an EFK stack that includes Filebeat, Elastic Search, and Kibana. Filebeat is responsible for harvesting the data that we want to log, while Elastic Search is used to store that data in a database. With the logging features implemented, it is much easier for developers to diagnose and debug problems with the system. It also helps us in maintaining the system.
+For logging features, we have implemented an EFK stack that includes Elastic Search, Filebeat, and Kibana. Filebeat is responsible for harvesting the data that we want to log, while Elastic Search is used to store that data in a database. With the logging features implemented, it is much easier for developers to diagnose and debug problems with the system. The logging is absolute and thus also allows perfect reproduction of requests from users to both the frontend and backend. This is due to the entire request body and the most significant features of the request header being logged.
 
 # Architecture
 
@@ -22,7 +22,8 @@ With a project that requires a web app, database, and API, it is normal to have 
 
 For this reason, our web app and API don't communicate with one another, and therefore don't form a frontend/backend structure. Instead, our database is our backend and our web app/API servers are our frontends.
 
-****We chose to use a PostGreSQL client that initially was hosted on the same, but we changed it to blah bla h ablsdlsad**** django with postgres - lecture 3??? 
+Django has an integrated Database API allowing both querying, changing and deleting sql entries with connected database instances. Defining the tables within the Django Framework allows Django to both create and manipulate these tables. Additionally it also allows Django to export it's basic tables required for authentication management along side other basic functionalities, instead of storing it in the RAM. It also simplifies the required syntax to both query and add to the tables themselves resulting in much more simple code.
+
 
 **more detailed diagram**
 
@@ -90,6 +91,10 @@ API dependecies are as follows:
 
 Do we know any bugs in our system or ?
 
+We have some timeout errors, we used nginx to ... (we didnt utilize the threads) when someone was using the api ...
+
+Some error with follower.
+
 For static analysis of the software, we've primarily used SonarCloud. As of now their report on the project is as follows:
 
  **Reliability**: 0 bugs
@@ -97,6 +102,11 @@ For static analysis of the software, we've primarily used SonarCloud. As of now 
  **Maintainability**: 2 hours technical debt based on 16 code smells, where hereof 8 are critical or major.
  **Duplications**: 5.0 % duplications and 6 dublicated blocks (including tests/settings)
  
+ Mono repo caused the settings fields to be duplicated.
+
+ We chose a bad encryptions method
+
+ Had a problem with vagrant (had to move server, couldnt find out how to move the database)
 
 # License
 

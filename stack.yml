@@ -35,7 +35,6 @@ services:
       - api
     networks:
       - main
-      # - traefik-public
     ports:
       - "80:8080"
     volumes:
@@ -94,8 +93,6 @@ services:
       - main
 
 networks:
-  traefik-public:
-    external: true
   main:
     driver: overlay
 

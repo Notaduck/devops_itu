@@ -19,7 +19,7 @@ class PublicTimelineView(TimelineView):
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		context['public'] = True
-		context['posts'] = Message.objects.select_related('author').all().order_by('-pub_date')
+                context['posts'] = Message.objects.select_related('author').all().order_by('-pub_date').[:40]
 		return context
 
 

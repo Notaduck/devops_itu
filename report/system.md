@@ -113,4 +113,4 @@ For static analysis of the software, we've primarily used SonarCloud. As of now 
 
 # License
 
-We collected all the license for every dependency we have to form the license our product. Here we met the GNU GPL v2 for psycopg2, The GPL series are all copyleft licenses, which means that any derivative work must be distributed under the same or equivalent license terms. To cover the product we therefore chose to go with the GNU General Public License v3.0; which can be found in the licence document. In this process we also collected all copyright noticies for the dependencies, these are all placed in the Notice document.
+We collected all the licenses and copyright notices for every dependency to formulate our product's license. Here, we met the GNU GPL v2 for psycopg2. The GPL series are all copyleft licenses where any derivative work must be distributed under the same or equivalent license terms. Therefore, to cover the product, we chose to go with the GNU General Public License v3.0, which can be found in the licence document. We also collected all copyright notices for the dependencies; these are all placed in the Notice document.

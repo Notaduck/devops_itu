@@ -6,15 +6,15 @@ Here we meet up, discuss meetings, solutions, problems and more. We also created
 
 We use discord servers to meet up every Monday during and after our lecture. We usually work on the given task most of that day. The work that we did not finish is generally completed at the weekend because of the group members incompatible time schedules during the week.
 
+
 # CI/CD pipeline
 
-Our CI/CD chain is run everytime we commit to any branch.
+The CI/CD Pipeline starts when a developer commits a change to the local git repository, it will first run [Black](https://github.com/psf/black) to format the code, thereafter it will run [flake83(https://gitlab.com/pycqa/flake8) to ensure a codestyle in order to keep the source code clean an easy maintaiable.  
+
+Once the changes get to a branch which isn't the main branch travis will get activated and ensure that the branch can be build and unit test's will be ran. If and only if a pull request are made to the main branch, travis will be started again, a deployment to the production server will be performed id the two former steps are sucessfull and a release to github will be made.  All of this is described in the following subsections
 
 ![CI/CD pipeline](images/CICD.png "CI/CD pipeline"){ width=80% }
 
-Before commiting, we have a git hook that runs **Flake8** and **Black** to enforce ... and style consistency across our Python project.
-
-The developer code is then pushed to Github ...
 
 ## Static code analysis
 

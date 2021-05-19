@@ -122,6 +122,9 @@ For static analysis of the software, we've primarily used SonarCloud. As of now 
 
 The encryption choosen for the user passwords is a weak one, however we could not migrate to a new one since we allready had a lot of users using the wrong encryption methods.
 
+The current state of the logging system is not ideal since the formatting of the logging is all weird and messed ud so we have to make some complicated searchqueries in order to extract usefull log.
+
 # License
 
 We collected all the licenses and copyright notices for every dependency to formulate our product's license. Here, we met the GNU GPL v2 for psycopg2. The GPL series are all copyleft licenses where any derivative work must be distributed under the same or equivalent license terms. Therefore, to cover the product, we chose to go with the GNU General Public License v3.0, which can be found in the licence document. We also collected all copyright notices for the dependencies; these are all placed in the Notice document.
+

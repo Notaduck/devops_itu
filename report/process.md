@@ -100,6 +100,3 @@ We do not have anything like fail2ban setup on the database server, and we only 
 
 Django protects us from host-header injections. It also provides CSRF token support, which helps to protect our users from CSRF attacks. 
 
-# Scaling and load balancing
-
-Our scaling and load balancing is done through a single Docker Swarm that holds all of Minitwit's non-database services. 

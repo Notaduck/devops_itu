@@ -10,36 +10,6 @@
 
 ## How to get started
 
-### Get your virtual enviroment running
-
-```sh
-python -m pip install virtualenv
-```
-
-### Get psycopg2 and Django
-
-```sh
-sudo apt-get install libpq-dev
-```
-
-In order tovalidate that you have `pg_config` please run the following in your terminal
-
-```sh
-pg_config
-```
-
-Next thing is to install the `psycopg2`
-
-```sh
-python -m pip install psycopg2
-```
-
-```sh
-python -m pip install django 
-```
-
-### How to setup docker
-
 ```sh
 sudo apt-get install docker-ce  && docker-compose
 ```

@@ -84,9 +84,9 @@ The Infrastructure Monitoring dashboard contains CPU Load percent, used for up-t
 
 # Logging
 
-Logging in Django can be implemeted as middleware allowing logging of both existing views and future views without tailoring the logging system in each and every view. This both results in a very simplistic an all sided logging system, without hindering the developer in adding new features or functionality.
+Logging in Django can be implemented as middleware allowing logging of both current views and future views without tailoring the logging system in every view. It results in a simplistic all-sided logging system without hindering the developer from adding new features or functionality.
 
-Our EFK stack is set up to report each transaction's user, IP address, request type, content, page redirect, and response status. This data is collected by Filebeat when Django invokes its middleware. They are logged as soon as the API/web response is ready to be sent back to the user, and thus both include the intial request as well as the result of the request. When Filebeat logs the data, it is sent to the Elastic Search database that is hosted on a separate droplet, such that it is accessible on Kibana.
+Our EFK stack is set up to report each transaction's user, IP address, request type, content, page redirect, and response status. This data is collected by Filebeat when Django invokes its middleware. They are logged as soon as the API/web response is ready to be sent back to the user, and thus both include the initial request and the result of the request. When Filebeat logs the data, it is sent to the Elastic Search database hosted on a separate droplet, such that it is accessible on Kibana.
 
 # Security
 

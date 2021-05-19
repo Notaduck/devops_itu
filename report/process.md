@@ -22,9 +22,9 @@ We use 3 static analysis tools as software quality gates into your CI/CD pipelin
 
 We use **SonarQube** for continuous inspection of code quality. It performs automatic reviews with static analysis of the code to detect bugs, code smells, and security vulnerabilities in our project.
 
-We use **Code Climate** for test coverage, 
+We use **Code Climate** for test coverage.
 
-We use **Better Code Hub** for quality improvements?
+We use **Better Code Hub** for quality improvements.
 
 ## Travis 
 
@@ -34,7 +34,7 @@ The first job in our Travis setup is the build job. Before this job, we start wi
 
 The second job is testing. Here we start by migrating. Migrations are Django’s way of propagating changes we make to our models (adding a field, deleting a model, etc.) into our database schema. We only test the frontend with Travis. When we ran the backend test in Travis, it tried to start up the system.
 
-The third job is deploy, and we only deploy when we commit to the main branch, which is how we make a new release. Before deploying, we set up the git user and tag the commit. The final step is pulling the images and deploying them to the swarm. - deploy token?
+The third job is deploy, and we only deploy when we commit to the main branch, which is how we make a new release. Before deploying, we set up the git user and tag the commit. The final step is pulling the images and deploying them to the swarm.
 
 # Repository
 

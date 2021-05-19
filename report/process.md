@@ -12,7 +12,7 @@ Our CI/CD chain is run everytime we commit to any branch.
 
 ![CI/CD pipeline](images/CICD.png "CI/CD pipeline"){ width=80% }
 
-Before commiting, we have a git hook that runs **Flake8** and **Black** to enforce ... and style consistency across our Python project.
+Before commiting, we have a git hook that runs **Flake8** and **Black** to enforce style consistency across our Python project.
 
 The developer code is then pushed to Github ...
 

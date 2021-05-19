@@ -12,13 +12,12 @@ We should have started by getting to know each other and match our expectations 
 
 ## Tool choice
 
-With the lack of communication came some bad choices. We chose to go with a framework that only one group member knew, which meant that the rest of the group had to use a lot of time getting to know the structure and functionalities. 
+With the lack of communication came some bad choices. We chose to go with a framework that only one group member knew, which meant that the rest of the group had to use a lot of time getting to know the structure and functionalities.
 
-Django is a large scale framework. It has a large amount implemented functionality; easy database management, easy implementation of views and pages, authentications tools and security features. This is all very usefull when you use it as a large scale API framework, the problem we ran into here was that our project didn't take advantage of these features the way it was meant to be used. Django turned out to be unmanageable for inexperienced users due to the high complexity of the innate features.
+Django is an extensive scale framework. It has a large amount of implemented functionality; easy database management, easy implementation of views and pages, authentications tools and security features. It is beneficial when you use it as a large scale API framework. We ran into a problem here because our project didn't take advantage of these features the way it was meant to be used. Django turned out to be unmanageable for inexperienced users due to the high complexity of the innate features.
 
 
-... use tools we already know (% django) % python 
-latest, use db instead of global variable in python.
+... using tools we already know (% django) % python latest, use db instead of global variable in python.
 
 ## Technical debt
 

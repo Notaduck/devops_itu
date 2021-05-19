@@ -11,7 +11,6 @@ Minitwit also consists of monitoring tools, which the web app and API communicat
 For logging features, we have implemented an EFK stack that includes Elastic Search, Filebeat, and Kibana. Filebeat is responsible for harvesting the data that we want to log, while Elastic Search is used to store that data in a database. With the logging features implemented, it is much easier for developers to diagnose and debug problems with the system. The logging is absolute and allows perfect reproduction of requests from users to the front-end and backend due to the entire request body and the most significant features of the request header being logged.
 
 
-
 # Architecture
 
 Minitwit is hosted on multiple Digital Ocean droplets, which form a Docker Swarm. Our logging and production database are each containerized on their separate Droplets and separated from the swarm to isolated these two systems from the systems exposed to the end-user. It allows us to easily horizontally scale everything besides our persistent data, which should not be horizontally scaled in this scenario. However, if this were supposed to run in a production environment, it would make sense to let Digital Ocean take care of the horizontal scaling of our database instead of maintaining it ourselves and set up a  High Availability and Load Balancing for our db, which includes maintenance of the Master DB and all of the Slaves.
@@ -110,9 +109,11 @@ We had many timeout errors that were due to the large size of the public timelin
 For static analysis of the software, we've primarily used SonarCloud. As of now their report on the project is as follows:
 
  **Reliability**: 0 bugs
- **Security**: 0 vulnerabilities with 3 security hotspots (23 with tests??)
+ **Security**: 0 vulnerabilities with 3 security hotspots
  **Maintainability**: 2 hours technical debt based on 16 code smells, where hereof 8 are critical or major.
- **Duplications**: 5.0 % duplications and 6 dublicated blocks (including tests/settings)
+ **Duplications**: 5.0 % duplications and 6 dublicated blocks
+
+The duplications are only test and settings files.
 
 The encryption choosen for the user passwords is a weak one, however we could not migrate to a new one since we already had a lot of users using the wrong encryption methods.
 

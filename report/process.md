@@ -90,13 +90,9 @@ Our EFK stack is set up to report each transaction's user, IP address, request t
 
 # Security
 
-Brief results of the security assessment.
+The security assessment helped us to identify which issues to prioritize. We performed 2 vulnerability scans overall, and the second scan was done after we had fixed various vulnerabilities that were identified in the first scan.
 
-What tools did why use?
-Known risks?
-Did we get firewall on database?
+After using WMAP to scan our system we identified 4 vulnerabilities and noticed that our 2 of most urgent issues were related to our project being unprotected by a firewall.
+We also tried to run SQL injections and cross site scripting on our site, which did not reveal any vulnerabilities.
 
-We do not have anything like fail2ban setup on the database server, and we only use basic authentication which provides very little security and are therefore vulnerable to brute force and dictionary attacks.
-
-Django protects us from host-header injections. It also provides CSRF token support, which helps to protect our users from CSRF attacks. 
-
+After we created the firewall for our project, we ran a second vulnerability scan using OWASP ZAP. We found just one issue that wasn't picked up by WMAP. 

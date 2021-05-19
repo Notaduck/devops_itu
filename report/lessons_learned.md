@@ -14,15 +14,16 @@ We should have started out by getting to know eatchother and match our expectati
 
 With the lack of communication came some bad choices. We chose to go with a framework that only one group member knew, which meant that the rest of the group had to use a lot of time getting to know the structure and functionalities. 
 
-Django is a large scale framework. It has a large amount implemented functionality; easy database management, easy implementation of views and pages, authentications tools and security features. This is all very usefull when you use it as a large scale API framework, the problem we ran into here was that our project didn't take advantage of these features the way it was meant to be used. Django turned out to be unmanageable for inexperienced users due to the high complexity of the innate features.
+Django is a large scale framework. It has a large amount of implemented functionality; easy database management, easy implementation of views and pages, authentications tools and security features. This is all very usefull when you use it as a large scale API framework, the problem we ran into here was that our project didn't take advantage of these features the way it was meant to. Django turned out to be unmanageable for inexperienced users due to the high complexity of the innate features.
 
-
-... use tools we already know (% django) % python 
-latest, use db instead of global variable in python.
+We should have started out discussing several choices including prices on the long run, for the whole tech stack as well as the teammembers prior work with these.
 
 ## Technical debt
 
-testing implementations (vagrant; mac)
-we werent ready for the simulator (already behind)
-when you have a enormous backlog dont choose the harder implementation (docker swarm)
-get loggin up and running for use.
+The team didn't use enough time going through and testing the individual pull request, which meant that we spent a lot of time looking into small errors that ...
+
+When the simulator started, we already had a backlog resulting in our product not being ready for the simulator. This meant that some register request already failed the first day, resulting in future error on message and follow request. The team should have focused a lot more time into getting the project ready for the simulator together and thus avoiding future errors. 
+
+Later in the project, we decided to try and implement docker swarm. This took a lot of time and looking back, we probably should'nt have chosen the harder implementation when we already had quite a big backlog. We did learn a lot from working with docker swarm and in the end it was really worth it to get it up and running for the learning experience.
+
+Our technical debt included a couple of errors from former tasks. It took a lot of time to find these and fix them. We should have focused more time into getting the loggin system up and running for use, so that we actually had a tool to help us in these cases.

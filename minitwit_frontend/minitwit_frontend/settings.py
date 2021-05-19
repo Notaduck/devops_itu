@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'minitwit_frontend.middleware.LoggingMiddleware', # import custom middleware for logging of all requests
     'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -76,7 +77,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-		'users.views.login_context'
+		        'users.views.login_context'
             ],
             'libraries': {
                 'custom_filters' : 'minitwit_frontend.filters'
@@ -148,3 +149,63 @@ STATIC_ROOT = '/vol/web/static/'
 AUTH_USER_MODEL = 'users.User'
 
 LOGIN_REDIRECT_URL = '/timeline'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+
+    'handlers': {
+        'console': {
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        }
+    },
+
+    'formatters': {
+        'simple': {
+            'format': '{asctime} {levelname} {message}',
+            'style': '{'
+        }
+    },
+
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG' if DEBUG else 'INFO',
+    },
+
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False
+        },
+        'django.server': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False
+        },
+        'django.security.*': {
+            # security types avaliable and raise SuspiciousOperation are [DisallowedHost, DisallowedModelAdminLookup, DisallowedModelAdminToField, DisallowedRedirect, InvalidSessionKey, RequestDataTooBig, SuspiciousFileOperation, SuspiciousMultipartForm, SuspiciousSession, TooManyFieldsSent] 
+            # although CSRF Failures are not regarded as SuspicousOperations and are logged to the type ['csrf']
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False
+        },
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False
+        },
+        'django.db.backends.schema': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False
+        }
+    }
+}

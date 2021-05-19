@@ -22,21 +22,22 @@ class FollowView(CreateAPIView, DestroyAPIView):
 		if User.objects.filter(username = username).exists():
 			who = User.objects.get(username=username)
 
-		if request.data.get('follow', False) and User.objects.filter(username=request.data.get('follow')).exists():
-			whom = User.objects.get_by_natural_key(request.data.get('follow'))
+			if request.data.get('follow', False) and User.objects.filter(username=request.data.get('follow')).exists():
+				whom = User.objects.get_by_natural_key(request.data.get('follow'))
 
-			if Follower.objects.filter(who = who, whom = whom).exists() or who == whom:
-				return Response(status=status.HTTP_400_BAD_REQUEST)
-			return self.create(request, username, who, whom, *args, **kwargs)
+				if Follower.objects.filter(who = who, whom = whom).exists() or who == whom:
+					return Response(status=status.HTTP_400_BAD_REQUEST)
+				return self.create(request, username, who, whom, *args, **kwargs)
 
-		if request.data.get('unfollow', False) and User.objects.filter(username=request.data.get('unfollow')).exists():
-			whom = User.objects.get(username=request.data.get('unfollow'))
+			if request.data.get('unfollow', False) and User.objects.filter(username=request.data.get('unfollow')).exists():
+				whom = User.objects.get(username=request.data.get('unfollow'))
 
-			if Follower.objects.filter(who = who, whom = whom).exists():
-				return self.destroy(request, username, who, whom, *args, **kwargs)
-			else:
-				# return 204 because api specifies such 
-				return Response(status=status.HTTP_204_NO_CONTENT)
+				if Follower.objects.filter(who = who, whom = whom).exists():
+					return self.destroy(request, username, who, whom, *args, **kwargs)
+				else:
+					# return 204 because api specifies such 
+					return Response(status=status.HTTP_204_NO_CONTENT)
+					
 		return Response(status=status.HTTP_400_BAD_REQUEST)
 	
 

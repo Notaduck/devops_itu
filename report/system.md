@@ -24,17 +24,35 @@ With a project that requires a web app, database, and API, it is normal to have 
 
 For this reason, our web app and API don't communicate with one another, and therefore don't form a frontend/backend structure. Instead, our database is our backend, and our web app/API servers are our frontends.
 
-Django has an integrated Database API allowing both querying, creating, updating and deleting SQL entries with connected database instances. Defining the tables within the Django Framework allows Django to both create and manipulate these tables. Additionally, it also allows Django to export its basic tables required for authentication management alongside other basic functionalities instead of storing them in the RAM. It also simplifies the syntax needed to query and add to the tables themselves, resulting in much more simple code. However, doing it like this where we had to separate the API and the web application leads to some unnecessary complexity where we needed one of the application to take care of database migrations, and both of the systems must have the same models for the database, not to overwrite the tables in the database.
-
+Django has an integrated Database API allowing both querying, creating, updating and deleting sql entries with connected database instances. Defining the tables within the Django Framework allows Django to both create and manipulate these tables. Additionally it also allows Django to export it's basic tables required for authentication management along side other basic functionalities, instead of storing it in the RAM. It also simplifies the required syntax to both query and add to the tables themselves resulting in much more simple code. However doing it like this where we had to separate the API and the web application introduced some unnecessary complexity where we needed one of the application to take care of database migrations and both of the systems must have the same models for the database to not overwrite the tables in the database.
 
 **more detailed diagram**
 
-We have a proxy service that uses nginx to route traffic from minitwititu.xyz to our web app server's IP address, and from api.minitwititu.xyz to our API server's address. It only exposes those two IPs, so all of the logging and monitoring related IPs are not exposed.
+
+We have a reverse proxy server in front of the web application and the api which routes the incoming traffic from `minitwititu.xyz` and `api.minitwititu.xyz`. The reverse proxy also acts as a loadbalancer where it will redirect a new connection to the module with the least current connections. In this way we can add ass many `worker-(n+1)` nodes to the system and `nginx` will take care of the load-balancing.
+
 
 Our logging is accomplished by our Filebeat service, along with a logging database that hosts an Elastic Search instance. Filebeat scrapes the swarm manager's output, including all standard output for all services in the stack, and then logs relevant data in the logging database (Elastic Search). This logging database is used by Kibana to display our log information in a neat and readable website.
+=======
+Our logging is accomplished by our Filebeat service, along with a logging database that hosts an Elastic Search instance. Filebeat scrapes the swarm manager's output, including all standard output for all services in the stack, and then logs relevant data in the logging database (Elastic Search). Kibana uses this logging database to display our log information in a neat and readable website.
+>>>>>>> dd2e8b6519bc9f75399a88ba87fbb4039ecf7245
 
-Our monitoring is accomplished by Prometheus, which exposes our metrics on minitwitwitu.xyz/metrics. Our web app and API both make calls to update certain Prometheus metrics, and Prometheus gathers other performance-related metrics from both of them. The /metrics route is also checked by our Grafana service, which hosts a webpage in which metrics can be monitored through customizeable dashboards.
+Our monitoring is accomplished by Prometheus, which exposes our metrics on minitwitwitu.xyz/metrics. Our web app and API both make calls to update specific Prometheus metrics, and Prometheus gathers other performance-related metrics from both of them. The /metrics route is also checked by our Grafana service, which hosts a webpage where the metrics can be monitored through customizable dashboards.
 
+As seen in the deployment diagram `prometheus`,`grafana`,`filebeat` and our `reverse proxy/load balancer` are only running on the `manager-node`, and each `node` in the swarm are limited to a single replica of the API and Web. So to upscale the system we need to configure the `Vagrant` file in our repository and increase the amount of `worker-nodes`, increase the amount of replicas in the `remote_files/stack.yml` which will trigger a new deployment through travis if a pull request to main is made. The manual process here is that we need to manually shh to the new worker and connect it to the swarm, this can be done with a simple shell script much like this
+
+```bash
+#!/bin/bash
+# N is the number of workers.
+
+for ((i = 1; i <= N; ++i)); do 
+    vagrant ssh "worker-$(i)" -c "docker swarm join \
+    --token $(SWARM_WORKER_TOKEN) \
+      $(SWARM_MANAGER_IP):2377"
+done
+
+
+```
 
 
 # Dependencies
@@ -90,11 +108,11 @@ API dependecies are as follows:
 - **uWSGI 2.0.18 - 2.1** - Web service gateway
 - **wrapt 1.12.1** - A Python module for decorators, wrappers and monkey patching.
 
+
+jjkkkkkk
 # Current state
 
-Do we know any bugs in our system or ?
-
-We have some timeout errors, we used nginx to ... (we didnt utilize the threads) when someone was using the api ...
+We have some timeout errors, we used nginx to ... This is mainly due to the large size of the `public timeline` and rendering that in the frontend will crash the server, pagination would have solved that however we set a fixed number of messages which would be displayed.
 
 Some error with follower.
 
@@ -107,10 +125,7 @@ For static analysis of the software, we've primarily used SonarCloud. As of now 
  
  Mono repo caused the settings fields to be duplicated.
 
- We chose a bad encryptions method
-
- Had a problem with vagrant (had to move server, couldnt find out how to move the database)
-
+The encryption choosen for the user passwords is a weak one, however we could not migrate to a new one since we allready had a lot of users using the wrong encryption methods.
 # License
 
-We collected all the license for every dependency we have to form the license our product. Here we met the GNU GPL v2 for psycopg2, The GPL series are all copyleft licenses, which means that any derivative work must be distributed under the same or equivalent license terms. To cover the product we therefore chose to go with the GNU General Public License v3.0; which can be found in the licence document. In this process we also collected all copyright noticies for the dependencies, these are all placed in the Notice document.
+We collected all the licenses and copyright notices for every dependency to formulate our product's license. Here, we met the GNU GPL v2 for psycopg2. The GPL series are all copyleft licenses where any derivative work must be distributed under the same or equivalent license terms. Therefore, to cover the product, we chose to go with the GNU General Public License v3.0, which can be found in the licence document. We also collected all copyright notices for the dependencies; these are all placed in the Notice document.

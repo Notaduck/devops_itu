@@ -2,9 +2,9 @@
 # The Team
 
 The team is organized via Discord. We build a server to support all communication through that.
-Here we meet up, discuss meetings, solutions, problems and more. We also created a Github webhook, so that everyone gets a notification on the Discord server, whenever there are made changes to the project.
+Here we meet up, discuss meetings, solutions, problems and more. We also created a Github webhook to get a notification on the Discord server whenever there are changes to the project.
 
-We use discord servers to meet up every Monday during and after our lecture, we usually work on the given task most of that day. The work that we did not finish are usually completed in the weekend, because of the group members incompatible time schedules during the week.
+We use discord servers to meet up every Monday during and after our lecture. We usually work on the given task most of that day. The work that we did not finish is generally completed at the weekend because of the group members incompatible time schedules during the week.
 
 # CI/CD pipeline
 
@@ -28,19 +28,19 @@ We use **Better Code Hub** for quality improvements?
 
 ## Travis 
 
-Our Travis setup consist of 3 jobs; build, test, deploy.
+Our Travis setup consists of 3 jobs; build, test, deploy.
 
-The first job in our Travis setup is build. Before build we start out with getting access to Travis by using our ssh keys. Afterwards, build has 3 stages; login to docker, build the 3 docker images web, api and proxy and lastly push the 3 images.
+The first job in our Travis setup is the build job. Before this job, we start with getting access to Travis by using our ssh keys. Afterwards, the build job has three stages; log in to docker, build the three docker images web, API and proxy, and push the three images.
 
-The second job is testing. Here we start out by migrating. Migrations are Django’s way of propagating changes we make to our models (adding a field, deleting a model, etc.) into our database schema. We only test frontend with Travis. When we ran the backend test in Travis it tried to start up the system.
+The second job is testing. Here we start by migrating. Migrations are Django’s way of propagating changes we make to our models (adding a field, deleting a model, etc.) into our database schema. We only test the frontend with Travis. When we ran the backend test in Travis, it tried to start up the system.
 
-The third job is deploy and we only deploy when we commit to the main branch, which is how we make a new release. Before deploying we set up the git user and tag the commit. The final step is pulling the images and deplying to the swarm. - deploy token?
+The third job is deploy, and we only deploy when we commit to the main branch, which is how we make a new release. Before deploying, we set up the git user and tag the commit. The final step is pulling the images and deploying them to the swarm. - deploy token?
 
 # Repository
 
-The repository is currently a mono repository since django allows us to work with database models which is tightly incorporated into the framework. 
+The repository is currently a mono repository since Django allows us to work with database models tightly incorporated into the framework. 
 
-We split logging into a separate repository because we wanted to be ready for docker swarm and we didnt want the logging system to take up all the ressources from the web and api.
+We split logging into a separate repository because we wanted to be ready for the docker swarm, and we didn't want the logging system to take up all the resources from the web and API.
 
 # Branching strategy
 

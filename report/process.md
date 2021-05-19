@@ -75,11 +75,11 @@ We split our monitoring into 2 Grafana dashboards; Business Monitoring (e.g. ima
 
 The Business Monitoring dashboard contains amount of: Users, Messages and Followers. We used these data to monitor the correctness of successful requests.
 
-![Business Monitoring](images/Business Monitoring.png "Business Monitoring"){ height=25% }
+![Business Monitoring](images/BusinessMonitoring.png "Business Monitoring"){ height=25% }
 
 The Infrastructure Monitoring dashboard contains CPU Load percent, used for up-time calculation as well as strain on the system and HTTP Responses (Frontend / Backend), used to monitor system failure as well as performance in regards to correct response.
 
-![Infrastructure Monitoring](images/Infrastructure Monitoring.png "Infrastructure Monitoring")
+![Infrastructure Monitoring](images/InfrastructureMonitoring.png "Infrastructure Monitoring")
 
 
 # Logging

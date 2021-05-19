@@ -1,35 +1,20 @@
 
 # Leasons learned
 
-CICD
-
-Logging in Django can be implemeted as middleware allowing logging of both existing views and future views withour tailoring the logging system in each and every view. This both results in a very simplistic an all sided logging system, without hindering the developer in adding new features or functionality.
-
 ## Commications
 
-Importance of communicating in a devops team (different skills / experience)
-    Get to know each other
-    Match your expectations
+The team had a pretty rough start going into the project. We didn't know eachother, our schedules, skills or experience levels. This turned out to be quite a roadblock through the entire course. We experienced a lot of miss-communication and times with no communication at all, which would result in tasks being completed twice, task not being completed at all and group members working alone on a big task.
 
-Organizing
+Because of the lack of communication, we created quite the backlog througout the course. We did at one point, create a technical debt on the API, which meant that a group member had to work on the CICD alone.
 
-technical debt on api, (Daniel alone on CICD)
+We should have started out by getting to know eatchother and match our expectations for the project. We had a lot of different backgrounds; three were writing their bachelor and four had a job taking up time aswell, this meant that we should have focused a lot more time into discussing schedules and meetings, so that we didn't end up meeting at odd hours every week. By focusing more time on this, we could have gone into the project with a better foundation and maybe a better endproduct. 
+
 
 ## Tool choice
 
-Large scale framework 
- - much implemeted functionality
-    - easy database management
-    - easy implementation of simplistic views and pages
-    - large scale api framework
-    - authentication tools
-    - security features by default
- - simplistic custom implementation
- - many resources for help (large docs, stack overflow, widely used)
+With the lack of communication came some bad choices. We chose to go with a framework that only one group member knew, which meant that the rest of the group had to use a lot of time getting to know the structure and functionalities. 
 
-disadvantages:
- - much implemeted functionality
-    - unmanageable for inexperienced users due to the high complexity of the innate features
+Django is a large scale framework. It has a large amount implemented functionality; easy database management, easy implementation of views and pages, authentications tools and security features. This is all very usefull when you use it as a large scale API framework, the problem we ran into here was that our project didn't take advantage of these features the way it was meant to be used. Django turned out to be unmanageable for inexperienced users due to the high complexity of the innate features.
 
 
 ... use tools we already know (% django) % python 

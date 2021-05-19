@@ -1,5 +1,5 @@
 
-# Lesson learned
+# Lesson Learned
 
 ## Communications
 
@@ -10,7 +10,7 @@ Because of the lack of communication, we created quite a backlog throughout the 
 We should have started by getting to know each other and match our expectations for the project. We had many different backgrounds; three were writing their bachelor, and four had a job taking up time. It meant that we should have focused a lot more time discussing schedules and meetings, not meeting odd hours every week. By focusing more time on this, we could have gone into the project with a better foundation and possibly a better end product. It would probably have been a good idea to give each group member a role and a responsibility and then actively use a kanban board, so everybody knows what is going on and what is missing.
 
 
-## Tool choice
+## Tool Choice
 
 With the lack of communication came some bad choices. We chose to go with a framework that only one group member knew, which meant that the rest of the group had to use a lot of time getting to know the structure and functionalities.
 
@@ -18,7 +18,7 @@ Django is an extensive scale framework. It has a large amount of implemented fun
 
 We should have started discussing several choices, including prices in the long run, for the whole tech stack and the team members prior work with these.
 
-## Technical debt
+## Technical Debt
 
 The team didn't use enough time going through and testing the individual pull request, which meant that we spent a lot of time looking into minor errors that ...
 

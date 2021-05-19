@@ -10,7 +10,6 @@
   {% endif %}
 {% endblock %}
 {% block body %}
-  <h2>{{ self.title }}</h2>
   {% if user %}
     {% if not public %}
       <div class=followstatus>
@@ -38,7 +37,7 @@
   {% if posts %}
     <ul class=messages>
     {% for post in posts %}
-      <li>{{ post.author_id.email|gravatar }}<p>
+      <li>{{ post.author_id|gravatar }}<p>
         <strong><a href="/timeline/{{post.author.username}}">{{ post.author.username }}</a></strong>
         {{ post.text }}
         <small>&mdash;{{ post.pub_date }}</small>

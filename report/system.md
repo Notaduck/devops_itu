@@ -105,9 +105,7 @@ API dependecies are as follows:
 
 # Current state
 
-We have some timeout errors, we used nginx to ... This is mainly due to the large size of the `public timeline` and rendering that in the frontend will crash the server, pagination would have solved that however we set a fixed number of messages which would be displayed.
-
-Some error with follower.
+We had many timeout errors that were due to the large size of the public timeline. The frontend server would crash since it tried to load all messages on the public timeline page.Pagination would have solved that however we set a fixed number of messages which would be displayed.
 
 For static analysis of the software, we've primarily used SonarCloud. As of now their report on the project is as follows:
 
@@ -115,12 +113,12 @@ For static analysis of the software, we've primarily used SonarCloud. As of now 
  **Security**: 0 vulnerabilities with 3 security hotspots (23 with tests??)
  **Maintainability**: 2 hours technical debt based on 16 code smells, where hereof 8 are critical or major.
  **Duplications**: 5.0 % duplications and 6 dublicated blocks (including tests/settings)
- 
- Mono repo caused the settings fields to be duplicated.
 
-The encryption choosen for the user passwords is a weak one, however we could not migrate to a new one since we allready had a lot of users using the wrong encryption methods.
+The encryption choosen for the user passwords is a weak one, however we could not migrate to a new one since we already had a lot of users using the wrong encryption methods.
 
-The current state of the logging system is not ideal since the formatting of the logging is all weird and messed ud so we have to make some complicated searchqueries in order to extract usefull log.
+The current state of the logging system is not ideal since we have to make some complicated search queries in order to extract useful information from them.
+
+There are also some undiagnosed bugs in the follow and add_message functions, since they sometimes still return a 500 status code.
 
 # License
 

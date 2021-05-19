@@ -46,9 +46,9 @@ We split logging into a separate repository because we wanted to be ready for th
 
 Our branching strategy utilizes the Gitflow Workflow. We will have two main branches and several feature branches:
 
-- main branch - This is the main branch and contains the production code.
-- developer branch - This is the development branch containing the development code. This code is merged and pushed into main at the end of each completed weekly assignment.
-- feature branches - Used to develop specific features relating to a specific assignment and is merged and pushed into the development branch when it is completed.
+- Main branch. It is the main branch and contains the production code.
+- Developer branch. It is the development branch containing the development code. This code is merged and pushed into main at the end of each completed weekly assignment.
+- Feature branches. These branches are used to develop specific features relating to a specific assignment and is merged and pushed into the development branch when it is completed.
 
 Branches should always be branched from the develop branch.
 

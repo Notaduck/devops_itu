@@ -3,11 +3,11 @@ title: MiniTwit Project of DevOps 2021
 subtitle: DevOps, Software Evolution and Software Maintenance Copenhagen IT University Denmark
 date: 17 May 2021
 author: 
-- "Einar Klarlund"
-- "Malou Elmelund Landsgaard"
-- "Daniel Guldberg Aaes"
-- "Emil Dichmann"
-- "Jonas Aagaard"
+- "Einar Klarlund, eikl@itu.dj"
+- "Malou Elmelund Landsgaard, ella@itu.dk"
+- "Daniel Guldberg Aaes, daaa@itu.dk"
+- "Emil Dichmann, emdi@itu.dk"
+- "Jonas Aagaard, joaa@itu.dk "
 geometry: margin=2cm
 include-before:
 - '`\newpage{}`{=latex}'

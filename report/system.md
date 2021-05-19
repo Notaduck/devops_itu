@@ -2,36 +2,50 @@
 
 # System Design
 
-Minitwit is a social media application that provides basic Twitter-like services. It consists of a web app and API services that are publicly available on the internet. Both services allow the user to register a profile, log in, create messages (tweets), follow and unfollow users. Basic authentication is required when creating messages, following, or unfollowing. Most of the application is written in Python, since our web app and API are using the Django framework. 
+Minitwit is a social media application that provides basic Twitter-like services. It consists of a web app and API services that are publicly available on the internet. Both services allow the user to register a profile, log in, create messages (tweets), follow and unfollow users. Basic authentication is required when creating messages, following, or unfollowing. Most of the application is written in Python since our web app and API uses the Django framework.
 
-One of the first things that our application needed was a database to store user info and posts. We chose to use a containerized PostGreSQL server.
+One of the first things that our application needed was a database to store user info and posts. We chose to use a containerized PostgreSQL server.
 
-Minitwit also consists of monitoring tools, which the web app and API communicate with when certain metrics are updated. These tools include Prometheus and Grafana, which allow for collection and displaying of metrics respectively. The monitoring tools are very useful for us developers, since they help us to maintain the system properly. 
+Minitwit also consists of monitoring tools, which the web app and API communicate with when specific metrics are updated. These tools include Prometheus and Grafana, which allow for the collection and displaying of metrics, respectively. The monitoring tools are handy for us developers since they help us to maintain the system properly.
 
-For logging features, we have implemented an EFK stack that includes Elastic Search, Filebeat, and Kibana. Filebeat is responsible for harvesting the data that we want to log, while Elastic Search is used to store that data in a database. With the logging features implemented, it is much easier for developers to diagnose and debug problems with the system. The logging is absolute and thus also allows perfect reproduction of requests from users to both the frontend and backend. This is due to the entire request body and the most significant features of the request header being logged.
+For logging features, we have implemented an EFK stack that includes Elastic Search, Filebeat, and Kibana. Filebeat is responsible for harvesting the data that we want to log, while Elastic Search is used to store that data in a database. With the logging features implemented, it is much easier for developers to diagnose and debug problems with the system. The logging is absolute and allows perfect reproduction of requests from users to the front-end and backend due to the entire request body and the most significant features of the request header being logged.
+
 
 # Architecture
 
-Minitwit is hosted on multiple Digital Ocean droplets which form a Docker Swarm. Our logging and production database are each containerized on their own separate Droplets. This allows us to easily horizontally scale everything besides our persistent data, which should not be horizontally scaled anyways. 
+Minitwit is hosted on multiple Digital Ocean droplets, which form a Docker Swarm. Our logging and production database are each containerized on their separate Droplets and separated from the swarm to isolated these two systems from the systems exposed to the end-user. It allows us to easily horizontally scale everything besides our persistent data, which should not be horizontally scaled in this scenario. However, if this were supposed to run in a production environment, it would make sense to let Digital Ocean take care of the horizontal scaling of our database instead of maintaining it ourselves and set up a  High Availability and Load Balancing for our db, which includes maintenance of the Master DB and all of the Slaves.
 
 ![Deployment diagram of docker swarm setup](images/deployment_diagram.png "Deployment Diagram"){ width=80% }
 
 With a project that requires a web app, database, and API, it is normal to have the web app communicate with the database through the API. However, Django is designed such that direct communication with a database backend is much simpler to implement than communication with a custom backend server.
 
-![Diagram of project structure](images/web-api-db.png "Diagram of project structure"){ width=50% }
+For this reason, our web app and API don't communicate with one another, and therefore don't form a frontend/backend structure. Instead, our database is our backend, and our web app/API servers are our frontends.
 
-For this reason, our web app and API don't communicate with one another, and therefore don't form a frontend/backend structure. Instead, our database is our backend and our web app/API servers are our frontends.
+Django has an integrated Database API allowing both querying, creating, updating and deleting sql entries with connected database instances. Defining the tables within the Django Framework allows Django to both create and manipulate these tables. Additionally it also allows Django to export it's basic tables required for authentication management along side other basic functionalities, instead of storing it in the RAM. It also simplifies the required syntax to both query and add to the tables themselves resulting in much more simple code. However doing it like this where we had to separate the API and the web application introduced some unnecessary complexity where we needed one of the application to take care of database migrations and both of the systems must have the same models for the database to not overwrite the tables in the database.
 
-Django has an integrated Database API allowing both querying, changing and deleting sql entries with connected database instances. Defining the tables within the Django Framework allows Django to both create and manipulate these tables. Additionally it also allows Django to export it's basic tables required for authentication management along side other basic functionalities, instead of storing it in the RAM. It also simplifies the required syntax to both query and add to the tables themselves resulting in much more simple code.
+![Subsystem diagram](images/subsystems.png "Subsystem diagram"){ width=50% }
 
 
-**more detailed diagram**
+We have a reverse proxy server in front of the web application and the api which routes the incoming traffic from `minitwititu.xyz` and `api.minitwititu.xyz`. The reverse proxy also acts as a loadbalancer where it will redirect a new connection to the module with the least current connections. In this way we can add ass many `worker-(n+1)` nodes to the system and `nginx` will take care of the load-balancing.
 
-We have a proxy service that uses nginx to route traffic from minitwititu.xyz to our web app server's IP address, and from api.minitwititu.xyz to our API server's address. It only exposes those two IPs, so all of the logging and monitoring related IPs are not exposed.
+Our logging is accomplished by our Filebeat service, along with a logging database that hosts an Elastic Search instance. Filebeat scrapes the swarm manager's output, including all standard output for all services in the stack, and then logs relevant data in the logging database (Elastic Search). Kibana uses this logging database to display our log information in a neat and readable website.
 
-Our logging is accomplished by our Filebeat service, along with a logging database that hosts an Elastic Search instance. Filebeat scrapes the swarm manager's output, including all standard output for all services in the stack, and then logs relevant data in the logging database (Elastic Search). This logging database is used by Kibana to display our log information in a neat and readable website.
+Our monitoring is accomplished by Prometheus, which exposes our metrics on minitwitwitu.xyz/metrics. Our web app and API both make calls to update specific Prometheus metrics, and Prometheus gathers other performance-related metrics from both of them. The /metrics route is also checked by our Grafana service, which hosts a webpage where the metrics can be monitored through customizable dashboards.
 
-Our monitoring is accomplished by Prometheus, which exposes our metrics on minitwitwitu.xyz/metrics. Our web app and API both make calls to update certain Prometheus metrics, and Prometheus gathers other performance-related metrics from both of them. The /metrics route is also checked by our Grafana service, which hosts a webpage in which metrics can be monitored through customizeable dashboards.
+As seen in the deployment diagram `prometheus`,`grafana`,`filebeat` and our `reverse proxy/load balancer` are only running on the `manager-node`, and each `node` in the swarm are limited to a single replica of the API and Web. So to upscale the system we need to configure the `Vagrant` file in our repository and increase the amount of `worker-nodes`, increase the amount of replicas in the `remote_files/stack.yml` which will trigger a new deployment through travis if a pull request to main is made. The manual process here is that we need to manually shh to the new worker and connect it to the swarm, this can be done with a simple shell script much like this
+
+```bash
+#!/bin/bash
+# N is the number of workers.
+
+for ((i = 1; i <= N; ++i)); do 
+    vagrant ssh "worker-$(i)" -c "docker swarm join \
+    --token $(SWARM_WORKER_TOKEN) \
+      $(SWARM_MANAGER_IP):2377"
+done
+
+
+```
 
 
 # Dependencies
@@ -87,27 +101,27 @@ API dependecies are as follows:
 - **uWSGI 2.0.18 - 2.1** - Web service gateway
 - **wrapt 1.12.1** - A Python module for decorators, wrappers and monkey patching.
 
+
 # Current state
 
-Do we know any bugs in our system or ?
-
-We have some timeout errors, we used nginx to ... (we didnt utilize the threads) when someone was using the api ...
-
-Some error with follower.
+We had many timeout errors that were due to the large size of the public timeline. The frontend server would crash since it tried to load all messages on the public timeline page.Pagination would have solved that however we set a fixed number of messages which would be displayed.
 
 For static analysis of the software, we've primarily used SonarCloud. As of now their report on the project is as follows:
 
  **Reliability**: 0 bugs
- **Security**: 0 vulnerabilities with 3 security hotspots (23 with tests??)
+ **Security**: 0 vulnerabilities with 3 security hotspots
  **Maintainability**: 2 hours technical debt based on 16 code smells, where hereof 8 are critical or major.
- **Duplications**: 5.0 % duplications and 6 dublicated blocks (including tests/settings)
- 
- Mono repo caused the settings fields to be duplicated.
+ **Duplications**: 5.0 % duplications and 6 dublicated blocks
 
- We chose a bad encryptions method
+The duplications are only test and settings files.
 
- Had a problem with vagrant (had to move server, couldnt find out how to move the database)
+The encryption choosen for the user passwords is a weak one, however we could not migrate to a new one since we already had a lot of users using the wrong encryption methods.
+
+The current state of the logging system is not ideal since we have to make some complicated search queries in order to extract useful information from them.
+
+There are also some undiagnosed bugs in the follow and add_message functions, since they sometimes still return a 500 status code.
 
 # License
 
-We collected all the license for every dependency we have to form the license our product. Here we met the GNU GPL v2 for psycopg2, The GPL series are all copyleft licenses, which means that any derivative work must be distributed under the same or equivalent license terms. To cover the product we therefore chose to go with the GNU General Public License v3.0; which can be found in the licence document. In this process we also collected all copyright noticies for the dependencies, these are all placed in the Notice document.
+We collected all the licenses and copyright notices for every dependency to formulate our product's license. Here, we met the GNU GPL v2 for psycopg2. The GPL series are all copyleft licenses where any derivative work must be distributed under the same or equivalent license terms. Therefore, to cover the product, we chose to go with the GNU General Public License v3.0, which can be found in the licence document. We also collected all copyright notices for the dependencies; these are all placed in the Notice document.
+

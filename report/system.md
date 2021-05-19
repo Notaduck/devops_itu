@@ -105,7 +105,6 @@ API dependecies are as follows:
 - **wrapt 1.12.1** - A Python module for decorators, wrappers and monkey patching.
 
 
-jjkkkkkk
 # Current state
 
 We have some timeout errors, we used nginx to ... This is mainly due to the large size of the `public timeline` and rendering that in the frontend will crash the server, pagination would have solved that however we set a fixed number of messages which would be displayed.
@@ -122,6 +121,7 @@ For static analysis of the software, we've primarily used SonarCloud. As of now 
  Mono repo caused the settings fields to be duplicated.
 
 The encryption choosen for the user passwords is a weak one, however we could not migrate to a new one since we allready had a lot of users using the wrong encryption methods.
+
 # License
 
 We collected all the licenses and copyright notices for every dependency to formulate our product's license. Here, we met the GNU GPL v2 for psycopg2. The GPL series are all copyleft licenses where any derivative work must be distributed under the same or equivalent license terms. Therefore, to cover the product, we chose to go with the GNU General Public License v3.0, which can be found in the licence document. We also collected all copyright notices for the dependencies; these are all placed in the Notice document.

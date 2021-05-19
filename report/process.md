@@ -44,27 +44,27 @@ We split logging into a separate repository because we wanted to be ready for th
 
 # Branching strategy
 
-Our branching strategy utilizes the Gitflow Workflow. Basically we will have 2 main branches and a number of feature branches:
+Our branching strategy utilizes the Gitflow Workflow. We will have two main branches and several feature branches:
 
 - main branch - This is the main branch and contains the production code.
 - developer branch - This is the development branch containing the development code. This code is merged and pushed into main at the end of each completed weekly assignment.
 - feature branches - Used to develop specific features relating to a specific assignment and is merged and pushed into the development branch when it is completed.
 
-Branches should always be branched from develop
+Branches should always be branched from the develop branch.
 
-Always pull the newest development branch before creating a feature branch
+Always pull the newest development branch before creating a feature branch.
 
-Experimenting is preferably done in branches. In some cases when working on a specific task it might make sense to further branch out from the feature branch eg.
+Experimenting is preferably done in branches. When working on a specific task, it might make sense to branch out from the feature branch, eg.
 
 ![Branch strategy](images/branch.png "Branch strategy"){ width=80% }
 
 # Development process
 
-For this project we worked with an agile development process. Agile is all about moving fast, releasing often, and responding to the needs of your users, even if it goes against what’s in your initial plan. Every week we would plan a new implementation, work on the implementation in smaller bids, test it and release it for feedback session the next lecture. If we had any bugs or backlog from the last week we would split up and work on tasks in smaller groups. 
+For this project, we worked with an agile development process. Agile is all about moving fast, releasing often, and responding to the needs of your users, even if it goes against what’s in your initial plan. Every week, we plan a new implementation, work on the implementation in smaller bids, test it, and release it for feedback session the following lecture. If we had any bugs or backlog from the last week, we would split up and work on tasks in smaller groups. 
 
-The way the workflow was distributed was that the team would create a set of tasks in the project management tool git provides, once that was done the team members would distribute the tasks between each team member. Once a task is a completed a PR had to be made and once it had gone through a review process it would get merged into the dev branch. When all tasks for a given week had been completed a new PR would be made in order to merge the current stage of the dev branch into the main branch and a new release would be created with an appropriate dectrion of the new changes.
+The workflow was distributed because the team would create a set of tasks in the project management tool git provides. Once that was done, the team members would distribute the tasks between each team member. Once a task is completed, a PR had to be made, and once it had gone through a review process, it would get merged into the dev branch. When all tasks for a given week had been completed, a new PR would be made to merge the current stage of the dev branch into the main branch, and a new release would be created with an appropriate dectrion of the recent changes.
 
-Every single team member is responsible for integration and reviews. It is up to the group to and to the idividual team member to decide if he or she has the competence to do the review or integration of a new feature.
+Every single team member is responsible for integration and reviews. It is up to the group and the individual team member to decide if they can do the review or integration of a new feature.
 
 # Monitoring
 

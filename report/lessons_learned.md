@@ -1,7 +1,7 @@
 
 # Lesson learned
 
-## Commications
+## Communications
 
 The team had a pretty rough start going into the project. We didn't know each other, our schedules, skills or experience levels. It turned out to be quite a roadblock throughout the entire course. We experienced a lot of miscommunication and times with no communication at all, which would result in tasks being completed twice, tasks not being met at all and group members working alone on a big task.
 

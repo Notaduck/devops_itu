@@ -1,5 +1,5 @@
 
-# Lesson Learned
+# Lessons Learned
 
 ## Communications
 
@@ -20,7 +20,7 @@ We should have started discussing several choices, including prices in the long 
 
 ## Technical Debt
 
-The team didn't use enough time going through and testing the individual pull request, which meant that we spent a lot of time looking into minor errors that ...
+The team didn't use enough time going through and testing the individual pull request, which meant that we spent a lot of time looking into minor errors that.
 
 When the simulator started, we already had a backlog, resulting in our product not being ready for the simulator. It meant that some register request already failed the first day, resulting in a future error on message and follow request. The team should have focused a lot more time on getting the project ready for the simulator and avoiding future mistakes. 
 

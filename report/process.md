@@ -68,10 +68,7 @@ Every single team member is responsible for integration and reviews. It is up to
 
 # Monitoring
 
-We use the monitoring service Prometheus, to monitor our application...
-To display the data that we get from Prometheus, we use the web-based graph interface, Grafana...
-
-We split our monitoring into 2 Grafana dashboards; Business Monitoring (e.g. images/Business Monitoring), which displays our PostgreSQL Query data, and Infrastructure Monitoring (e.g. images/Infrastructure Monitoring), which displays our Prometheus metrics.
+We use the monitoring service Prometheus, to monitor our application. To display the data that we get from Prometheus, we use the web-based graph interface, Grafana. We split our monitoring into 2 Grafana dashboards; Business Monitoring (e.g. images/Business Monitoring), which displays our PostgreSQL Query data, and Infrastructure Monitoring (e.g. images/Infrastructure Monitoring), which displays our Prometheus metrics.
 
 The Business Monitoring dashboard contains amount of: Users, Messages and Followers. We used these data to monitor the correctness of successful requests.
 

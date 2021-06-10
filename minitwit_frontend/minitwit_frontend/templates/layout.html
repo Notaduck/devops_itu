@@ -16,6 +16,13 @@
   {% endif %}
   </div>
   <div class=body>
+  {% if flashes %}
+    <ul class=flashes> 
+    {% for flash in flashes %}
+      <li> {{ flash }} <li> 
+    {% endfor %}
+    </ul>
+  {% endif %}
   {% block body %}{% endblock %}
   </div>
   <div class=footer>

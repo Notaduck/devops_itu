@@ -34,7 +34,7 @@ class CustomTimelineView(TimelineView):
 		elif context['user']:
 			users = [follower.whom for follower in Follower.objects.filter(who=context['user'])]
 			users.append(context['user'])
-			context['posts'] = Message.objects.select_related('author').filter(author_id__in=users).order_by('-pub_date')
+			context['posts'] = Message.objects.select_related('author').filter(author__in=users).order_by('-pub_date')
 		else:
 			redirect('public_timeline')
 		return context

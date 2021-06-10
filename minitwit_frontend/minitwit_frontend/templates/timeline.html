@@ -37,7 +37,7 @@
   {% if posts %}
     <ul class=messages>
     {% for post in posts %}
-      <li>{{ post.author_id|gravatar }}<p>
+      <li>{{ post.author.email|gravatar }}<p>
         <strong><a href="/timeline/{{post.author.username}}">{{ post.author.username }}</a></strong>
         {{ post.text }}
         <small>&mdash;{{ post.pub_date }}</small>
